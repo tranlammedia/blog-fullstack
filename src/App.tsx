@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import SampleLayout from "./layout/SampleLayout";
-import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -15,28 +14,23 @@ import PortfolioDetail from "./pages/PortfolioDetail";
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<SampleLayout />}>
-            <Route index element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-			<Route path="/post" element={<PortfolioDetail />} />
-
-            <Route path="/portfolio" >
-              <Route index element={<PortfolioDetail />} />
-              <Route path="/portfolio/:post" element={<Portfolio />} />
-            </Route>
+      <Routes>
+        <Route path="/" element={<SampleLayout />}>
+          <Route index element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/post" element={<PortfolioDetail />} />
+          <Route path="/portfolio">
+            <Route index element={<Portfolio />} />
+            <Route path=":project" element={<PortfolioDetail />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-      {/* <Blog>
-          <Sidebar />
-        </Blog> */}
-      {/* <BlogDetail>
-          <Sidebar />
-        </BlogDetail> */}
-      {/* <Contact /> */}
+          <Route path="/blog">
+            <Route index element={<Blog />} />
+            <Route path=":blogid" element={<BlogDetail />} />
+          </Route>
+          <Route path="/contact" element={<Contact />} />
+        </Route>
+      </Routes>
     </>
   );
 }

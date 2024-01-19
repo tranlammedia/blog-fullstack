@@ -1,23 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Portfolio() {
   return (
     <>
-      {/* <!--================ Start Banner Area =================--> */}
-      <section className="banner_area">
-        <div className="banner_inner d-flex align-items-center">
-          <div className="container">
-            <div className="banner_content text-center">
-              <h2>Portfolio</h2>
-              <div className="page_link">
-                <a href="index.html">Home</a>
-                <a href="portfolio.html">Portfolio</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* <!--================ End Banner Area =================--> */}
 
       {/* <!--================Start Portfolio Area =================--> */}
       <section className="portfolio_area section_gap_top" id="portfolio">
@@ -63,7 +49,7 @@ export default function Portfolio() {
                   </div>
                   <div className="short_info">
                     <h4>
-                      <a href="portfolio-details.html">minimal design</a>
+                      <Link to="detail">minimal design</Link>
                     </h4>
                     <p>Animated, portfolio</p>
                   </div>
@@ -86,7 +72,7 @@ export default function Portfolio() {
                   </div>
                   <div className="short_info">
                     <h4>
-                      <a href="portfolio-details.html">Paint wall</a>
+                      <Link to="detail">Paint wall</Link>
                     </h4>
                     <p>Animated, portfolio</p>
                   </div>
@@ -109,7 +95,7 @@ export default function Portfolio() {
                   </div>
                   <div className="short_info">
                     <h4>
-                      <a href="portfolio-details.html">female light</a>
+                      <Link to="detail">female light</Link>
                     </h4>
                     <p>Animated, portfolio</p>
                   </div>
@@ -132,7 +118,7 @@ export default function Portfolio() {
                   </div>
                   <div className="short_info">
                     <h4>
-                      <a href="portfolio-details.html">fourth air</a>
+                      <Link to="detail">fourth air</Link>
                     </h4>
                     <p>Animated, portfolio</p>
                   </div>
@@ -155,7 +141,7 @@ export default function Portfolio() {
                   </div>
                   <div className="short_info">
                     <h4>
-                      <a href="portfolio-details.html">together sign</a>
+                      <Link to="detail">together sign</Link>
                     </h4>
                     <p>Animated, portfolio</p>
                   </div>
@@ -178,7 +164,7 @@ export default function Portfolio() {
                   </div>
                   <div className="short_info">
                     <h4>
-                      <a href="portfolio-details.html">multiply fowl</a>
+                      <Link to="detail">multiply fowl</Link>
                     </h4>
                     <p>Animated, portfolio</p>
                   </div>
@@ -201,7 +187,7 @@ export default function Portfolio() {
                   </div>
                   <div className="short_info">
                     <h4>
-                      <a href="portfolio-details.html">green heaven</a>
+                      <Link to="detail">green heaven</Link>
                     </h4>
                     <p>Animated, portfolio</p>
                   </div>
@@ -245,7 +231,7 @@ export default function Portfolio() {
                   </div>
                   <div className="short_info">
                     <h4>
-                      <a href="portfolio-details.html">season face</a>
+                      <Link to="detail">season face</Link>
                     </h4>
                     <p>Animated, portfolio</p>
                   </div>

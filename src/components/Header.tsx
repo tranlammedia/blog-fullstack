@@ -52,26 +52,7 @@ export default function Header() {
                     Portfolio
                   </Link>
                 </li>
-                <li className="nav-item submenu dropdown">
-                  <a
-                    href="#"
-                    className="nav-link dropdown-toggle"
-                    data-toggle="dropdown"
-                    role="button"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    Pages
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li className="nav-item">
-                      <a className="nav-link" href="elements.html">
-                        Elements
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </li>
+                
                 <li className="nav-item submenu dropdown">
                   <a
                     href="#"
@@ -85,21 +66,21 @@ export default function Header() {
                   </a>
                   <ul className="dropdown-menu">
                     <li className="nav-item">
-                      <a className="nav-link" href="blog.html">
+                      <Link className="nav-link" to="/blog">
                         Blog
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="single-blog.html">
+                      <Link className="nav-link" to="/blog/detail">
                         Blog Details
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="contact.html">
+                  <Link className="nav-link" to="/contact">
                     Contact
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

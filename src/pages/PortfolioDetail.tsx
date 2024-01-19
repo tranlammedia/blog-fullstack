@@ -1,19 +1,20 @@
 import React from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 
 interface PortfolioDetailProps {
     
 }
 export default function PortfolioDetail() {
+    let { project } = useParams<"project">();
+    console.log(project)
   return (
-    <>
-      	{/* <!--================Start Portfolio Details Area =================--> */}
 	<section className="portfolio_details_area section_gap">
         <div className="container">
             <div className="portfolio_details_inner">
                 <div className="row">
                     <div className="col-lg-6">
                         <div className="left_img">
-                            <img className="img-fluid" src="img/portfolio/portfolio-details.jpg" alt=""/>
+                            <img className="img-fluid" src="/img/portfolio/portfolio-details.jpg" alt=""/>
                         </div>
                     </div>
                     <div className="offset-lg-1 col-lg-5">
@@ -46,8 +47,6 @@ export default function PortfolioDetail() {
             </div>
         </div>
     </section>
-    {/* <!--================End Portfolio Details Area =================--> */}
-    
-    </>
+
   );
 }

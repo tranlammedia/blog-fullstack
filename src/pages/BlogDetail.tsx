@@ -1,9 +1,7 @@
 import React, { ReactNode } from "react";
+import Sidebar from "../components/Sidebar";
 
-interface BlogDetailProps {
-  children: ReactNode
-}
-export default function BlogDetail({children}: BlogDetailProps) {
+export default function BlogDetail() {
   return (
     <>
       {/* <!--================Blog Area =================--> */}
@@ -14,7 +12,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                     <div className="single-post row">
                         <div className="col-lg-12">
                             <div className="feature-img">
-                                <img className="img-fluid" src="img/blog/feature-img1.jpg" alt="" />
+                                <img className="img-fluid" src="/img/blog/feature-img1.jpg" alt="" />
                             </div>									
                         </div>
                         <div className="col-lg-3  col-md-3">
@@ -57,10 +55,10 @@ export default function BlogDetail({children}: BlogDetailProps) {
                             </div>
                             <div className="row">
                                 <div className="col-6">
-                                    <img className="img-fluid" src="img/blog/post-img1.jpg" alt="" />
+                                    <img className="img-fluid" src="/img/blog/post-img1.jpg" alt="" />
                                 </div>
                                 <div className="col-6">
-                                    <img className="img-fluid" src="img/blog/post-img2.jpg" alt="" />
+                                    <img className="img-fluid" src="/img/blog/post-img2.jpg" alt="" />
                                 </div>	
                                 <div className="col-lg-12 mt-25">
                                     <p>
@@ -77,7 +75,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                         <div className="row">
                             <div className="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
                                 <div className="thumb">
-                                    <a href="#"><img className="img-fluid" src="img/blog/prev.jpg" alt="" /></a>
+                                    <a href="#"><img className="img-fluid" src="/img/blog/prev.jpg" alt="" /></a>
                                 </div>
                                 <div className="arrow">
                                     <a href="#"><span className="lnr text-white lnr-arrow-left"></span></a>
@@ -96,7 +94,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                                     <a href="#"><span className="lnr text-white lnr-arrow-right"></span></a>
                                 </div>
                                 <div className="thumb">
-                                    <a href="#"><img className="img-fluid" src="img/blog/next.jpg" alt="" /></a>
+                                    <a href="#"><img className="img-fluid" src="/img/blog/next.jpg" alt="" /></a>
                                 </div>										
                             </div>									
                         </div>
@@ -107,7 +105,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                             <div className="single-comment justify-content-between d-flex">
                                 <div className="user justify-content-between d-flex">
                                     <div className="thumb">
-                                        <img src="img/blog/c1.jpg" alt="" />
+                                        <img src="/img/blog/c1.jpg" alt="" />
                                     </div>
                                     <div className="desc">
                                         <h5><a href="#">Emilly Blunt</a></h5>
@@ -126,7 +124,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                             <div className="single-comment justify-content-between d-flex">
                                 <div className="user justify-content-between d-flex">
                                     <div className="thumb">
-                                        <img src="img/blog/c2.jpg" alt="" />
+                                        <img src="/img/blog/c2.jpg" alt="" />
                                     </div>
                                     <div className="desc">
                                         <h5><a href="#">Elsie Cunningham</a></h5>
@@ -145,7 +143,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                             <div className="single-comment justify-content-between d-flex">
                                 <div className="user justify-content-between d-flex">
                                     <div className="thumb">
-                                        <img src="img/blog/c3.jpg" alt="" />
+                                        <img src="/img/blog/c3.jpg" alt="" />
                                     </div>
                                     <div className="desc">
                                         <h5><a href="#">Annie Stephens</a></h5>
@@ -164,7 +162,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                             <div className="single-comment justify-content-between d-flex">
                                 <div className="user justify-content-between d-flex">
                                     <div className="thumb">
-                                        <img src="img/blog/c4.jpg" alt="" />
+                                        <img src="/img/blog/c4.jpg" alt="" />
                                     </div>
                                     <div className="desc">
                                         <h5><a href="#">Maria Luna</a></h5>
@@ -183,7 +181,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                             <div className="single-comment justify-content-between d-flex">
                                 <div className="user justify-content-between d-flex">
                                     <div className="thumb">
-                                        <img src="img/blog/c5.jpg" alt="" />
+                                        <img src="/img/blog/c5.jpg" alt="" />
                                     </div>
                                     <div className="desc">
                                         <h5><a href="#">Ina Hayes</a></h5>
@@ -221,7 +219,7 @@ export default function BlogDetail({children}: BlogDetailProps) {
                     </div>
                 </div>
                 <div className="col-lg-4">
-                    {children}
+                    <Sidebar></Sidebar>
                 </div>
             </div>
         </div>

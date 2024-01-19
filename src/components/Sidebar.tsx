@@ -23,7 +23,7 @@ export default function Sidebar() {
         <aside className="single_sidebar_widget author_widget">
           <img
             className="author_img rounded-circle"
-            src="img/blog/author.png"
+            src="/img/blog/author.png"
             alt=""
           />
           <h4>Charlie Barber</h4>
@@ -52,7 +52,7 @@ export default function Sidebar() {
         <aside className="single_sidebar_widget popular_post_widget">
           <h3 className="widget_title">Popular Posts</h3>
           <div className="media post_item">
-            <img src="img/blog/popular-post/post1.jpg" alt="post" />
+            <img src="/img/blog/popular-post/post1.jpg" alt="post" />
             <div className="media-body">
               <a href="blog-details.html">
                 <h3>Space The Final Frontier</h3>
@@ -61,7 +61,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div className="media post_item">
-            <img src="img/blog/popular-post/post2.jpg" alt="post" />
+            <img src="/img/blog/popular-post/post2.jpg" alt="post" />
             <div className="media-body">
               <a href="blog-details.html">
                 <h3>The Amazing Hubble</h3>
@@ -70,7 +70,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div className="media post_item">
-            <img src="img/blog/popular-post/post3.jpg" alt="post" />
+            <img src="/img/blog/popular-post/post3.jpg" alt="post" />
             <div className="media-body">
               <a href="blog-details.html">
                 <h3>Astronomy Or Astrology</h3>
@@ -79,7 +79,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div className="media post_item">
-            <img src="img/blog/popular-post/post4.jpg" alt="post" />
+            <img src="/img/blog/popular-post/post4.jpg" alt="post" />
             <div className="media-body">
               <a href="blog-details.html">
                 <h3>Asteroids telescope</h3>
@@ -91,7 +91,7 @@ export default function Sidebar() {
         </aside>
         <aside className="single_sidebar_widget ads_widget">
           <a href="#">
-            <img className="img-fluid" src="img/blog/add.jpg" alt="" />
+            <img className="img-fluid" src="/img/blog/add.jpg" alt="" />
           </a>
           <div className="br"></div>
         </aside>
