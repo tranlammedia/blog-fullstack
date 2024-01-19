@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.js": "/blog-fullstack/static/js/main.3dd2446e.js",
+    "static/js/787.d5fa4d18.chunk.js": "/blog-fullstack/static/js/787.d5fa4d18.chunk.js",
+    "index.html": "/blog-fullstack/index.html",
+    "main.3dd2446e.js.map": "/blog-fullstack/static/js/main.3dd2446e.js.map",
+    "787.d5fa4d18.chunk.js.map": "/blog-fullstack/static/js/787.d5fa4d18.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.3dd2446e.js"
+  ]
+}
