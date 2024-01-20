@@ -1,6 +1,3 @@
-import React, {ReactNode} from "react";
-
-
 export function About () {
   return (
     <>
