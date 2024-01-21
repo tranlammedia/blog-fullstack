@@ -1,6 +1,33 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ApiService } from "../services/Api";
+
+interface TypePost {
+  id: string;
+  title: string;
+  content: string;
+  author: string;
+}
 
 export default function Blog() {
+  const [posts, setPosts] = useState<TypePost[] | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const posts: TypePost[] = await ApiService.getAllPosts();
+        setPosts(posts);
+      } catch (error) {
+        // console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const element = posts?.map((post) => {
+    return <h3>{post.title}</h3>;
+  });
+
   return (
     <>
       {/* <!--================Blog Categorie Area =================--> */}
@@ -60,286 +87,76 @@ export default function Blog() {
           <div className="row">
             <div className="col-lg-8">
               <div className="blog_left_sidebar">
-                <article className="row blog_item">
-                  <div className="col-md-3">
-                    <div className="blog_info text-right">
-                      <div className="post_tag">
-                        <a href="#">Food,</a>
-                        <a className="active" href="#">
-                          Technology,
-                        </a>
-                        <a href="#">Politics,</a>
-                        <a href="#">Lifestyle</a>
-                      </div>
-                      <ul className="blog_meta list">
-                        <li>
-                          <a href="#">
-                            Mark wiens<i className="lnr lnr-user"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            12 Dec, 2017
-                            <i className="lnr lnr-calendar-full"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            1.2M Views<i className="lnr lnr-eye"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            06 Comments<i className="lnr lnr-bubble"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="col-md-9">
-                    <div className="blog_post">
-                      <img src="/img/blog/main-blog/m-blog-1.jpg" alt="" />
-                      <div className="blog_details">
-                        <Link to="detail">
-                          <h2>Astronomy Binoculars A Great Alternative</h2>
-                        </Link>
-                        <p>
-                          MCSE boot camps have its supporters and its
-                          detractors. Some people do not understand why you
-                          should have to spend money on boot camp when you can
-                          get the MCSE study materials yourself at a fraction.
-                        </p>
-                        <Link to="detail" className="primary_btn">
-                          <span>View More</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-                <article className="row blog_item">
-                  <div className="col-md-3">
-                    <div className="blog_info text-right">
-                      <div className="post_tag">
-                        <a href="#">Food,</a>
-                        <a className="active" href="#">
-                          Technology,
-                        </a>
-                        <a href="#">Politics,</a>
-                        <a href="#">Lifestyle</a>
-                      </div>
-                      <ul className="blog_meta list">
-                        <li>
-                          <a href="#">
-                            Mark wiens<i className="lnr lnr-user"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            12 Dec, 2017
-                            <i className="lnr lnr-calendar-full"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            1.2M Views<i className="lnr lnr-eye"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            06 Comments<i className="lnr lnr-bubble"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="col-md-9">
-                    <div className="blog_post">
-                      <img src="/img/blog/main-blog/m-blog-2.jpg" alt="" />
-                      <div className="blog_details">
-                        <Link to="detail">
-                          <h2>The Basics Of Buying A Telescope</h2>
-                        </Link>
-                        <p>
-                          MCSE boot camps have its supporters and its
-                          detractors. Some people do not understand why you
-                          should have to spend money on boot camp when you can
-                          get the MCSE study materials yourself at a fraction.
-                        </p>
-                        <Link to="detail" className="primary_btn">
-                          <span>View More</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-                <article className="row blog_item">
-                  <div className="col-md-3">
-                    <div className="blog_info text-right">
-                      <div className="post_tag">
-                        <a href="#">Food,</a>
-                        <a className="active" href="#">
-                          Technology,
-                        </a>
-                        <a href="#">Politics,</a>
-                        <a href="#">Lifestyle</a>
-                      </div>
-                      <ul className="blog_meta list">
-                        <li>
-                          <a href="#">
-                            Mark wiens<i className="lnr lnr-user"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            12 Dec, 2017
-                            <i className="lnr lnr-calendar-full"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            1.2M Views<i className="lnr lnr-eye"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            06 Comments<i className="lnr lnr-bubble"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="col-md-9">
-                    <div className="blog_post">
-                      <img src="/img/blog/main-blog/m-blog-3.jpg" alt="" />
-                      <div className="blog_details">
-                        <Link to="detail">
-                          <h2>The Glossary Of Telescopes</h2>
-                        </Link>
-                        <p>
-                          MCSE boot camps have its supporters and its
-                          detractors. Some people do not understand why you
-                          should have to spend money on boot camp when you can
-                          get the MCSE study materials yourself at a fraction.
-                        </p>
-                        <Link to="detail" className="primary_btn">
-                          <span>View More</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-                <article className="row blog_item">
-                  <div className="col-md-3">
-                    <div className="blog_info text-right">
-                      <div className="post_tag">
-                        <a href="#">Food,</a>
-                        <a className="active" href="#">
-                          Technology,
-                        </a>
-                        <a href="#">Politics,</a>
-                        <a href="#">Lifestyle</a>
-                      </div>
-                      <ul className="blog_meta list">
-                        <li>
-                          <a href="#">
-                            Mark wiens<i className="lnr lnr-user"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            12 Dec, 2017
-                            <i className="lnr lnr-calendar-full"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            1.2M Views<i className="lnr lnr-eye"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            06 Comments<i className="lnr lnr-bubble"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="col-md-9">
-                    <div className="blog_post">
-                      <img src="/img/blog/main-blog/m-blog-4.jpg" alt="" />
-                      <div className="blog_details">
-                        <Link to="detail">
-                          <h2>The Night Sky</h2>
-                        </Link>
-                        <p>
-                          MCSE boot camps have its supporters and its
-                          detractors. Some people do not understand why you
-                          should have to spend money on boot camp when you can
-                          get the MCSE study materials yourself at a fraction.
-                        </p>
-                        <Link to="detail" className="primary_btn">
-                          <span>View More</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-                <article className="row blog_item">
-                  <div className="col-md-3">
-                    <div className="blog_info text-right">
-                      <div className="post_tag">
-                        <a href="#">Food,</a>
-                        <a className="active" href="#">
-                          Technology,
-                        </a>
-                        <a href="#">Politics,</a>
-                        <a href="#">Lifestyle</a>
-                      </div>
-                      <ul className="blog_meta list">
-                        <li>
-                          <a href="#">
-                            Mark wiens<i className="lnr lnr-user"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            12 Dec, 2017
-                            <i className="lnr lnr-calendar-full"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            1.2M Views<i className="lnr lnr-eye"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            06 Comments<i className="lnr lnr-bubble"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="col-md-9">
-                    <div className="blog_post">
-                      <img src="/img/blog/main-blog/m-blog-5.jpg" alt="" />
-                      <div className="blog_details">
-                        <Link to="detail">
-                          <h2>Telescopes 101</h2>
-                        </Link>
-                        <p>
-                          MCSE boot camps have its supporters and its
-                          detractors. Some people do not understand why you
-                          should have to spend money on boot camp when you can
-                          get the MCSE study materials yourself at a fraction.
-                        </p>
-                        <Link to="detail" className="primary_btn">
-                          <span>View More</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
+                {posts?.map((post) => {
+                  return (
+                    <>
+                      {/* start article post*/}
+                      <article className="row blog_item">
+                        {/* infor */}
+                        <div className="col-md-3">
+                          <div className="blog_info text-right">
+                            <div className="post_tag">
+                              <a href="#">Food,</a>
+                              <a className="active" href="#">
+                                Technology,
+                              </a>
+                              <a href="#">Politics,</a>
+                              <a href="#">Lifestyle</a>
+                            </div>
+                            <ul className="blog_meta list">
+                              <li>
+                                <a href="#">
+                                  {post.author}<i className="lnr lnr-user"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="#">
+                                  12 Dec, 2017
+                                  <i className="lnr lnr-calendar-full"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="#">
+                                  1.2M Views<i className="lnr lnr-eye"></i>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="#">
+                                  06 Comments<i className="lnr lnr-bubble"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        {/* post */}
+                        <div className="col-md-9">
+                          <div className="blog_post">
+                            <img
+                              src="/img/blog/main-blog/m-blog-1.jpg"
+                              alt=""
+                            />
+                            <div className="blog_details">
+                              <Link to="detail">
+                                <h2>
+                                  {post.title}
+                                </h2>
+                              </Link>
+                              <p>
+                                {post.content}
+                              </p>
+                              <Link to={post.id} className="primary_btn">
+                                <span>View More</span>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+                      {/* end article */}
+                    </>
+                  );
+                })}
+
+                {/* pagetitation */}
                 <nav className="blog-pagination justify-content-center d-flex">
                   <ul className="pagination">
                     <li className="page-item">

@@ -1,6 +1,21 @@
+import { useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import { useEffect } from "react";
 
 export default function BlogDetail() {
+    const { blogid } = useParams();
+    useEffect(() => {
+        // Đặt lại vị trí cuộn về trên đầu trang khi component được mount
+        window.scrollTo(0, 200);
+    
+        // Các công việc khác nếu cần
+        // ...
+    
+        // Đối với cleanup, ví dụ, nếu bạn muốn đặt lại vị trí cuộn khi component bị unmount
+        return () => {
+          window.scrollTo(0, 0);
+        };
+      }, [blogid]);
   return (
     <>
       {/* <!--================Blog Area =================--> */}
