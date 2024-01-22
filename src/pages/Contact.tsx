@@ -1,4 +1,10 @@
+import { useEffect } from "react";
+
 export default function Contact() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+  },[]);
   return (
     <>
       {/* <!--================Contact Area =================--> */}
@@ -84,16 +90,7 @@ export default function Contact() {
               </form>
             </div>
           </div>
-          <div
-            id="mapBox"
-            className="mapBox"
-            data-lat="40.701083"
-            data-lon="-74.1522848"
-            data-zoom="13"
-            data-info="PO Box CT16122 Collins Street West, Victoria 8007, Australia."
-            data-mlat="40.701083"
-            data-mlon="-74.1522848"
-          ></div>
+
         </div>
       </section>
       {/* <!--================Contact Area =================--> */}

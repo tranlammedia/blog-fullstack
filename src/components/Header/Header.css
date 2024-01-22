@@ -1,0 +1,22 @@
+.header_area .navbar {
+    background: linear-gradient(to right, #4458dc 0%, #854fee 100%), radial-gradient(circle at top left, #4458dc, #854fee);
+}
+/* default */
+.header_area .navbar .nav .nav-item .nav-link {
+    color: #fff;
+}
+/* hover */
+.header_area .navbar .nav .nav-item .nav-link:hover {
+    color: #ccc;
+}
+/* active */
+.header_area .navbar .nav .nav-item:hover .nav-link, .header_area .navbar .nav .nav-item.active .nav-link {
+    color: #00f;
+}
+
+.logo-container {
+    background-color: rgba(233, 233, 233, 0.3) ;
+    padding: 2px 3px;
+    margin: 5px 0;
+    border-radius: 5px;
+}

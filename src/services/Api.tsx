@@ -1,21 +1,29 @@
 import axios, { AxiosResponse } from "axios";
 import { API_SERVER_URL } from "../config/constants";
+import { PostType } from "../interfaces";
 
-interface TypePost {
-  id: string;
-  title: string;
-  content: string;
-  author: string;
-}
 
 export const ApiService = {
-  getAllPosts: async (): Promise<TypePost[]> => {
+  getAllPosts: async (): Promise<PostType[]> => {
     try {
-      const response: AxiosResponse<TypePost[]> = await axios.get(
+      const response: AxiosResponse<any> = await axios.get(
         `${API_SERVER_URL}/posts`
       );
-      console.log(response)
-      return response.data;
+      
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  },
+
+  getPost: async (id: string): Promise<PostType[]> => {
+    try {
+      const response: AxiosResponse<any> = await axios.get(
+        `${API_SERVER_URL}/post/${id}`
+      );
+      
+      return response.data.data;
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;

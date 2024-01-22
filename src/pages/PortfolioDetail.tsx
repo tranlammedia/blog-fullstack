@@ -1,8 +1,12 @@
+import { useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
 export default function PortfolioDetail() {
   let { project } = useParams<"project">();
-  console.log(project);
+  useEffect(() => {
+    window.scrollTo(0, 100);
+
+  },[])
   return (
     <section className="portfolio_details_area section_gap">
       <div className="container">

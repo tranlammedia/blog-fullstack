@@ -1,24 +1,18 @@
-import React, { ReactNode, ReactElement } from "react";
+import { ReactNode } from "react";
 import { Outlet } from "react-router-dom";
 
-import { TITLES } from "../config/title";
-import Header from "../components/Header";
+import Header from "../components/Header/Header";
 import Footer from "../components/Footer";
 
-import Banner from "../components/Banner";
 import Newsletter from "../components/Newsletter";
-
-interface SampleLayoutProps {
-  children: ReactNode;
-}
-const componentNotShow : string[]= ["Home", "BlogDetail"]
+import FormSignin from "../components/FormSignin";
 
 export default function SampleLayout() {
 
   return (
     <>
       <Header />
-      
+      <FormSignin></FormSignin>
       <Outlet />
       <Newsletter />
       <Footer />
