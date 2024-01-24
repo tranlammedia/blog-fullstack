@@ -30,27 +30,40 @@ function undoChange(this: { quill: any }) {
 function redoChange(this: { quill: any }) {
   this.quill.history.redo();
 }
-
 // const Size = Quill.import("attributors/style/size");
 // Size.whitelist = ["0.8rem", "1rem", "1.5rem", "2rem"];
 // Quill.register(Size, true);
 
-const Font = Quill.import("formats/font");
-Font.whitelist = [
-  "arial",
-  "comic-sans",
-  "courier-new",
-  "georgia",
-  "helvetica",
-  "lucida",
-];
-Quill.register(Font, true);
+// const Font = Quill.import("formats/font");
+// Font.whitelist = [
+//   "arial",
+//   "comic-sans",
+//   "courier-new",
+//   "georgia",
+//   "helvetica",
+//   "lucida",
+// ];
+// Quill.register(Font, true);
 Quill.register("modules/imageResize", ImageResize);
 
 export const modules = {
   toolbar: {
     
-    container: "#toolbar",
+    // container: "#toolbar",
+    container: [
+      [{ header: "1" }, { header: "2" }, { font: [] }],
+      [{ size: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote",'code-block'],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      ["link", "image", "video"],
+      ["code-block"],
+      ["clean"],
+    ],
     handlers: {
       undo: undoChange,
       redo: redoChange,
@@ -103,6 +116,7 @@ export const formats = [
   "indent",
   "link",
   "image",
+  "video",
   "color",
   "code-block",
 ];
@@ -111,14 +125,14 @@ interface QuillToolbarProps {}
 export const EditorToolbar: FC<QuillToolbarProps> = () => (
   <div id="toolbar">
     <span className="ql-formats">
-      <select className="ql-font" defaultValue="arial">
+      {/* <select className="ql-font" defaultValue="arial">
         <option value="arial">Arial</option>
         <option value="comic-sans">Comic Sans</option>
         <option value="courier-new">Courier New</option>
         <option value="georgia">Georgia</option>
         <option value="helvetica">Helvetica</option>
         <option value="lucida">Lucida</option>
-      </select>
+      </select> */}
       {/* <select className="ql-size" defaultValue="1rem">
         <option value="0.8rem">Small</option>
         <option value="1rem" >Normal</option>

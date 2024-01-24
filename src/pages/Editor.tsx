@@ -1,6 +1,5 @@
 import  { useState } from "react";
-import Quill from "../components/Quill";
-import EditQuill from "../components/EditQuill/Editor";
+import EditQuill from "../components/EditQuill/EditQuill";
 export default function Editor() {
   const [content, setContent] = useState("");
     console.log(content);
@@ -13,9 +12,8 @@ export default function Editor() {
   return (
     <>
       <section className="section_gap">
-        {/* <Tiptap /> */}
-        <EditQuill value={content} onChange={handleContentChange}/>
-        {/* <Quill value={content} onChange={handleContentChange}></Quill> */}
+      <EditQuill value={content} onChange={handleContentChange}/>
+        {/* <Editor value={content} onChange={handleContentChange}/> */}
       </section>
     </>
   );

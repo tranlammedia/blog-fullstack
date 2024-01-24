@@ -3,8 +3,19 @@
     margin: 0 auto;
   }
   .ql-editor {
-    min-height: 100px;
+    min-height: 400px;
   }
 .ql-container{
   font-size: 1rem;
+}
+svg {
+  vertical-align: baseline;
+}
+
+.ql-editor .ql-video {
+  display: block;
+  max-width: 40vw;
+  width: 80vw;
+  max-height: 30vw ;
+ height: 80vw;
 }
