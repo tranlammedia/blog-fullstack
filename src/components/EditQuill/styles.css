@@ -1,0 +1,10 @@
+.text-editor {
+    width: 1086px;
+    margin: 0 auto;
+  }
+  .ql-editor {
+    min-height: 100px;
+  }
+.ql-container{
+  font-size: 1rem;
+}

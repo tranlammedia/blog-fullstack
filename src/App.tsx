@@ -9,6 +9,8 @@ import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import PortfolioDetail from "./pages/PortfolioDetail";
+import DashboardLayout from "./layout/DashboardLayout";
+import Editor from "./pages/Editor";
 
 function App() {
   return (
@@ -28,6 +30,10 @@ function App() {
             <Route path=":blogid" element={<BlogDetail />} />
           </Route>
           <Route path="/contact" element={<Contact />} />
+        </Route>
+        <Route path="/dashboard" element={<DashboardLayout />} >
+          <Route index element={<Editor />} />
+
         </Route>
       </Routes>
     </>
