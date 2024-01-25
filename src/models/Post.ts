@@ -6,8 +6,11 @@ const postSchema = new Schema<PostType>(
         title: { type: String, required: true },
         content: { type: String, required: true },
         authorId: { type: Schema.Types.ObjectId, ref: "User" },
-        views: { type: Number, default: 0, required: true},
-        createdAt: { type: Date, default: Date.now },
+        commentIds: {type: [String], required: true, default: [] },
+        views: { type: Number, required: true, default: 0},
+        status: {type: String, required: true},
+        createdAt: { type: Date, required: true, default: Date.now },
+        updateAt: { type: Date, required: true, default: Date.now },
     }
 );
 

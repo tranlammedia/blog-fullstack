@@ -12,7 +12,9 @@ export interface TypePost {
     authorId: Types.ObjectId; // Reference to _id of TypeUser
     commentIds: CommentType[];
     views: number;
+    status: "draft" | "publish";
     createdAt: Date;
+    updateAt: Date;
 }
 
 export interface TypeComment {
