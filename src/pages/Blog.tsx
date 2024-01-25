@@ -156,7 +156,7 @@ export default function Blog() {
                                                                 {post.title}
                                                             </h2>
                                                         </Link>
-                                                        <p>{post.content}</p>
+                                                        <div dangerouslySetInnerHTML={{__html: post.content}}/>
                                                         <Link
                                                             to={post._id}
                                                             className="primary_btn"

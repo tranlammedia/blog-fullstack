@@ -126,7 +126,7 @@ export default function BlogDetail() {
                                         </p>
                                     </div>
                                     <div className="col-lg-12">
-                                        <div>{posts[1].content}</div>
+                                        <div dangerouslySetInnerHTML={{__html: posts[1].content}}/>
                                     </div>
                                 </div>
                                 <div className="navigation-area">
