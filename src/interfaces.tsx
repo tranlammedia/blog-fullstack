@@ -8,10 +8,12 @@ export interface PostType {
     _id: string;
     title: string;
     content: string;
-    authorId: UserType;
+    authorId: UserType ;
     commentIds: CommentType[];
     views: number;
+    status: "draft" | "publish";
     createdAt: string;
+    updateAt: string;
 }
 export interface CommentType {
     _id: string;
