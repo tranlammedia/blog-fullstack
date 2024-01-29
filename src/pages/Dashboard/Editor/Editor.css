@@ -1,0 +1,112 @@
+/* initial css */
+:root {
+  --width-nav-left-open: 15vw;
+  --width-nav-left-open-half: 6vw;
+  --width-nav-right-open: 12vw;
+  --width-nav-right-close: 4vw;
+  --margin-top: 70px;
+}
+.divider {
+  border-bottom: #dee2e6 1px solid;
+}
+
+.container-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  margin: 0 5vw;
+  height: var(--margin-top);
+}
+
+.header_dashboard .navbar {
+  position: absolute;
+  width: 100%;
+  z-index: 9999;
+  background: linear-gradient(to right, #4458dc 0%, #854fee 100%), radial-gradient(circle at top left, #4458dc, #854fee);
+}
+.icon-toggle {
+  color: white;
+  font-size: x-large;
+  transition: margin-left 0.3s;
+}
+.icon-toggle-move {
+  margin-left: var(--width-nav-left-open-half);
+}
+
+.navbar-name {
+  color: aliceblue;
+}
+.container-dashboard {
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  margin-top: var(--margin-top) !important;
+}
+/* nav-left */
+.nav-left {
+  position: fixed;
+  height: 100%;
+  width: 0;
+  background-color: white;
+  color: white;
+  overflow-x: hidden;
+  transition: width 0.3s;
+  border-right: #dee2e6 1px solid;
+}
+.nav-left.open-left {
+  width: var(--width-nav-left-open);
+}
+.signout-btn {
+  text-align: center;
+}
+
+/* content */
+.main-content {
+  width: auto !important;
+  padding: 30px;
+  transition: margin-right 0.3s, margin-left 0.3s;
+  overflow-y: auto;
+  margin-right: var(--width-nav-right-close);
+}
+.main-content.open-left{
+  margin-left: var(--width-nav-left-open);
+}
+.main-content.open-right{
+  margin-right: var(--width-nav-right-open);
+}
+
+/* nav-right */
+.nav-right {
+  position: fixed;
+  top: var(--margin-top); 
+  right: 0;
+  width:var(--width-nav-right-close);
+  background-color: white;
+  height: 100%;
+  /* color: white; */
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: width 0.3s;
+  border-left: #dee2e6 1px solid;;
+}
+.nav-right.open-right {
+  width:var(--width-nav-right-open);
+}
+
+.collapse-right {
+  display: block;
+}
+.input-nav-right {
+  width: 100%;
+  border: #dee2e6 1px solid;
+
+}
+.close-btn {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  color: white;
+}

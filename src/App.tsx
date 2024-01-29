@@ -10,7 +10,7 @@ import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import PortfolioDetail from "./pages/PortfolioDetail";
 import DashboardLayout from "./layout/DashboardLayout";
-import Editor from "./pages/Editor";
+import Editor from "./pages/Dashboard/Editor/Editor";
 
 function App() {
   return (
@@ -32,7 +32,9 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Route>
         <Route path="/dashboard" element={<DashboardLayout />} >
+          {/* <Route index element={<Editor />} /> */}
           <Route index element={<Editor />} />
+          <Route path="new" element={<Editor />} />
 
         </Route>
       </Routes>
