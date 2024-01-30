@@ -11,6 +11,7 @@ import BlogDetail from "./pages/BlogDetail";
 import PortfolioDetail from "./pages/PortfolioDetail";
 import DashboardLayout from "./layout/DashboardLayout";
 import Editor from "./pages/Dashboard/Editor/Editor";
+import ManagerPosts from "./pages/Dashboard/ManagerPosts/ManagerPosts";
 
 function App() {
   return (
@@ -32,8 +33,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Route>
         <Route path="/dashboard" element={<DashboardLayout />} >
-          {/* <Route index element={<Editor />} /> */}
-          <Route index element={<Editor />} />
+
+          <Route index element={<ManagerPosts />} />
           <Route path="new" element={<Editor />} />
 
         </Route>

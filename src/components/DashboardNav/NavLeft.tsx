@@ -16,7 +16,7 @@ export default function NavLeft() {
         <div className={`nav-left ${showNavLeft ? "open-left" : ""}`}>
                     <ul className="nav navbar-nav menu_nav justify-content-center">
                         <NavLink
-                            to="new"
+                            to="/dashboard/new"
                             className={({ isActive }) =>
                                 `nav-item btn border-bottom text-muted ${
                                     isActive ? "active" : ""

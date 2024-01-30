@@ -5,7 +5,7 @@ import Header from "../components/Header/Header";
 import Footer from "../components/Footer";
 
 import Newsletter from "../components/Newsletter";
-import FormSignin from "../components/FormSignin";
+import FormSignin from "../components/FormSignin/FormSignin";
 
 export default function SampleLayout() {
 
