@@ -12,6 +12,7 @@ import PortfolioDetail from "./pages/PortfolioDetail";
 import DashboardLayout from "./layout/DashboardLayout";
 import Editor from "./pages/Dashboard/Editor/Editor";
 import ManagerPosts from "./pages/Dashboard/ManagerPosts/ManagerPosts";
+import ManagerUsers from "./pages/Dashboard/ManagerUsers/ManagerUsers";
 
 function App() {
   return (
@@ -34,8 +35,9 @@ function App() {
         </Route>
         <Route path="/dashboard" element={<DashboardLayout />} >
 
-          <Route index element={<ManagerPosts />} />
+          <Route index  element={<ManagerPosts />} />
           <Route path="new" element={<Editor />} />
+          <Route path="users" element={<ManagerUsers />} />
 
         </Route>
       </Routes>

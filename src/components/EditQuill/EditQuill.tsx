@@ -4,6 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import "./styles.css";
 import { useLocation } from "react-router-dom";
+import { useShowNavLeft } from "../../layout/DashboardLayout";
 
 Quill.register("modules/imageResize", ImageResize);
 
@@ -85,7 +86,7 @@ const formats = [
 const EditQuill: React.FC<TextEditorProps> = ({ value, onChangeContent, onChangeTitle }) => {
     const location = useLocation();
     
-    const [showNavLeft, setShowNavLeft] = useState(true);
+    const {showNavLeft, setShowNavLeft} : any = useShowNavLeft();
     const [showNavRight, setShowNavRight] = useState(true);
     const [content, setContent] = useState(value);
     const [title, setTitle] = useState(value);
@@ -122,13 +123,11 @@ const EditQuill: React.FC<TextEditorProps> = ({ value, onChangeContent, onChange
                     <input
                         type="text"
                         className="form-control form-control-sm"
-                        name=""
-                        id=""
-                        aria-describedby="helpId"
                         placeholder=""
                         onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                         ) => handleChangeTitle(event)}
+                        defaultValue={title}
                     />
                 </div>
                 <div className="form-group">

@@ -20,6 +20,7 @@ export default function Newsletter() {
                     action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"
                     method="get"
                     className="subscription relative"
+                    defaultValue={""}
                   >
                     <input
                       name="EMAIL"
@@ -30,8 +31,9 @@ export default function Newsletter() {
                       <input
                         name="b_36c4fd991d266f23781ded980_aefe40901a"
                         tabIndex={-1}
-                        value=""
                         type="text"
+                    defaultValue={""}
+
                       />
                     </div>
                     <button className="primary-btn hover d-inline">

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function NavRight({onPost, checkDisableButton} ) {
     const navigate = useNavigate();
     const [showNavRight, setShowNavRight] = useState(true);
+    const [tags, setTags] = useState("");
 
     function toggleNavRight(){
         setShowNavRight(!showNavRight);
@@ -62,6 +63,8 @@ export default function NavRight({onPost, checkDisableButton} ) {
                                         <input
                                             type="text"
                                             className="input-nav-right"
+                                            onChange={(e) => setTags(e.target.value)}
+                                            defaultValue={tags || ""}
                                         />
                                         <small>
                                             tags: tài chính, sức khỏe...

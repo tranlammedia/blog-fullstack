@@ -1,12 +1,15 @@
 import { Link, NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Header.css";
-import FormSignin from "../FormSignin/FormSignin";
+import { checkAuth, clearAuth } from "../../helpers/handleAuth";
+import { decodeJwt } from "../../helpers/convert";
 
 export default function Header() {
     const [isNavbarFixed, setNavbarFixed] = useState(false);
-
+    const [isAuthen, setAuthen] = useState(checkAuth());
+    const userLogin = decodeJwt();
     useEffect(() => {
+        console.log(userLogin);
         const handleScroll = () => {
             const scroll = window.scrollY;
             if (scroll >= 50) {
@@ -22,6 +25,10 @@ export default function Header() {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+    function handleSignOut() {
+        clearAuth()
+    }
 
     return (
         <header
@@ -60,6 +67,8 @@ export default function Header() {
                                     className={({ isActive }) =>
                                         `nav-item ${isActive ? "active" : ""}`
                                     }
+                                    data-toggle="collapse"
+                                    data-target=".navbar-collapse.show"
                                 >
                                     <span className="nav-link">Home</span>
                                 </NavLink>
@@ -68,6 +77,8 @@ export default function Header() {
                                     className={({ isActive }) =>
                                         `nav-item ${isActive ? "active" : ""}`
                                     }
+                                    data-toggle="collapse"
+                                    data-target=".navbar-collapse.show"
                                 >
                                     <span className="nav-link">About</span>
                                 </NavLink>
@@ -76,22 +87,28 @@ export default function Header() {
                                     className={({ isActive }) =>
                                         `nav-item ${isActive ? "active" : ""}`
                                     }
+                                    data-toggle="collapse"
+                                    data-target=".navbar-collapse.show"
                                 >
                                     <span className="nav-link">Services</span>
                                 </NavLink>
                                 <NavLink
                                     to="/portfolio"
                                     className={({ isActive }) =>
-                                        `nav-item ${isActive ? "active" : ""}`
+                                        `nav-item nav-item-custom ${isActive ? "active" : ""}`
                                     }
+                                    data-toggle="collapse"
+                                    data-target=".navbar-collapse.show"
                                 >
-                                    <span className="nav-link">Portfolio</span>
+                                    <span className="nav-link nav-item-custom">Portfolio</span>
                                 </NavLink>
                                 <NavLink
                                     to="/blog"
                                     className={({ isActive }) =>
                                         `nav-item ${isActive ? "active" : ""}`
                                     }
+                                    data-toggle="collapse"
+                                    data-target=".navbar-collapse.show"
                                 >
                                     <span className="nav-link">Blog</span>
                                 </NavLink>
@@ -100,27 +117,63 @@ export default function Header() {
                                     className={({ isActive }) =>
                                         `nav-item ${isActive ? "active" : ""}`
                                     }
+                                    data-toggle="collapse"
+                                    data-target=".navbar-collapse.show"
                                 >
                                     <span className="nav-link">Contact</span>
                                 </NavLink>
-                                <li className="nav-item">
-                                    <div className="nav-link">
-                                        <button
-                                        type="button"
-                                            className="btn btn-primar"
-                                            data-toggle="modal"
-                                            data-target="#FormSignin"
+                                {isAuthen ? (
+                                    <li className="nav-item">
+                                        <div className="dropdown nav-link dropdown-custom">
+                                            
+                                            <button
+                                                className="btn btn-primary "
+                                                type="button"
+                                                data-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                My name
+                                            </button>
+                                            <div className="dropdown-menu dropdown-menu-custom">
+                                                <Link
+                                                    className="dropdown-item dropdown-name divider"
+                                                    to="/dashboard"
+                                                >
+                                                    Dashboard
+                                                </Link>
+                                                
+                                                <a
+                                                    className="dropdown-item dropdown-name "
+                                                    href="#"
+                                                    onClick={handleSignOut}
+                                                >
+                                                    Sign out
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ) : (
+                                    <li className="nav-item">
+                                        <div
+                                            className="nav-link"
+                                            data-toggle="collapse"
+                                            data-target=".navbar-collapse.show"
                                         >
-                                            Sign in
-                                        </button>
-                                    </div>
-                                </li>
-                                
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                data-toggle="modal"
+                                                data-target="#FormSignin"
+                                            >
+                                                Sign in
+                                            </button>
+                                        </div>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>
                 </nav>
-                
             </div>
         </header>
     );

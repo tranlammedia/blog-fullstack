@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { useEffect, useState } from "react";
 import { PostType } from "../interfaces";
-import { ApiService } from "../services/Api";
+import { ApiPost } from "../services/Api";
 import { formateDate } from "../helpers/convert";
 
 export default function BlogDetail() {
@@ -16,7 +16,7 @@ export default function BlogDetail() {
 
         const fetchData = async (blogid: string) => {
             try {
-                const posts: PostType[] = await ApiService.getPost(blogid);
+                const posts: PostType[] = await ApiPost.getPost(blogid);
                 console.log(posts)
                 setPosts(posts);
             } catch (error) {

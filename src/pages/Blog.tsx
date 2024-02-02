@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ApiService } from "../services/Api";
+import { ApiPost } from "../services/Api";
 import { PostType } from "../interfaces";
 import { formateDate } from "../helpers/convert";
 
@@ -10,7 +10,7 @@ export default function Blog() {
         window.scrollTo(0, 0);
         const fetchData = async () => {
             try {
-                const posts: PostType[] = await ApiService.getAllPosts();
+                const posts: PostType[] = await ApiPost.getAllPosts();
                 setPosts(posts);
             } catch (error) {
                 // console.log(error);

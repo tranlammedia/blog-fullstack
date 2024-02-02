@@ -1,5 +1,5 @@
 .width-form {
-    max-width: 700px;
+    max-width: 600px;
 }
 .btn-google {
     color: #fff;
@@ -60,4 +60,10 @@
     background-image: none;
     border: 1px solid transparent;
     border-radius: 4px;
+}
+
+.help-signin {
+    color: royalblue;
+    font-size: small;
+    cursor:pointer;
 }

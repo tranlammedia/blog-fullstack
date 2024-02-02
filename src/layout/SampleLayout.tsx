@@ -5,14 +5,14 @@ import Header from "../components/Header/Header";
 import Footer from "../components/Footer";
 
 import Newsletter from "../components/Newsletter";
-import FormSignin from "../components/FormSignin/FormSignin";
+import FormSigninProvider from "../components/FormSignin";
 
 export default function SampleLayout() {
 
   return (
     <>
       <Header />
-      <FormSignin></FormSignin>
+      <FormSigninProvider/>
       <Outlet />
       <Newsletter />
       <Footer />

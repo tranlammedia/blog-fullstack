@@ -1,7 +1,9 @@
 export interface UserType {
-    _id: string;
+    _id?: string;
+    email: string,
+    password: string;
     name: string;
-    role: "admin" | "author" | "reader";
+    role?: "admin" | "author" | "reader";
 }
 
 export interface PostType {

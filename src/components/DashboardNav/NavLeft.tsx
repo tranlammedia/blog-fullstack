@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useShowNavLeft } from "../../layout/DashboardLayout";
 
 export default function NavLeft() {
     const location = useLocation();
     
-    const [showNavLeft, setShowNavLeft] = useState(true);
+    const {showNavLeft, setShowNavLeft} : any = useShowNavLeft();
 
     useEffect(() => {
         if (location.state?.showNavLeft != undefined) {
@@ -34,6 +35,16 @@ export default function NavLeft() {
                             }
                         >
                             <span className="nav-link">Danh sách Bài viết</span>
+                        </NavLink>
+                        <NavLink
+                            to="/dashboard/users"
+                            className={({ isActive }) =>
+                                `nav-item btn border-bottom text-muted ${
+                                    isActive ? "active" : ""
+                                }`
+                            }
+                        >
+                            <span className="nav-link">Quản lý thành viên</span>
                         </NavLink>
                     </ul>
                     <li className="nav-item signout-btn mt-5">

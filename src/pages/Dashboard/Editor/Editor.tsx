@@ -6,25 +6,26 @@ import EditQuill from "../../../components/EditQuill/EditQuill";
 import NavRight from "../../../components/DashboardNav/NavRight";
 import NavLeft from "../../../components/DashboardNav/NavLeft";
 import "./Editor.css"; // Import file CSS tự tạo
-import { ApiService } from "../../../services/Api";
+import { ApiPost } from "../../../services/Api";
 import { PostType } from "../../../interfaces";
 import { useNavigate } from "react-router-dom";
+import { useShowNavLeft } from "../../../layout/DashboardLayout";
 
 interface EditorProps {
     showNavLeft: boolean;
+    
 }
 
 const Editor = () => {
     const navigate = useNavigate();
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
+    
 
     function handleChangeContent(content: string){
-        console.log(content);
         setContent(content);
     };
     function handleChangeTitle(title: string) {
-        console.log(content);
         setTitle(title);
     };
     function handleCheckDisableButton() {
@@ -39,7 +40,7 @@ const Editor = () => {
             };
             const fetchData = async (newPost) => {
                 try {
-                    const post: PostType = await ApiService.createPost(newPost);
+                    const post: PostType = await ApiPost.createPost(newPost);
                     console.log(post._id);
                     navigate("/blog/"+post._id)
                 } catch (error) {

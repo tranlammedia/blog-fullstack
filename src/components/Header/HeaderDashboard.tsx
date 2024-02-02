@@ -1,17 +1,12 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useShowNavLeft } from "../../layout/DashboardLayout";
 
-interface HeaderDashboardProps {
-    onShowNavLeft: (show: boolean) => void
-}
 
 export default function HeaderDashboard() {
-    const navigate = useNavigate();
-    const [showNavLeft, setShowNavLeft] = useState(true);
+    const {showNavLeft, setShowNavLeft} : any = useShowNavLeft();
 
     const toggleNavLeft = () => {
         setShowNavLeft(!showNavLeft);
-        navigate(".", { state: { showNavLeft: !showNavLeft } });
     };
 
     return (

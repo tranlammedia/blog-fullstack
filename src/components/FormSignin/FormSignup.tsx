@@ -1,15 +1,13 @@
 import { ReactNode, useState } from "react";
+import { UserType } from "../../interfaces";
 import { ApiUser } from "../../services/Api";
-import { checkAuth, clearAuth, setAuth } from "../../helpers/handleAuth";
 
-export default function FormSignin({ children }: { children: ReactNode }) {
+export default function FormSignup({ children }: { children: ReactNode }) {
     const [requestBody, setRequestBody] = useState<{ [key: string]: string }>(
         {}
     );
-    const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
-    const [isValidPwd, setIsValidPwd] = useState<boolean>(false);
-    const [isExistEmail, setIsExistEmail] = useState(true);
-    const [isCorrectPwd, setIsCorrectPwd] = useState(true);
+    const [isValidEmail, setIsValidEmail] = useState(false);
+    const [isExistEmail, setIsExistEmail] = useState(false);
 
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
@@ -23,47 +21,31 @@ export default function FormSignin({ children }: { children: ReactNode }) {
             const isValid = emailRegex.test(event.target.value);
             setIsValidEmail(isValid);
         }
-        // check length of password
-        if (event.target.name === "password") {
-            setIsValidPwd(event.target.value.length > 0);
-        }
     }
 
-    function handleSignIn(requestBody) {
+    function handleSubmit(requestBody) {
         const fetch = async () => {
             try {
-                const token = await ApiUser.loginUserJwt(requestBody);
-                setAuth(token);
+                const newUser = await ApiUser.createUser(requestBody);
+                console.log(newUser);
+                setIsExistEmail(false);
             } catch (error: any) {
-                const { status } = error.response;
-
-                // Tài khoản không tồn tại
-                if (status === 404) setIsExistEmail(false);
-
-                // Sai mật khẩu
-                if (status === 401) {
-                    setIsCorrectPwd(false);
-                    setRequestBody({
-                        ...requestBody,
-                        password: "",
-                    });
-                    setIsValidPwd(false);
+                if (error.response.status === 409) {
+                    setIsExistEmail(true);
                 }
-
-                // other
-                console.log(status);
             }
         };
         fetch();
     }
+
     return (
         <>
-            <div className="modal" id="FormSignin">
+            <div className="modal" id="FormSignup">
                 <div className="modal-dialog modal-dialog-centered width-form">
                     <div className="modal-content">
                         {/* <!-- Modal Header --> */}
                         <div className="modal-header">
-                            <h4 className="modal-title">Đăng nhập</h4>
+                            <h4 className="modal-title">Đăng Ký</h4>
                             <button
                                 type="button"
                                 className="close"
@@ -81,6 +63,23 @@ export default function FormSignin({ children }: { children: ReactNode }) {
                                         <div className="card-body">
                                             <div>
                                                 <div className="form-group">
+                                                    <label htmlFor="password">
+                                                        Your name
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        name="name"
+                                                        onChange={(e) =>
+                                                            handleRequestBody(e)
+                                                        }
+                                                        defaultValue={
+                                                            requestBody.name ||
+                                                            ""
+                                                        }
+                                                    />
+                                                </div>
+                                                <div className="form-group">
                                                     <label htmlFor="email">
                                                         Email
                                                     </label>
@@ -91,11 +90,12 @@ export default function FormSignin({ children }: { children: ReactNode }) {
                                                         onChange={(e) =>
                                                             handleRequestBody(e)
                                                         }
-                                                        value={
+                                                        defaultValue={
                                                             requestBody.email ||
                                                             ""
                                                         }
                                                     />
+
                                                     {requestBody?.email
                                                         ?.length > 3 &&
                                                         !isValidEmail && (
@@ -103,9 +103,10 @@ export default function FormSignin({ children }: { children: ReactNode }) {
                                                                 Incorrect email
                                                             </small>
                                                         )}
-                                                    {!isExistEmail && (
+
+                                                    {isExistEmail && (
                                                         <small className="form-text text-danger">
-                                                            Email không tồn tại
+                                                            Email đã tồn tại
                                                         </small>
                                                     )}
                                                 </div>
@@ -120,45 +121,38 @@ export default function FormSignin({ children }: { children: ReactNode }) {
                                                         onChange={(e) =>
                                                             handleRequestBody(e)
                                                         }
-                                                        value={requestBody.password || ""}
+                                                        defaultValue={
+                                                            requestBody.password ||
+                                                            ""
+                                                        }
                                                     />
-                                                    {!isCorrectPwd && (
-                                                        <small className="form-text text-danger">
-                                                            Sai mật khẩu
-                                                        </small>
-                                                    )}
                                                 </div>
                                                 <button
                                                     type="submit"
                                                     className="btn btn-dark"
                                                     onClick={() =>
-                                                        handleSignIn(
+                                                        handleSubmit(
                                                             requestBody
                                                         )
                                                     }
-                                                    disabled={
-                                                        !(
-                                                            isValidEmail &&
-                                                            isValidPwd
-                                                        )
-                                                    }
                                                 >
-                                                    Sign in
+                                                    Sign up
                                                 </button>{" "}
                                                 <span
                                                     // type="button"
                                                     className=" help-signin"
                                                     data-toggle="modal"
                                                     data-dismiss="modal"
-                                                    data-target="#FormSignup"
+                                                    data-target="#FormSignin"
                                                 >
-                                                    Chưa có tài khoản?
+                                                    Đã có tài khoản?
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 {/* <-- soccial  -->*/}
+
                                 {children}
                             </div>
                         </div>
