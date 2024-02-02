@@ -11,7 +11,7 @@ import PostModel from "./models/Post";
 import UserModel from "./models/User";
 
 interface ExtendedRequest extends Request {
-  user?:  any
+    user?: any;
 }
 
 dotenv.config();
@@ -25,6 +25,7 @@ app.use(
     cors({
         origin: "http://localhost:3000", // Replace with your actual client origin
         credentials: true,
+        exposedHeaders: 'Authorization', // sent token to client
     })
 );
 app.use(
@@ -38,20 +39,26 @@ let posts: Array<TypePost> = POSTS;
 
 function generateToken(user: UserType) {
     try {
-        const token = jwt.sign({name: user.name, role: user.role}, SECRET_JWT_KEY, { expiresIn: "1h" });
+        const token = jwt.sign(
+            { name: user.name, role: user.role },
+            SECRET_JWT_KEY,
+            { expiresIn: "1h" }
+        );
         return token;
     } catch (error) {
         return error;
     }
 }
 
-function authenticateToken(req: ExtendedRequest, res: Response, next: Function) {
-
+function authenticateToken(
+    req: ExtendedRequest,
+    res: Response,
+    next: Function
+) {
     const token = req.header("Authorization");
     if (!token) return res.sendStatus(401); // chua dang nhap authentication
 
     jwt.verify(token, SECRET_JWT_KEY, (err, user) => {
-
         if (err) return res.sendStatus(403); // co token nhung khong co quyen
 
         req.user = user;
@@ -59,11 +66,15 @@ function authenticateToken(req: ExtendedRequest, res: Response, next: Function) 
     });
 }
 
-function authenticateAdmin(req: ExtendedRequest, res: Response, next: Function) {
-  const {user} = req;
-  if(user.role !== 'admin') return res.sendStatus(403); // co token nhung khong co quyen
-  
-  next();
+function authenticateAdmin(
+    req: ExtendedRequest,
+    res: Response,
+    next: Function
+) {
+    const { user } = req;
+    if (user.role !== "admin") return res.sendStatus(403); // co token nhung khong co quyen
+
+    next();
 }
 
 // Get all posts
@@ -240,34 +251,51 @@ app.get("/api/user/:id", async (req: Request, res: Response) => {
 
 // create a new user
 app.post("/api/user", async (req: Request, res: Response) => {
-    const { name, role } = req.body;
-    console.log(req.body);
-    if (!name || !role) {
+    const { name, email, password } = req.body;
+
+    // Kiểm tra email duy nhất
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
+        return res
+            .status(409)
+            .json({ success: false, error: "Email đã được sử dụng" });
+    }
+
+    // Kiểm tra các trường bắt buộc
+    if (!name || !email || !password) {
         return res.status(400).json({
             success: false,
-            error: "Name and role are required fields",
+            error: "name, email, password yêu cầu bắt buộc",
         });
     }
-    const newUser: UserType = new UserModel({ name, role });
+    const newUser: UserType = new UserModel({ name, email, password });
     await UserModel.create(newUser);
 
     res.status(201).json({ success: true, data: newUser });
 });
 
-// user login
+// user login email and password
 app.post("/api/login", async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     // find user in database
     try {
-      const user: UserType | null = await UserModel.findOne({
-        name: username,
-      });
-      // console.log(user)
+        const user: UserType | null = await UserModel.findOne({ email });
 
-        if (!user) return res.sendStatus(401);
+        // Tài khoản không tồn tại
+        if (!user)
+            return res
+                .status(404)
+                .json({ success: false, error: "user not found" });
+
+        // Sai mật khẩu
+        if (user.password !== password)
+            return res
+                .status(401)
+                .json({ success: false, error: "Sai mật khẩu." });
+
         // generate token
         const token = generateToken(user);
-        res.setHeader('Authorization', token)
+        res.setHeader("Authorization", token);
         return res.sendStatus(200);
     } catch (error) {
         return res.sendStatus(500);
@@ -275,10 +303,15 @@ app.post("/api/login", async (req: Request, res: Response) => {
 });
 
 // authorization
-app.get("/api/auth", authenticateToken, authenticateAdmin, async (req: ExtendedRequest, res: Response) => {
-  console.log(req.user)
-  return res.sendStatus(200)
-});
+app.get(
+    "/api/auth",
+    authenticateToken,
+    authenticateAdmin,
+    async (req: ExtendedRequest, res: Response) => {
+        console.log(req.user);
+        return res.sendStatus(200);
+    }
+);
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
