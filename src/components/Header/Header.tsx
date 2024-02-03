@@ -3,13 +3,15 @@ import { useEffect, useRef, useState } from "react";
 import "./Header.css";
 import { checkAuth, clearAuth } from "../../helpers/handleAuth";
 import { decodeJwt } from "../../helpers/convert";
+import { useAuth } from "../../providers/useAuth";
 
 export default function Header() {
+    const { isLoggedIn, login, logout }: any = useAuth();
     const [isNavbarFixed, setNavbarFixed] = useState(false);
-    const [isAuthen, setAuthen] = useState(checkAuth());
     const userLogin = decodeJwt();
     useEffect(() => {
-        console.log(userLogin);
+        const userLogin = login();
+        console.log(userLogin)
         const handleScroll = () => {
             const scroll = window.scrollY;
             if (scroll >= 50) {
@@ -27,7 +29,7 @@ export default function Header() {
     }, []);
 
     function handleSignOut() {
-        clearAuth()
+        logout();
     }
 
     return (
@@ -95,12 +97,16 @@ export default function Header() {
                                 <NavLink
                                     to="/portfolio"
                                     className={({ isActive }) =>
-                                        `nav-item nav-item-custom ${isActive ? "active" : ""}`
+                                        `nav-item nav-item-custom ${
+                                            isActive ? "active" : ""
+                                        }`
                                     }
                                     data-toggle="collapse"
                                     data-target=".navbar-collapse.show"
                                 >
-                                    <span className="nav-link nav-item-custom">Portfolio</span>
+                                    <span className="nav-link nav-item-custom">
+                                        Portfolio
+                                    </span>
                                 </NavLink>
                                 <NavLink
                                     to="/blog"
@@ -122,54 +128,64 @@ export default function Header() {
                                 >
                                     <span className="nav-link">Contact</span>
                                 </NavLink>
-                                {isAuthen ? (
-                                    <li className="nav-item">
-                                        <div className="dropdown nav-link dropdown-custom">
-                                            
-                                            <button
-                                                className="btn btn-primary "
-                                                type="button"
-                                                data-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
-                                                My name
-                                            </button>
-                                            <div className="dropdown-menu dropdown-menu-custom">
-                                                <Link
-                                                    className="dropdown-item dropdown-name divider"
-                                                    to="/dashboard"
-                                                >
-                                                    Dashboard
-                                                </Link>
-                                                
-                                                <a
-                                                    className="dropdown-item dropdown-name "
-                                                    href="#"
-                                                    onClick={handleSignOut}
-                                                >
-                                                    Sign out
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                ) : (
-                                    <li className="nav-item">
-                                        <div
-                                            className="nav-link"
-                                            data-toggle="collapse"
-                                            data-target=".navbar-collapse.show"
+
+                                <li className="nav-item">
+                                    {/* show login */}
+                                    <div
+                                        className="dropdown nav-link dropdown-custom"
+                                        style={{
+                                            display: !isLoggedIn
+                                                ? "none"
+                                                : "list-item",
+                                        }}
+                                    >
+                                        <button
+                                            className="btn btn-primary "
+                                            type="button"
+                                            data-toggle="dropdown"
+                                            aria-expanded="false"
                                         >
-                                            <button
-                                                type="button"
-                                                className="btn btn-primary"
-                                                data-toggle="modal"
-                                                data-target="#FormSignin"
+                                            My name: {userLogin?.name}
+                                        </button>
+                                        <div className="dropdown-menu dropdown-menu-custom">
+                                            <Link
+                                                className="dropdown-item dropdown-name divider"
+                                                to="/dashboard"
                                             >
-                                                Sign in
-                                            </button>
+                                                Dashboard
+                                            </Link>
+
+                                            <a
+                                                className="dropdown-item dropdown-name "
+                                                href="#"
+                                                onClick={handleSignOut}
+                                            >
+                                                Sign out
+                                            </a>
                                         </div>
-                                    </li>
-                                )}
+                                    </div>
+                                    {/* show not login */}
+                                    <div
+                                        className="nav-link"
+                                        data-toggle="collapse"
+                                        data-target=".navbar-collapse.show"
+                                        aria-expanded="false"
+                                        style={{
+                                            display: isLoggedIn
+                                                ? "none"
+                                                : "list-item",
+                                        }}
+                                    >
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            data-toggle="modal"
+                                            data-target="#FormSignin"
+                                        >
+                                            Sign in
+                                        </button>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>

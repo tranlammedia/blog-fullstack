@@ -1,11 +1,13 @@
 import { ReactNode, useState } from "react";
 import { ApiUser } from "../../services/Api";
 import { checkAuth, clearAuth, setAuth } from "../../helpers/handleAuth";
+import { useAuth } from "../../providers/useAuth";
 
 export default function FormSignin({ children }: { children: ReactNode }) {
     const [requestBody, setRequestBody] = useState<{ [key: string]: string }>(
         {}
     );
+    const {isLoggedIn, login} : any = useAuth()
     const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
     const [isValidPwd, setIsValidPwd] = useState<boolean>(false);
     const [isExistEmail, setIsExistEmail] = useState(true);
@@ -34,6 +36,11 @@ export default function FormSignin({ children }: { children: ReactNode }) {
             try {
                 const token = await ApiUser.loginUserJwt(requestBody);
                 setAuth(token);
+                login();
+                const dismissButton = document.querySelector('[data-dismiss="modal"]');
+                if (dismissButton ) {
+                    dismissButton.dispatchEvent(new Event('click', { bubbles: true }));
+                }
             } catch (error: any) {
                 const { status } = error.response;
 

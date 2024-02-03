@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useShowNavLeft } from "../../layout/DashboardLayout";
+import { useShowNavLeft } from "../../providers/useShowNavLeft";
 
 export default function NavLeft() {
     const location = useLocation();

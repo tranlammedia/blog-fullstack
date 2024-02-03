@@ -9,12 +9,7 @@ import "./Editor.css"; // Import file CSS tự tạo
 import { ApiPost } from "../../../services/Api";
 import { PostType } from "../../../interfaces";
 import { useNavigate } from "react-router-dom";
-import { useShowNavLeft } from "../../../layout/DashboardLayout";
 
-interface EditorProps {
-    showNavLeft: boolean;
-    
-}
 
 const Editor = () => {
     const navigate = useNavigate();

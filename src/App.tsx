@@ -13,36 +13,40 @@ import DashboardLayout from "./layout/DashboardLayout";
 import Editor from "./pages/Dashboard/Editor/Editor";
 import ManagerPosts from "./pages/Dashboard/ManagerPosts/ManagerPosts";
 import ManagerUsers from "./pages/Dashboard/ManagerUsers/ManagerUsers";
+import { AuthProvider } from "./providers/useAuth";
 
 function App() {
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<SampleLayout />}>
-          <Route index element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/post" element={<PortfolioDetail />} />
-          <Route path="/portfolio">
-            <Route index element={<Portfolio />} />
-            <Route path=":project" element={<PortfolioDetail />} />
-          </Route>
-          <Route path="/blog">
-            <Route index element={<Blog />} />
-            <Route path=":blogid" element={<BlogDetail />} />
-          </Route>
-          <Route path="/contact" element={<Contact />} />
-        </Route>
-        <Route path="/dashboard" element={<DashboardLayout />} >
-
-          <Route index  element={<ManagerPosts />} />
-          <Route path="new" element={<Editor />} />
-          <Route path="users" element={<ManagerUsers />} />
-
-        </Route>
-      </Routes>
-    </>
-  );
+    return (
+        <>
+            <AuthProvider>
+                <Routes>
+                    <Route path="/" element={<SampleLayout />}>
+                        <Route index element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/services" element={<Services />} />
+                        <Route path="/post" element={<PortfolioDetail />} />
+                        <Route path="/portfolio">
+                            <Route index element={<Portfolio />} />
+                            <Route
+                                path=":project"
+                                element={<PortfolioDetail />}
+                            />
+                        </Route>
+                        <Route path="/blog">
+                            <Route index element={<Blog />} />
+                            <Route path=":blogid" element={<BlogDetail />} />
+                        </Route>
+                        <Route path="/contact" element={<Contact />} />
+                    </Route>
+                    <Route path="/dashboard" element={<DashboardLayout />}>
+                        <Route index element={<ManagerPosts />} />
+                        <Route path="new" element={<Editor />} />
+                        <Route path="users" element={<ManagerUsers />} />
+                    </Route>
+                </Routes>
+            </AuthProvider>
+        </>
+    );
 }
 
 export default App;

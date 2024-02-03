@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
+import ImageUploader from "quill-image-uploader";
+
 import "./styles.css";
 import { useLocation } from "react-router-dom";
-import { useShowNavLeft } from "../../layout/DashboardLayout";
+import { useShowNavLeft } from "../../providers/useShowNavLeft";
 
 Quill.register("modules/imageResize", ImageResize);
+Quill.register("modules/imageUploader", ImageUploader);
 
 interface TextEditorProps {
     value: string;
@@ -14,83 +23,109 @@ interface TextEditorProps {
     onChangeTitle: (value: string) => void;
 }
 
-const modules = {
-    toolbar: [
-        [{ header: 2 }, { font: [] }, { header: [2, 3, 4, false] }],
-        [
-            "bold",
-            "italic",
-            "underline",
-            "strike",
-            { script: "sub" },
-            { script: "super" },
-        ],
-        [{ color: [] }, { background: [] }, "blockquote", "code-block"],
-        [
-            { align: [] },
-            { indent: "-1" },
-            { indent: "+1" },
-            { list: "ordered" },
-            { list: "bullet" },
-        ],
-        ["link", "image", "video"],
-        [{ direction: "rtl" }, "clean"],
-    ],
-
-    imageResize: {
-        parchment: Quill.import("parchment"),
-        modules: ["Resize", "DisplaySize", "Toolbar"],
-        handleStyles: {
-            backgroundColor: "black",
-            border: "none",
-            color: "white",
-            // other camelCase styles for size display
-        },
-        displayStyles: {
-            backgroundColor: "black",
-            border: "none",
-            color: "white",
-            // other camelCase styles for size display
-        },
-        toolbarStyles: {
-            backgroundColor: "black",
-            border: "none",
-            color: "white",
-            // other camelCase styles for size display
-        },
-    },
-};
-
-const formats = [
-    "header",
-    "font",
-    "size",
-    "bold",
-    "italic",
-    "underline",
-    "align",
-    "strike",
-    "script",
-    "blockquote",
-    "background",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "video",
-    "color",
-    "code-block",
-];
-
-const EditQuill: React.FC<TextEditorProps> = ({ value, onChangeContent, onChangeTitle }) => {
+const EditQuill: React.FC<TextEditorProps> = ({
+    value,
+    onChangeContent,
+    onChangeTitle,
+}) => {
     const location = useLocation();
-    
-    const {showNavLeft, setShowNavLeft} : any = useShowNavLeft();
+
+    const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
     const [showNavRight, setShowNavRight] = useState(true);
     const [content, setContent] = useState(value);
     const [title, setTitle] = useState(value);
+    const modules = useMemo(() => ({
+        toolbar: [
+            [{ header: 2 }, { font: [] }, { header: [2, 3, 4, false] }],
+            [
+                "bold",
+                "italic",
+                "underline",
+                "strike",
+                { script: "sub" },
+                { script: "super" },
+            ],
+            [{ color: [] }, { background: [] }, "blockquote", "code-block"],
+            [
+                { align: [] },
+                { indent: "-1" },
+                { indent: "+1" },
+                { list: "ordered" },
+                { list: "bullet" },
+            ],
+            ["link", "image", "video"],
+            [{ direction: "rtl" }, "clean"],
+        ],
+        imageResize: {
+            parchment: Quill.import("parchment"),
+            modules: ["Resize", "DisplaySize", "Toolbar"],
+            handleStyles: {
+                backgroundColor: "black",
+                border: "none",
+                color: "white",
+                // other camelCase styles for size display
+            },
+            displayStyles: {
+                backgroundColor: "black",
+                border: "none",
+                color: "white",
+                // other camelCase styles for size display
+            },
+            toolbarStyles: {
+                backgroundColor: "black",
+                border: "none",
+                color: "white",
+                // other camelCase styles for size display
+            },
+        },
+        imageUploader: {
+            upload: (file) => {
+                return new Promise((resolve, reject) => {
+                    const formData = new FormData();
+                    formData.append("image", file);
 
+                    fetch(
+                        "https://api.imgbb.com/1/upload?key=bb203a4e08530038019bd1f9ebade9b8 ",
+                        {
+                            method: "POST",
+                            body: formData,
+                        }
+                    )
+                        .then((response) => response.json())
+                        .then((result) => {
+                            console.log(result);
+                            resolve(result.data.url);
+                        })
+                        .catch((error) => {
+                            reject("Upload failed");
+                            console.error("Error:", error);
+                        });
+                });
+            },
+        },
+    }),[]);
+
+    const formats = [
+        "header",
+        "font",
+        "size",
+        "bold",
+        "italic",
+        "underline",
+        "align",
+        "strike",
+        "script",
+        "blockquote",
+        "background",
+        "list",
+        "bullet",
+        "indent",
+        "link",
+        "image",
+        "video",
+        "color",
+        "code-block",
+    ];
     useEffect(() => {
         if (location.state?.showNavLeft != undefined) {
             setShowNavLeft(location.state?.showNavLeft);
@@ -98,17 +133,17 @@ const EditQuill: React.FC<TextEditorProps> = ({ value, onChangeContent, onChange
         if (location.state?.showNavRight != undefined) {
             setShowNavRight(location.state?.showNavRight);
         }
-      }, [location.state?.showNavLeft, location.state?.showNavRight]);
+    }, [location.state?.showNavLeft, location.state?.showNavRight]);
 
-    function handleChangeContent(newContent: string){
+    function handleChangeContent(newContent: string) {
         setContent(newContent);
         onChangeContent(newContent);
-    };
+    }
 
-    function handleChangeTitle(event: React.ChangeEvent<HTMLInputElement>){
+    function handleChangeTitle(event: React.ChangeEvent<HTMLInputElement>) {
         setTitle(event.target.value);
         onChangeTitle(event.target.value);
-    };
+    }
 
     return (
         <div
