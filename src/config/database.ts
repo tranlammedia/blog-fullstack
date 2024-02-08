@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 export default async function connectDatabase(URL_DATABASE: string): Promise<void> {

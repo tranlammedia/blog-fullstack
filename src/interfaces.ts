@@ -6,6 +6,8 @@ export interface TypeUser {
     password: string;
     name: string;
     role: "admin" | "author" | "reader";
+    id_gg?: string;
+    id_github?: string;
     createdAt: Date;
     updateAt: Date;
 }
