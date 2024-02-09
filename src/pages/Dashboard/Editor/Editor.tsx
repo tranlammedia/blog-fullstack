@@ -1,5 +1,4 @@
-// App.js
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import EditQuill from "../../../components/EditQuill/EditQuill";
@@ -10,19 +9,17 @@ import { ApiPost } from "../../../services/Api";
 import { PostType } from "../../../interfaces";
 import { useNavigate } from "react-router-dom";
 
-
 const Editor = () => {
     const navigate = useNavigate();
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
-    
 
-    function handleChangeContent(content: string){
+    function handleChangeContent(content: string) {
         setContent(content);
-    };
+    }
     function handleChangeTitle(title: string) {
         setTitle(title);
-    };
+    }
     function handleCheckDisableButton() {
         return !(content.length > 0 && title.length > 0);
     }
@@ -37,7 +34,7 @@ const Editor = () => {
                 try {
                     const post: PostType = await ApiPost.createPost(newPost);
                     console.log(post._id);
-                    navigate("/blog/"+post._id)
+                    navigate("/blog/" + post._id);
                 } catch (error) {
                     // console.log(error);
                 }

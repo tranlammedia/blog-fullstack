@@ -20,7 +20,7 @@ export default function Blog() {
         fetchData();
         return () => {
             window.scrollTo(0, 0);
-          };
+        };
     }, []);
 
     return (
@@ -118,19 +118,26 @@ export default function Blog() {
                                                     <ul className="blog_meta list">
                                                         <li>
                                                             <a href="#">
-                                                                { post.authorId.name }
+                                                                {
+                                                                    post
+                                                                        .authorId
+                                                                        .name
+                                                                }
                                                                 <i className="lnr lnr-user"></i>
                                                             </a>
                                                         </li>
                                                         <li>
                                                             <a href="#">
-                                                            {formateDate(post.createdAt)}
+                                                                {formateDate(
+                                                                    post.createdAt
+                                                                )}
                                                                 <i className="lnr lnr-calendar-full"></i>
                                                             </a>
                                                         </li>
                                                         <li>
                                                             <a href="#">
-                                                                {post.views} Views
+                                                                {post.views}{" "}
+                                                                Views
                                                                 <i className="lnr lnr-eye"></i>
                                                             </a>
                                                         </li>
@@ -156,7 +163,11 @@ export default function Blog() {
                                                                 {post.title}
                                                             </h2>
                                                         </Link>
-                                                        <div dangerouslySetInnerHTML={{__html: post.content}}/>
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: post.content,
+                                                            }}
+                                                        />
                                                         <Link
                                                             to={post._id}
                                                             className="primary_btn"

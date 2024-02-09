@@ -1,17 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Header.css";
-import { checkAuth, clearAuth } from "../../helpers/handleAuth";
-import { decodeJwt } from "../../helpers/convert";
 import { useAuth } from "../../providers/useAuth";
 
 export default function Header() {
-    const { isLoggedIn, login, logout }: any = useAuth();
+    const { userLogin, logout }: any = useAuth();
     const [isNavbarFixed, setNavbarFixed] = useState(false);
-    const userLogin = decodeJwt();
+
     useEffect(() => {
-        const userLogin = login();
-        console.log(userLogin)
         const handleScroll = () => {
             const scroll = window.scrollY;
             if (scroll >= 50) {
@@ -134,7 +130,7 @@ export default function Header() {
                                     <div
                                         className="dropdown nav-link dropdown-custom"
                                         style={{
-                                            display: !isLoggedIn
+                                            display: !userLogin
                                                 ? "none"
                                                 : "list-item",
                                         }}
@@ -171,7 +167,7 @@ export default function Header() {
                                         data-target=".navbar-collapse.show"
                                         aria-expanded="false"
                                         style={{
-                                            display: isLoggedIn
+                                            display: userLogin
                                                 ? "none"
                                                 : "list-item",
                                         }}

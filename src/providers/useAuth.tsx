@@ -1,32 +1,45 @@
 // AuthContext.js
-import React, { createContext, useContext, useState } from "react";
-import { checkAuth, clearAuth } from "../helpers/handleAuth";
-import { decodeJwt } from "../helpers/convert";
+import { createContext, useContext, useEffect, useState } from "react";
+import * as localStorage from "../helpers/localStorage";
+import * as cookies from "../helpers/cookies";
+import { ApiUser } from "../services/Api";
+import { UserType } from "../interfaces";
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userLogin, setUserLogin] = useState<UserType | null>(
+        cookies.getCookie()
+    );
 
-    const login = (): object | null => {
-        // Thực hiện logic đăng nhập
-        if (checkAuth()) {
-            setIsLoggedIn(true);
-            return decodeJwt();
-        } else {
-            setIsLoggedIn(false);
-            return null;
+    useEffect(() => {
+        const token = localStorage.getToken();
+        if (token) login(token);
+    }, []);
+
+    const login = async (token: string) => {
+        if (!(token && localStorage.checkToken(token))) {
+            return logout();
+        }
+        try {
+            const user = await ApiUser.loginSuccess(token);
+            cookies.setCookie(user);
+            return setUserLogin(user);
+        } catch (error) {
+            console.log(error);
+            return logout();
         }
     };
 
     const logout = () => {
         // Thực hiện logic đăng xuất
-        clearAuth();
-        setIsLoggedIn(false);
+        localStorage.deleteToken();
+        cookies.deleteCookie();
+        setUserLogin(null);
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+        <AuthContext.Provider value={{ userLogin, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

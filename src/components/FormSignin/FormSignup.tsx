@@ -1,5 +1,4 @@
 import { ReactNode, useState } from "react";
-import { UserType } from "../../interfaces";
 import { ApiUser } from "../../services/Api";
 
 export default function FormSignup({ children }: { children: ReactNode }) {

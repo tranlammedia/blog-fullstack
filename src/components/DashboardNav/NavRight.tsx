@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function NavRight({onPost, checkDisableButton} ) {
+export default function NavRight({ onPost, checkDisableButton }) {
     const navigate = useNavigate();
     const [showNavRight, setShowNavRight] = useState(true);
     const [tags, setTags] = useState("");
 
-    function toggleNavRight(){
+    function toggleNavRight() {
         setShowNavRight(!showNavRight);
         navigate(".", { state: { showNavRight: !showNavRight } });
-    };
+    }
     function handlePost(status: "draft" | "publish") {
         onPost(status);
     }
@@ -63,7 +63,9 @@ export default function NavRight({onPost, checkDisableButton} ) {
                                         <input
                                             type="text"
                                             className="input-nav-right"
-                                            onChange={(e) => setTags(e.target.value)}
+                                            onChange={(e) =>
+                                                setTags(e.target.value)
+                                            }
                                             defaultValue={tags || ""}
                                         />
                                         <small>

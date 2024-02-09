@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export default function Home() {
     useEffect(() => {
         window.scrollTo(0, 0);
-    },[]);
+    }, []);
     return (
         <>
             {/* <!--================ Start Home Banner Area =================--> */}
@@ -20,7 +20,9 @@ export default function Home() {
                                     <h5 className="text-uppercase">
                                         Future Tech Professional
                                     </h5>
-                                    <p className="text-uppercase">(Developer & Analyst)</p>
+                                    <p className="text-uppercase">
+                                        (Developer & Analyst)
+                                    </p>
                                     <div className="d-flex align-items-center">
                                         <a className="primary_btn" href="#">
                                             <span>Hire Me</span>

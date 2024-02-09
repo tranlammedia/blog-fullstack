@@ -10,7 +10,7 @@ export function formateDate(dateString: string): string {
 }
 
 export const decodeJwt = (token?: string | null) => {
-    let tokenEncode : string  | null = token || null
+    let tokenEncode: string | null = token || null;
     if (!token) {
         tokenEncode = localStorage.getItem("token");
     }
@@ -19,7 +19,6 @@ export const decodeJwt = (token?: string | null) => {
         const decodedPayload = JSON.parse(atob(payload));
         return decodedPayload;
     }
-    
 
     return null;
 };

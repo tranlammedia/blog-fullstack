@@ -6,7 +6,7 @@ export const ApiPost = {
     getAllPosts: async (): Promise<PostType[]> => {
         try {
             const response: AxiosResponse<any> = await axios.get(
-                `${API_SERVER_URL}/posts`
+                `${API_SERVER_URL}/post`
             );
 
             return response.data.data;
@@ -82,7 +82,7 @@ export const ApiUser = {
     loginUserJwt: async (requestBody: UserType): Promise<string> => {
         try {
             const response: AxiosResponse<any> = await axios.post(
-                `${API_SERVER_URL}/login`,
+                `${API_SERVER_URL}/auth/login`,
                 requestBody,
                 {
                     withCredentials: true,
@@ -92,6 +92,25 @@ export const ApiUser = {
                 }
             );
             return response.headers["authorization"];
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    loginSuccess: async (token: string): Promise<UserType> => {
+        try {
+            const response: AxiosResponse<any> = await axios.get(
+                `${API_SERVER_URL}/auth/success`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
         } catch (error) {
             throw error;
         }

@@ -8,17 +8,21 @@ const checkTokenExpiry = (storedToken: string): boolean => {
     return false;
 };
 
-export const checkAuth = () => {
-    const token = localStorage.getItem("token");
+export const checkToken = (token: string) => {
     if (token) return checkTokenExpiry(token);
 
     return false;
 };
 
-export const setAuth = (token: string) => {
+export const setToken = (token: string) => {
     localStorage.setItem("token", token);
 };
 
-export const clearAuth = () => {
+export const getToken = () => {
+    const token = localStorage.getItem("token");
+    return token;
+};
+
+export const deleteToken = () => {
     localStorage.removeItem("token");
 };

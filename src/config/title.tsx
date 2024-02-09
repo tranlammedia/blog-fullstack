@@ -1,5 +1,5 @@
 interface TitlePage {
-  [index: string]: string;
+    [index: string]: string;
 }
 
 const TITLES: TitlePage = {};

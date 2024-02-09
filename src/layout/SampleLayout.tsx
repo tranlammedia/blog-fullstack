@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { Outlet } from "react-router-dom";
 
 import Header from "../components/Header/Header";
@@ -8,14 +7,13 @@ import Newsletter from "../components/Newsletter";
 import FormSigninProvider from "../components/FormSignin";
 
 export default function SampleLayout() {
-
-  return (
-    <>
-      <Header />
-      <FormSigninProvider/>
-      <Outlet />
-      <Newsletter />
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <FormSigninProvider />
+            <Outlet />
+            <Newsletter />
+            <Footer />
+        </>
+    );
 }

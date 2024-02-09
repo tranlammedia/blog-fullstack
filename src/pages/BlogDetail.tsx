@@ -8,16 +8,15 @@ import { formateDate } from "../helpers/convert";
 export default function BlogDetail() {
     const [posts, setPosts] = useState<PostType[] | null>(null);
     const { blogid } = useParams();
-    
-    useEffect(() => {
 
+    useEffect(() => {
         // Đặt lại vị trí cuộn về trên đầu trang khi component được mount
         window.scrollTo(0, 0);
 
         const fetchData = async (blogid: string) => {
             try {
                 const posts: PostType[] = await ApiPost.getPost(blogid);
-                console.log(posts)
+                console.log(posts);
                 setPosts(posts);
             } catch (error) {
                 // console.log(error);
@@ -126,7 +125,11 @@ export default function BlogDetail() {
                                         </p>
                                     </div>
                                     <div className="col-lg-12">
-                                        <div dangerouslySetInnerHTML={{__html: posts[1].content}}/>
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: posts[1].content,
+                                            }}
+                                        />
                                     </div>
                                 </div>
                                 <div className="navigation-area">
@@ -135,7 +138,9 @@ export default function BlogDetail() {
                                             {posts[0]?._id && (
                                                 <>
                                                     <div className="thumb">
-                                                        <Link to={`/blog/${posts[0]._id}`}>
+                                                        <Link
+                                                            to={`/blog/${posts[0]._id}`}
+                                                        >
                                                             <img
                                                                 className="img-fluid"
                                                                 src="/img/blog/prev.jpg"
@@ -150,9 +155,11 @@ export default function BlogDetail() {
                                                     </div>
                                                     <div className="detials">
                                                         <p>Prev Post</p>
-                                                        <Link to={`/blog/${posts[0]._id}`}>
+                                                        <Link
+                                                            to={`/blog/${posts[0]._id}`}
+                                                        >
                                                             <h4>
-                                                            {posts[0].title}
+                                                                {posts[0].title}
                                                             </h4>
                                                         </Link>
                                                     </div>
@@ -160,31 +167,36 @@ export default function BlogDetail() {
                                             )}
                                         </div>
                                         <div className="col-lg-6 col-md-6 col-12 nav-right flex-row d-flex justify-content-end align-items-center">
-                                            
-                                        {posts[2]?._id && (
-                                            <>
-                                            <div className="detials">
-                                                <p>Next Post</p>
-                                                <Link to={`/blog/${posts[2]._id}`}>
-                                                    <h4>{posts[2].title}</h4>
-                                                </Link>
-                                            </div>
-                                            <div className="arrow">
-                                                <Link to="#">
-                                                    <span className="lnr text-white lnr-arrow-right"></span>
-                                                </Link>
-                                            </div>
-                                            <div className="thumb">
-                                                <Link to={`/blog/${posts[2]._id}`}>
-                                                    <img
-                                                        className="img-fluid"
-                                                        src="/img/blog/next.jpg"
-                                                        alt=""
-                                                    />
-                                                </Link>
-                                            </div>
-                                            </>
-                                        )}
+                                            {posts[2]?._id && (
+                                                <>
+                                                    <div className="detials">
+                                                        <p>Next Post</p>
+                                                        <Link
+                                                            to={`/blog/${posts[2]._id}`}
+                                                        >
+                                                            <h4>
+                                                                {posts[2].title}
+                                                            </h4>
+                                                        </Link>
+                                                    </div>
+                                                    <div className="arrow">
+                                                        <Link to="#">
+                                                            <span className="lnr text-white lnr-arrow-right"></span>
+                                                        </Link>
+                                                    </div>
+                                                    <div className="thumb">
+                                                        <Link
+                                                            to={`/blog/${posts[2]._id}`}
+                                                        >
+                                                            <img
+                                                                className="img-fluid"
+                                                                src="/img/blog/next.jpg"
+                                                                alt=""
+                                                            />
+                                                        </Link>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
