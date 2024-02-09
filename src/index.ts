@@ -2,19 +2,14 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
 
+import { PORT, SECRET_SESSION_KEY, URL_DATABASE } from "./config/constants";
 import connectDatabase from "./config/database";
 import passport from "./config/passport";
+
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
-import authenticateToken from "./middlewares/authenticateToken";
-import authenticateAdmin from "./middlewares/authenticateAdmin";
-import { PORT, SECRET_SESSION_KEY, URL_DATABASE } from "./config/constants";
 
-interface ExtendedRequest extends Request {
-    user?: any;
-    isAuthenticated?: () => boolean;
-}
 const app = express();
 
 connectDatabase(URL_DATABASE);
@@ -49,17 +44,6 @@ app.use(passport.session());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
-
-// authorization
-app.get(
-    "/api/auth",
-    authenticateToken,
-    authenticateAdmin,
-    async (req: ExtendedRequest, res: Response) => {
-        console.log(req.user);
-        return res.sendStatus(200);
-    }
-);
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);

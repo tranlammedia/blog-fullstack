@@ -1,12 +1,11 @@
 import { Schema, model } from "mongoose";
 import { UserType } from "../interfaces";
-import findOrCreate from "mongoose-findorcreate";
-
 
 const userSchema = new Schema<UserType>({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true, default: "1"},
+    name: { type: String, default: null },
+    email: { type: String, default: null },
+    username: { type: String, default: null },
+    password: { type: String, default: null},
     role: {
         type: String,
         enum: ["admin", "author", "reader"],
@@ -18,7 +17,8 @@ const userSchema = new Schema<UserType>({
     updateAt: { type: Date, required: true, default: Date.now },
 });
 
-userSchema.plugin(findOrCreate)
+userSchema.index({ email: 1, username: 1 }, { unique: true });
+
 const UserModel = model<UserType>("User", userSchema);
 
 export default UserModel;

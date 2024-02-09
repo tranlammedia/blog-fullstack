@@ -1,18 +1,19 @@
 import jwt from "jsonwebtoken";
-import { UserType } from "../interfaces";
 import { SECRET_JWT_KEY } from "../config/constants";
+import { Types } from "mongoose";
 
-const generateToken = (user: UserType) => {
-    try {
-        const token = jwt.sign(
-            { name: user.name, role: user.role },
-            SECRET_JWT_KEY,
-            { expiresIn: "1h" }
-        );
-        return token;
-    } catch (error) {
-        return error;
+const generateToken = (_id: Types.ObjectId | undefined) => {
+    if (_id) {
+        try {
+            const token = jwt.sign({ _id }, SECRET_JWT_KEY, {
+                expiresIn: "1h",
+            });
+            return token;
+        } catch (error) {
+            console.error(error);
+        }
     }
+    return null;
 };
 
 export default generateToken;

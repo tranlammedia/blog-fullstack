@@ -9,24 +9,57 @@ import {
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
 } from "./constants";
+import randomString from "../functions/randomString";
 
 const findOrCreateUser = {
     google: async (profile) => {
+        let existUser: UserType | null;
         const id_gg = profile.id;
         const name = profile.displayName;
         const email = profile.emails[0]["value"];
-        let user: UserType | null = await UserModel.findOne({ email });
-        if (!user) {
-            const newUser: UserType = new UserModel({ id_gg, name, email });
-            await UserModel.create(newUser);
-            user = newUser;
+
+        existUser = await UserModel.findOne({ id_gg });
+        if (existUser) {
+            return { _id: existUser._id };
         }
 
-        return user;
+        existUser = await UserModel.findOne({ email });
+        if (existUser) {
+            existUser = await UserModel.findByIdAndUpdate(
+                existUser._id,
+                { id_gg },
+                { new: true }
+            );
+            return { _id: existUser?._id };
+        }
+
+        const newUser: UserType = new UserModel({ id_gg, name, email });
+        existUser = await UserModel.create(newUser);
+
+        return { _id: existUser._id };
     },
-    github:async (profile) => {
+    github: async (profile) => {
+        let existUser: UserType | null;
+        let username = profile.username;
+        const id_github = profile.id;
+        const name = profile.displayName;
         
-    }
+        existUser = await UserModel.findOne({ id_github });
+    
+        if (existUser) {
+            return { _id: existUser._id };
+        }
+        
+        existUser = await UserModel.findOne({ username });
+        if (existUser) {
+            username = `${username}-${randomString()}`
+        }
+        
+        const newUser: UserType = new UserModel({ id_github, name, username });
+        existUser = await UserModel.create(newUser);
+
+        return { _id: existUser._id };
+    },
 };
 
 passport.use(
@@ -54,10 +87,8 @@ passport.use(
             callbackURL: "/api/auth/github/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
-            console.log("github");
-            console.log(profile);
-            // const user = await findOrCreateUser(profile)
-            done(null, profile);
+            const user = await findOrCreateUser.github(profile);
+            return done(null, user);
         }
     )
 );
@@ -65,7 +96,7 @@ passport.use(
 // Khởi tạo và duy trì phiên người dùng trong session
 passport.serializeUser(function (user, done) {
     process.nextTick(function () {
-        done(null, { email: user.email, name: user.name, role: user.role });
+        done(null, user);
     });
 });
 

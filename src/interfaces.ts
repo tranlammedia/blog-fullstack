@@ -4,6 +4,7 @@ export interface TypeUser {
     _id?: Types.ObjectId;
     email: string,
     password: string;
+    username: string;
     name: string;
     role: "admin" | "author" | "reader";
     id_gg?: string;

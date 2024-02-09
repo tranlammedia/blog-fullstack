@@ -1,0 +1,37 @@
+- email? không thể trùng, không thay đổi
+- username? không thể trùng
+- password?
+- name?
+- id_gg?
+- id_github?
+
+1. login thường: có email + pass + name
+create user
+- if !(email) return create user
+
+2. google: có email + name
+- if (id_gg) return update database & login
+- if (email in login) return update user id_gg
+- return create user
+
+3. github: có username (ko có email, name thì có thể null)
+- if (id_github) return login 
+- if (username) return usernameNew
+- return create user (+ usernameNew?) 
+
+show user: name? > username? email?
+
+case:
+1. tồn tại trước 1 email
+- không thể create new
+- google add id__gg nếu cùng email.
+
+2. tồn tại trước username, chưa có github
+- github login vào username. Nếu tài khoản username của user khác thì sao?
+=> new  username then create user
+
+xu ly token trong:
+- login -> xong
+- signup
+- google
+- github

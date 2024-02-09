@@ -1,30 +1,26 @@
-import { Request, Response } from 'express';
-import passport from 'passport';
-import { URL_CLIENT } from '../config/constants';
-import generateToken from '../functions/generateToken';
-import { UserType } from '../interfaces';
-import UserModel from '../models/User';
+import { Request, Response } from "express";
+import passport from "passport";
+import { URL_CLIENT } from "../config/constants";
+import generateToken from "../functions/generateToken";
+import { UserType } from "../interfaces";
+import UserModel from "../models/User";
 
 interface ExtendedRequest extends Request {
-    user?: any;
+    user?: object;
     isAuthenticated?: () => boolean;
 }
 
-export const loginSuccess =  async (req: ExtendedRequest, res: Response) => {
-    if (req.isAuthenticated && req.isAuthenticated()) {
-        console.log(req.isAuthenticated());
-        res.status(200).json({
-            success: true,
-            message: "successful",
-            user: req.user,
-        });
-    }
-}
+export const loginSuccess = async (req: ExtendedRequest, res: Response) => {
+    
+    res.status(200).json({ success: true, data: req.user });
+};
 
-export const loginFailed =  async (req: ExtendedRequest, res: Response) => {
-}
+export const loginFailed = async (req: ExtendedRequest, res: Response) => {};
 
-export const loginWithEmailAndPassword = async (req: Request, res: Response) => {
+export const loginWithEmailAndPassword = async (
+    req: Request,
+    res: Response
+) => {
     const { email, password } = req.body;
     // find user in database
     try {
@@ -32,15 +28,20 @@ export const loginWithEmailAndPassword = async (req: Request, res: Response) => 
 
         // Tài khoản không tồn tại
         if (!user)
-            return res.status(404).json({ success: false, error: 'User not found' });
+            return res
+                .status(404)
+                .json({ success: false, error: "User not found" });
 
         // Sai mật khẩu
         if (user.password !== password)
-            return res.status(401).json({ success: false, error: 'Incorrect password' });
+            return res
+                .status(401)
+                .json({ success: false, error: "Incorrect password" });
 
-            // generate token
-        const token = generateToken(user);
-        res.setHeader('Authorization', token);
+        // generate token
+        const token = generateToken(user?._id);
+
+        res.setHeader("Authorization", token);
 
         return res.sendStatus(200);
     } catch (error) {
@@ -48,26 +49,38 @@ export const loginWithEmailAndPassword = async (req: Request, res: Response) => 
     }
 };
 
-export const googleAuth = passport.authenticate('google', { scope: ['profile', 'email'] });
-export const googleAuthCallback = (req: ExtendedRequest, res: Response, next: Function) => {
-    passport.authenticate("google", { session: false }, (err, user, info) => {
+export const googleAuth = passport.authenticate("google", {
+    scope: ["profile", "email"],
+});
+export const googleAuthCallback = (
+    req: ExtendedRequest,
+    res: Response,
+    next: Function
+) => {
+    passport.authenticate("google", { session: false }, async (err, user, info) => {
         if (err) {
             return next(err);
         }
         if (!user) {
             return res.redirect("/api/auth/failed"); // Chuyển hướng khi xác thực thất bại
         }
-        
+
         // Tạo token JWT từ thông tin người dùng
-        const token = generateToken(user);
+        const token = generateToken(user._id);
         // Đặt token vào header và redirect người dùng đến trang client cùng token
-        res.setHeader('Authorization', token);
+        res.setHeader("Authorization", token);
         return res.redirect(`${URL_CLIENT}/auth/?token=${token}`);
     })(req, res, next);
 };
 
-export const githubAuth = passport.authenticate('github', { scope: ['profile', 'email'] });
-export const githubAuthCallback = (req: ExtendedRequest, res: Response, next: Function) => {
+export const githubAuth = passport.authenticate("github", {
+    scope: ["profile", "email"],
+});
+export const githubAuthCallback = (
+    req: ExtendedRequest,
+    res: Response,
+    next: Function
+) => {
     passport.authenticate("github", { session: false }, (err, user, info) => {
         if (err) {
             return next(err);
@@ -75,12 +88,11 @@ export const githubAuthCallback = (req: ExtendedRequest, res: Response, next: Fu
         if (!user) {
             return res.redirect("/api/auth/failed"); // Chuyển hướng khi xác thực thất bại
         }
-        
+
         // Tạo token JWT từ thông tin người dùng
-        const token = generateToken(user);
+        const token = generateToken(user._id);
         // Đặt token vào header và redirect người dùng đến trang client cùng token
-        res.setHeader('Authorization', token);
+        res.setHeader("Authorization", token);
         return res.redirect(`${URL_CLIENT}/auth/?token=${token}`);
     })(req, res, next);
 };
-

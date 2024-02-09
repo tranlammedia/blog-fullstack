@@ -1,10 +1,11 @@
 import express from "express";
 import * as authController from "../controllers/authController";
+import authenticateToken from "../middlewares/authenticateToken";
 
 const router = express.Router();
 
 // check login success
-router.get("/success", authController.loginSuccess);
+router.get("/success", authenticateToken, authController.loginSuccess);
 router.get("/failed", authController.loginFailed);
 
 // user login email and password
