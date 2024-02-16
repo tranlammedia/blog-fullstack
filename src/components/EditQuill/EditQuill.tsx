@@ -7,27 +7,18 @@ import ImageUploader from "quill-image-uploader";
 import "./styles.css";
 import { useLocation } from "react-router-dom";
 import { useShowNavLeft } from "../../providers/useShowNavLeft";
+import { useEditor } from "../../providers/useEditor";
+import { API_CLOUDINARY_URL, CLOUDINARY_PRESET } from "../../config/constants";
 
 Quill.register("modules/imageResize", ImageResize);
 Quill.register("modules/imageUploader", ImageUploader);
 
-interface TextEditorProps {
-    value: string;
-    onChangeContent: (value: string) => void;
-    onChangeTitle: (value: string) => void;
-}
-
-const EditQuill: React.FC<TextEditorProps> = ({
-    value,
-    onChangeContent,
-    onChangeTitle,
-}) => {
+const EditQuill = () => {
     const location = useLocation();
-
     const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
     const [showNavRight, setShowNavRight] = useState(true);
-    const [content, setContent] = useState(value);
-    const [title, setTitle] = useState(value);
+    const [lengthTitle, setLengthTitle] = useState(120);
+    const { post, setPost }: any = useEditor();
 
     useEffect(() => {
         if (location.state?.showNavLeft != undefined) {
@@ -39,60 +30,17 @@ const EditQuill: React.FC<TextEditorProps> = ({
     }, [location.state?.showNavLeft, location.state?.showNavRight]);
 
     function handleChangeContent(newContent: string) {
-        setContent(newContent);
-        onChangeContent(newContent);
+        setPost({ ...post, content: newContent });
     }
 
     function handleChangeTitle(event: React.ChangeEvent<HTMLInputElement>) {
-        setTitle(event.target.value);
-        onChangeTitle(event.target.value);
+        const title = event.target.value
+        if (title.length <= 120)  {
+            setPost({ ...post, title });
+            setLengthTitle(120 - title.length)
+        }
     }
 
-    function handleUploadImage(file) {
-        return new Promise((resolve, reject) => {
-            const formData = new FormData();
-            formData.append("image", file);
-
-            fetch(
-                "https://api.imgbb.com/1/upload?key=bb203a4e08530038019bd1f9ebade9b8 ",
-                {
-                    method: "POST",
-                    body: formData,
-                }
-            )
-                .then((response) => response.json())
-                .then((result) => {
-                    console.log(result);
-                    resolve(result.data.url);
-                })
-                .catch((error) => {
-                    reject("Upload failed");
-                    console.error("Error:", error);
-                });
-        });
-    }
-
-    async function handleUploadImage1(file) {
-        return new Promise((resolve, reject) => {
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "hknulgyy"); // Replace with your Cloudinary upload preset
-
-            fetch("https://api.cloudinary.com/v1_1/dgdi4xbyp/upload", {
-                method: "POST",
-                body: formData,
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    console.log(result);
-                    resolve(result.secure_url);
-                })
-                .catch((error) => {
-                    reject("Upload failed");
-                    console.error("Error:", error);
-                });
-        });
-    }
     const modules = useMemo(
         () => ({
             toolbar: [
@@ -164,11 +112,11 @@ const EditQuill: React.FC<TextEditorProps> = ({
                     return new Promise((resolve, reject) => {
                         const formData = new FormData();
                         formData.append("file", file);
-                        formData.append("upload_preset", "hknulgyy"); // Replace with your Cloudinary upload preset
+                        formData.append("upload_preset", CLOUDINARY_PRESET); // Replace with your Cloudinary upload preset
                         formData.append("folder", "blog-fullstack");
 
                         fetch(
-                            "https://api.cloudinary.com/v1_1/dgdi4xbyp/upload",
+                            API_CLOUDINARY_URL,
                             {
                                 method: "POST",
                                 body: formData,
@@ -221,7 +169,10 @@ const EditQuill: React.FC<TextEditorProps> = ({
             <div className="edit d-flex flex-column">
                 <h2>Bài viết mới</h2>
                 <div className="form-group">
-                    <label>Tiêu đề</label>
+                    <div className="d-flex justify-content-between">
+                        <label>Tiêu đề</label>
+                        <label>{lengthTitle}/120</label>
+                    </div>
                     <input
                         type="text"
                         className="form-control form-control-sm"
@@ -229,7 +180,7 @@ const EditQuill: React.FC<TextEditorProps> = ({
                         onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                         ) => handleChangeTitle(event)}
-                        defaultValue={title}
+                        value={post?.title || ""}
                     />
                 </div>
                 <div className="form-group">
@@ -237,7 +188,7 @@ const EditQuill: React.FC<TextEditorProps> = ({
                     <ReactQuill
                         theme={"snow"}
                         onChange={handleChangeContent}
-                        value={content}
+                        value={post?.content || ""}
                         modules={modules}
                         formats={formats}
                         placeholder={"Write something awesome..."}

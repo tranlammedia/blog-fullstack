@@ -1,0 +1,35 @@
+.gap-icon-label {
+    gap: 0.5rem;
+}
+
+.input-text {
+    color: #777777;
+}
+
+.input-text::placeholder {
+    font-size: 0.8rem;
+}
+
+.custom-file-upload {
+    font-size: small;
+    display: inline-block;
+    padding: 0rem 0.3rem;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #777777;
+}
+
+.custom-file-upload:hover {
+    background-color: #e9e9e9;
+}
+
+.visually-hidden {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+}
+
+.featured-image-review {
+    width: 100%;
+}

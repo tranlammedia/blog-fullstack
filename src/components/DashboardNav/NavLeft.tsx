@@ -14,7 +14,7 @@ export default function NavLeft() {
       }, [location.state?.showNavLeft]);
 
     return (
-        <div className={`nav-left ${showNavLeft ? "open-left" : ""}`}>
+        <div className={`nav-left sidebar-left ${showNavLeft ? "open-left" : ""}`}>
                     <ul className="nav navbar-nav menu_nav justify-content-center">
                         <NavLink
                             to="/dashboard/new"
@@ -47,18 +47,7 @@ export default function NavLeft() {
                             <span className="nav-link">Quản lý thành viên</span>
                         </NavLink>
                     </ul>
-                    <li className="nav-item signout-btn mt-5">
-                        <div className="nav-link">
-                            <button
-                                type="button"
-                                className="btn btn-primar"
-                                data-toggle="modal"
-                                data-target="#FormSignin"
-                            >
-                                Sign out
-                            </button>
-                        </div>
-                    </li>
+                    
                 </div>
     )
 }

@@ -22,3 +22,25 @@ export const decodeJwt = (token?: string | null) => {
 
     return null;
 };
+
+export const htmltostring = (html: string, len: number = 300): string => {
+    const stringHtml = html.substring(0, len + 50);
+    const stringWithoutHtml = stringHtml.replace(/<[^>]+>/g, "");
+
+    const regex = /[.?!]/gi
+    const subString = stringWithoutHtml.substring(0, len);
+
+    let lastPosition = -1;
+    let match;
+
+    while ((match = regex.exec(subString)) !== null) {
+        lastPosition = match.index;
+    }
+
+    const result =
+        lastPosition !== -1
+            ? stringWithoutHtml.substring(0, lastPosition + 1)
+            : stringWithoutHtml.substring(0, 200) + "...";
+
+    return result;
+};

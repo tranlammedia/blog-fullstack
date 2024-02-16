@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Newsletter from "../components/Newsletter";
 
 export default function Services() {
     useEffect(() => {
@@ -218,6 +219,7 @@ export default function Services() {
                 </div>
             </div>
             {/* <!--================ End Testimonial Area =================--> */}
+            <Newsletter />
         </>
     );
 }

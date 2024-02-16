@@ -1,0 +1,7 @@
+.feature-img-custom {
+    min-height: 250px;
+    max-height: 250px;
+    object-fit: contain;
+    width: -webkit-fill-available;  
+    width: -moz-available;
+}

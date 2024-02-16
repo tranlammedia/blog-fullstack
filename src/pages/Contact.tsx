@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Newsletter from "../components/Newsletter";
 
 export default function Contact() {
     useEffect(() => {
@@ -96,6 +97,7 @@ export default function Contact() {
                 </div>
             </section>
             {/* <!--================Contact Area =================--> */}
+            <Newsletter />
         </>
     );
 }

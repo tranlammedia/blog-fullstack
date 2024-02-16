@@ -1,0 +1,13 @@
+.blog_area-custom {
+    background-color: #fff;
+}
+
+.blog-pagination {
+    padding-bottom: 25px
+}
+
+.blog_post_image {
+    min-height: 250px;
+    max-height: 250px;
+    object-fit: contain;
+}

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import Newsletter from "../components/Newsletter";
 
 export default function Portfolio() {
     useEffect(() => {
@@ -281,6 +282,7 @@ export default function Portfolio() {
                 </div>
             </section>
             {/* <!--================End Portfolio Area =================--> */}
+            <Newsletter />
         </>
     );
 }

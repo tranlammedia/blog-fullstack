@@ -141,7 +141,7 @@ export default function Header() {
                                             data-toggle="dropdown"
                                             aria-expanded="false"
                                         >
-                                            My name: {userLogin?.name}
+                                            {userLogin?.name || userLogin?.username }
                                         </button>
                                         <div className="dropdown-menu dropdown-menu-custom">
                                             <Link

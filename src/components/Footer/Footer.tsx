@@ -1,3 +1,8 @@
+import FacebookIcon from "../icons/FacebookIcon";
+import GitHubIcon from "../icons/GitHubIcon";
+import LinkedinIcon from "../icons/LinkedinIcon"
+import YouTubeIcon from "../icons/YouTubeIcon";
+import './styles.css'
 export default function Footer() {
     return (
         <>
@@ -17,25 +22,25 @@ export default function Footer() {
                                         href="https://www.linkedin.com/in/tranledienlam/"
                                         target="blank"
                                     >
-                                        <i className="fa fa-linkedin"></i>
+                                        <LinkedinIcon />
                                     </a>
                                     <a
                                         href="https://github.com/tranledienlam"
                                         target="blank"
                                     >
-                                        <i className="fa fa-github"></i>
+                                        <GitHubIcon />
                                     </a>
                                     <a
                                         href="https://www.facebook.com/tranledienlam"
                                         target="blank"
                                     >
-                                        <i className="fa fa-facebook"></i>
+                                        <FacebookIcon />
                                     </a>
                                     <a
                                         href="https://www.youtube.com/channel/UCK_WJZUMybvHeK-vcFYOx6w"
                                         target="blank"
                                     >
-                                        <i className="fa fa-youtube"></i>
+                                        <YouTubeIcon />
                                     </a>
                                 </div>
                             </div>

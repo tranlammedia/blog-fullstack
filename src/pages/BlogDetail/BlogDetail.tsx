@@ -1,9 +1,11 @@
 import { Link, useParams } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import { useEffect, useState } from "react";
-import { PostType } from "../interfaces";
-import { ApiPost } from "../services/Api";
-import { formateDate } from "../helpers/convert";
+import { PostType } from "../../interfaces";
+import { ApiPost } from "../../services/Api";
+import { formateDate } from "../../helpers/convert";
+import "./styles.css"
+
 
 export default function BlogDetail() {
     const [posts, setPosts] = useState<PostType[] | null>(null);
@@ -16,7 +18,6 @@ export default function BlogDetail() {
         const fetchData = async (blogid: string) => {
             try {
                 const posts: PostType[] = await ApiPost.getPost(blogid);
-                console.log(posts);
                 setPosts(posts);
             } catch (error) {
                 // console.log(error);
@@ -44,23 +45,27 @@ export default function BlogDetail() {
                                 <div className="single-post row">
                                     <div className="col-lg-12">
                                         <div className="feature-img">
-                                            <img
-                                                className="img-fluid"
-                                                src="/img/blog/feature-img1.jpg"
-                                                alt=""
-                                            />
+
+                                            {posts[1].featureImageUrl && (
+                                                <img
+                                                    className="feature-img-custom"
+                                                    src={posts[1].featureImageUrl}
+                                                    alt=""
+                                                />
+
+                                            )}
                                         </div>
                                     </div>
                                     <div className="col-lg-3  col-md-3">
                                         <div className="blog_info text-right">
-                                            <div className="post_tag">
+                                            {/* <div className="post_tag">
                                                 <a href="#">Food,</a>
                                                 <a className="active" href="#">
                                                     Technology,
                                                 </a>
                                                 <a href="#">Politics,</a>
                                                 <a href="#">Lifestyle</a>
-                                            </div>
+                                            </div> */}
                                             <ul className="blog_meta list">
                                                 <li>
                                                     <a href="#">
@@ -69,7 +74,7 @@ export default function BlogDetail() {
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="#">
+                                                    <a>
                                                         {formateDate(
                                                             posts[1].createdAt
                                                         )}
@@ -77,7 +82,7 @@ export default function BlogDetail() {
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="#">
+                                                    <a>
                                                         {posts[1].views} Views
                                                         <i className="lnr lnr-eye"></i>
                                                     </a>
@@ -89,7 +94,7 @@ export default function BlogDetail() {
                                                     </a>
                                                 </li>
                                             </ul>
-                                            <ul className="social-links">
+                                            {/* <ul className="social-links">
                                                 <li>
                                                     <a href="#">
                                                         <i className="fa fa-facebook"></i>
@@ -110,21 +115,19 @@ export default function BlogDetail() {
                                                         <i className="fa fa-behance"></i>
                                                     </a>
                                                 </li>
-                                            </ul>
+                                            </ul> */}
                                         </div>
                                     </div>
                                     <div className="col-lg-9 col-md-9 blog_details">
                                         <h2>{posts[1].title}</h2>
-                                        <p className="excert">
-                                            MCSE boot camps have its supporters
-                                            and its detractors. Some people do
-                                            not understand why you should have
-                                            to spend money on boot camp when you
-                                            can get the MCSE study materials
-                                            yourself at a fraction.
-                                        </p>
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: posts[1].description,
+                                            }}
+                                        />
                                     </div>
                                     <div className="col-lg-12">
+                                        <br />
                                         <div
                                             dangerouslySetInnerHTML={{
                                                 __html: posts[1].content,
@@ -149,9 +152,11 @@ export default function BlogDetail() {
                                                         </Link>
                                                     </div>
                                                     <div className="arrow">
-                                                        <a href="#">
+                                                        <Link
+                                                            to={`/blog/${posts[0]._id}`}
+                                                        >
                                                             <span className="lnr text-white lnr-arrow-left"></span>
-                                                        </a>
+                                                        </Link>
                                                     </div>
                                                     <div className="detials">
                                                         <p>Prev Post</p>

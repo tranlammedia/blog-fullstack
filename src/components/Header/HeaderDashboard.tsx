@@ -1,14 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useShowNavLeft } from "../../providers/useShowNavLeft";
-
+import { useAuth } from "../../providers/useAuth";
 
 export default function HeaderDashboard() {
-    const {showNavLeft, setShowNavLeft} : any = useShowNavLeft();
+    const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
+    const { userLogin, logout }: any = useAuth();
+    const navigate = useNavigate();
 
     const toggleNavLeft = () => {
         setShowNavLeft(!showNavLeft);
     };
 
+    const handleSignOut = () => {
+        logout();
+    };
     return (
         <header className={`header_area navbar_fixed`}>
             <div className="main_menu">
@@ -33,10 +38,38 @@ export default function HeaderDashboard() {
                                 </div>
                             </Link>
                         </div>
+
                         <div>
-                            <button type="button" className="btn btn-primary">
-                                My Name
-                            </button>
+                            <div className="dropdown">
+                                <button
+                                    className="btn btn-primary "
+                                    type="button"
+                                    id="dropdownMenuButton"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    {userLogin?.name || userLogin?.username}
+                                </button>
+                                <div
+                                    className="dropdown-menu dropdown-menu-custom-dashboard"
+                                    aria-labelledby="dropdownMenuButton"
+                                >
+                                    <Link
+                                        className="dropdown-item dropdown-name divider"
+                                        to="/"
+                                    >
+                                        Go to Home
+                                    </Link>
+                                    <Link
+                                        className="dropdown-item dropdown-name"
+                                        to="/"
+                                        onClick={handleSignOut}
+                                    >
+                                        Sign out
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </nav>
