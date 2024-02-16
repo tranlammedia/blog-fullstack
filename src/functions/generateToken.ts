@@ -6,7 +6,7 @@ const generateToken = (_id: Types.ObjectId | undefined) => {
     if (_id) {
         try {
             const token = jwt.sign({ _id }, SECRET_JWT_KEY, {
-                expiresIn: "1h",
+                expiresIn: "4h",
             });
             return token;
         } catch (error) {

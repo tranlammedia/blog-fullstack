@@ -3,6 +3,11 @@ import PostModel from "../models/Post";
 import { Types } from "mongoose";
 import { PostType } from "../interfaces";
 
+interface ExtendedRequest extends Request {
+    user?: any;
+    isAuthenticated?: () => boolean;
+}
+
 export const getAllPosts = async (req: Request, res: Response) => {
     try {
         const posts = await PostModel.find()
@@ -62,11 +67,11 @@ export const getPostById = async (req: Request, res: Response) => {
         })
             .sort({ createdAt: 1 })
             .limit(1);
-        if (prevPost.length) {
-            console.log(prevPost);
-        }
-        console.log(nextPost[0]);
-        console.log([prevPost[0], currentPost, nextPost[0]]);
+        // if (prevPost.length) {
+        //     console.log(prevPost);
+        // }
+        // console.log(nextPost[0]);
+        // console.log([prevPost[0], currentPost, nextPost[0]]);
         // nếu tìm thấy
 
         res.status(200).json({
@@ -82,26 +87,24 @@ export const getPostById = async (req: Request, res: Response) => {
     }
 };
 
-export const createPost = async (req: Request, res: Response) => {
+export const createPost = async (req: ExtendedRequest, res: Response) => {
     try {
-        const { title, content, status } = req.body;
+        const postBody = req.body;
+        console.log(req.user._id);
+        if (!req.user?._id)
+            return res
+                .status(403)
+                .json({ success: false, error: "Unauthorized" });
 
-        if (!title || !content) {
+        if (!postBody.title || !postBody.content)
             return res.status(400).json({
                 success: false,
                 error: "title, content and authorId are required fields",
             });
-        }
 
         const newPost: PostType = new PostModel({
-            title,
-            content,
-            authorId: "65ae1c4c889d65dc86bd4940",
-            // commentIds, // default
-            // views, // default
-            status,
-            // createdAt, // default
-            // updateAt, // default
+            ...postBody,
+            authorId: req.user._id,
         });
         await PostModel.create(newPost);
 

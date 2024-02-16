@@ -9,6 +9,8 @@ import passport from "./config/passport";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
+import tagRoutes from "./routes/tagRoutes";
 
 const app = express();
 
@@ -44,6 +46,8 @@ app.use(passport.session());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/tag", tagRoutes);
 
 app.listen(PORT, () => {
     console.log(`listening on port ${PORT}`);
