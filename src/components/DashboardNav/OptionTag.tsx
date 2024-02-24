@@ -4,7 +4,7 @@ import { ApiTag } from "../../services/Api";
 import { useEditor } from "../../providers/useEditor";
 
 export default function OptionTag() {
-    const { post, setPost }: any = useEditor();
+    const { post, setPost, setTags }: any = useEditor();
     const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
     const [options, setOptions] = useState<any[]>([]);
 
@@ -15,7 +15,7 @@ export default function OptionTag() {
             tagIds: selectedOptions.map((option) => option._id),
         });
     };
-
+    
     useEffect(() => {
         const fectch = async () => {
             try {
@@ -28,10 +28,25 @@ export default function OptionTag() {
                         label: option.name,
                     }))
                 );
+                setTags(tags);
             } catch (error) {}
         };
         fectch();
+
     }, []);
+
+    useEffect(() => {
+
+        const targetIds = post?.tagIds;
+
+        if (targetIds?.length > 0 && targetIds[0].hasOwnProperty("_id")) {
+
+            const filteredOptions = options.filter((option) =>
+                targetIds.some((target) => target._id === option._id)
+            );
+            setSelectedOptions(filteredOptions);
+        }
+    }, [post?.hasOwnProperty("categoryIds"), options]);
 
     useEffect(() => {
         const lastSelectedOption = selectedOptions[selectedOptions.length - 1];
@@ -58,6 +73,7 @@ export default function OptionTag() {
         ) {
             fectchCreate();
         }
+
     }, [selectedOptions.length]);
 
     return (

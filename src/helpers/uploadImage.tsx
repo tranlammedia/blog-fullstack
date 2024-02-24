@@ -1,6 +1,7 @@
 import { API_CLOUDINARY_URL, CLOUDINARY_PRESET } from "../config/constants";
 
 export const uploadImage = async (file) => {
+    if (!file) return null; 
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", CLOUDINARY_PRESET); // Replace with your Cloudinary upload preset

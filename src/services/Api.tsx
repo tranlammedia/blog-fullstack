@@ -1,19 +1,56 @@
 import axios, { AxiosResponse } from "axios";
 import { API_SERVER_URL } from "../config/constants";
 import { CategoryType, PostType, TagType, UserType } from "../interfaces";
-import { getToken } from "../helpers/localStorage";
+import { getToken } from "../helpers/storage";
 
 const token = getToken();
 
+interface fetchPost {
+    totalPages: number;
+    page: number;
+    data: PostType[];
+}
 export const ApiPost = {
-    getAllPosts: async (): Promise<PostType[]> => {
+    getPostsForReader: async (
+        page: string | number = 1,
+        perpage: string | number = 10
+    ): Promise<fetchPost> => {
         try {
             const response: AxiosResponse<any> = await axios.get(
-                `${API_SERVER_URL}/post`
+                `${API_SERVER_URL}/post?page=${page}&perpage=${perpage}`
             );
-
-            return response.data.data;
+            return response.data;
         } catch (error) {
+            console.error("Error fetching data:", error);
+            throw error;
+        }
+    },
+
+    getPostsForAdmin: async (
+        page: string | number = 1,
+        perpage: string | number = 10
+    ): Promise<fetchPost> => {
+        try {
+            const response: AxiosResponse<any> = await axios.get(
+                `${API_SERVER_URL}/post/manage?page=${page}&perpage=${perpage}`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
+            return response.data;
+        } catch (error: any) {
+            console.log(error.code);
+            if (error.response.status == 404) {
+                return {
+                    totalPages: 0,
+                    page: 0,
+                    data: [],
+                };
+            }
             console.error("Error fetching data:", error);
             throw error;
         }
@@ -50,6 +87,59 @@ export const ApiPost = {
             return response.data.data;
         } catch (error) {
             console.error("Error creating post:", error);
+            throw error;
+        }
+    },
+
+    updatePost: async (newPost: PostType): Promise<PostType> => {
+        try {
+            const updatePost = {
+                title: newPost.title,
+                content: newPost.content,
+                description: newPost.description,
+                featureImageUrl: newPost.featureImageUrl,
+                status: newPost.status,
+                categoryIds: newPost.categoryIds.map((el) =>
+                    el.hasOwnProperty("_id") ? el._id : el
+                ),
+                tagIds: newPost.tagIds.map((el) =>
+                    el.hasOwnProperty("_id") ? el._id : el
+                ),
+            };
+            const response: AxiosResponse<any> = await axios.put(
+                `${API_SERVER_URL}/post/${newPost._id}`,
+                updatePost,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
+        } catch (error) {
+            console.error("Error creating post:", error);
+            throw error;
+        }
+    },
+    deletePost: async (id: string): Promise<PostType[]> => {
+        try {
+            const response: AxiosResponse<any> = await axios.delete(
+                `${API_SERVER_URL}/post/${id}`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
+        } catch (error) {
+            console.error("Error fetching data:", error);
             throw error;
         }
     },
@@ -123,7 +213,7 @@ export const ApiCategory = {
                     withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": token,
+                        Authorization: token,
                     },
                 }
             );
@@ -133,7 +223,6 @@ export const ApiCategory = {
         }
     },
 
-
     getAll: async (): Promise<CategoryType[]> => {
         try {
             const response: AxiosResponse<any> = await axios.get(
@@ -142,13 +231,54 @@ export const ApiCategory = {
                     withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": token,
+                        Authorization: token,
                     },
                 }
             );
 
             return response.data.data;
         } catch (error) {
+            throw error;
+        }
+    },
+
+    updateCategory: async (updateCategory: CategoryType): Promise<PostType> => {
+        try {
+            const response: AxiosResponse<any> = await axios.put(
+                `${API_SERVER_URL}/category/${updateCategory._id}`,
+                updateCategory,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
+        } catch (error) {
+            console.error("Error creating category:", error);
+            throw error;
+        }
+    },
+
+    deleteCategory: async (updateCategory: CategoryType): Promise<PostType> => {
+        try {
+            const response: AxiosResponse<any> = await axios.delete(
+                `${API_SERVER_URL}/category/${updateCategory._id}`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
+        } catch (error) {
+            console.error("Error creating category:", error);
             throw error;
         }
     },
@@ -164,7 +294,7 @@ export const ApiTag = {
                     withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": token,
+                        Authorization: token,
                     },
                 }
             );
@@ -175,7 +305,6 @@ export const ApiTag = {
         }
     },
 
-
     getAll: async (): Promise<TagType[]> => {
         try {
             const response: AxiosResponse<any> = await axios.get(
@@ -184,13 +313,52 @@ export const ApiTag = {
                     withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": token,
+                        Authorization: token,
                     },
                 }
             );
 
             return response.data.data;
         } catch (error) {
+            throw error;
+        }
+    },
+    updateTag: async (updateTag: TagType): Promise<TagType> => {
+        try {
+            const response: AxiosResponse<any> = await axios.put(
+                `${API_SERVER_URL}/tag/${updateTag._id}`,
+                updateTag,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
+        } catch (error) {
+            console.error("Error creating tag:", error);
+            throw error;
+        }
+    },
+    deleteTag: async (updateTag: TagType): Promise<PostType> => {
+        try {
+            const response: AxiosResponse<any> = await axios.delete(
+                `${API_SERVER_URL}/tag/${updateTag._id}`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
+        } catch (error) {
+            console.error("Error creating tag:", error);
             throw error;
         }
     },

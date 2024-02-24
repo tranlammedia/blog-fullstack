@@ -40,7 +40,7 @@ export const htmltostring = (html: string, len: number = 300): string => {
     const result =
         lastPosition !== -1
             ? stringWithoutHtml.substring(0, lastPosition + 1)
-            : stringWithoutHtml.substring(0, 200) + "...";
+            : stringWithoutHtml.substring(0, 200) + (stringWithoutHtml.length > 200 ? "..." : "");
 
     return result;
 };

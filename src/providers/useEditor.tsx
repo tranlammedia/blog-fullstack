@@ -1,14 +1,16 @@
 // AuthContext.js
 import { createContext, useContext, useEffect, useState } from "react";
-import * as localStorage from "../helpers/localStorage";
+import * as localStorage from "../helpers/storage";
 import * as cookies from "../helpers/cookies";
 import { ApiUser } from "../services/Api";
-import { PostType } from "../interfaces";
+import { CategoryType, PostType, TagType } from "../interfaces";
 
 const EditorContext = createContext({});
 
 export const EditorProvider = ({ children }) => {
     const [post, setPost] = useState<PostType | null>(null);
+    const [categories, setCategories] = useState<CategoryType | null>(null);
+    const [tags, setTags] = useState<TagType | null>(null);
 
     useEffect(() => {
 
@@ -16,7 +18,7 @@ export const EditorProvider = ({ children }) => {
 
 
     return (
-        <EditorContext.Provider value={{ post, setPost }}>
+        <EditorContext.Provider value={{ post, setPost, categories, setCategories, tags, setTags }}>
             {children}
         </EditorContext.Provider>
     );

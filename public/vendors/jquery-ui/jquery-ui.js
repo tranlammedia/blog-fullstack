@@ -6035,7 +6035,7 @@ $.widget( "ui.autocomplete", {
 			content = this._normalize( content );
 		}
 		this._trigger( "response", null, { content: content } );
-		if ( !this.options.disabled && content && content.length && !this.cancelSearch ) {
+		if ( !this.options.disabled && content && content?.length && !this.cancelSearch ) {
 			this._suggest( content );
 			this._trigger( "open" );
 		} else {
@@ -6226,8 +6226,8 @@ $.widget( "ui.autocomplete", $.ui.autocomplete, {
 		if ( this.options.disabled || this.cancelSearch ) {
 			return;
 		}
-		if ( content && content.length ) {
-			message = this.options.messages.results( content.length );
+		if ( content && content?.length ) {
+			message = this.options.messages.results( content?.length );
 		} else {
 			message = this.options.messages.noResults;
 		}

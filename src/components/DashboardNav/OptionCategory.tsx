@@ -4,7 +4,7 @@ import { ApiCategory } from "../../services/Api";
 import { useEditor } from "../../providers/useEditor";
 
 export default function OptionCategory() {
-    const { post, setPost }: any = useEditor();
+    const { post, setPost, category, setCategory }: any = useEditor();
     const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
     const [options, setOptions] = useState<any[]>([]);
 
@@ -15,11 +15,11 @@ export default function OptionCategory() {
             categoryIds: selectedOptions.map((option) => option._id),
         });
     };
+    console.log(category)
     useEffect(() => {
         const fectch = async () => {
             try {
                 const categories = await ApiCategory.getAll();
-
                 setOptions(
                     categories.map((option) => ({
                         _id: option._id,
@@ -27,16 +27,28 @@ export default function OptionCategory() {
                         label: option.name,
                     }))
                 );
+                setCategory(categories)
             } catch (error) {}
         };
         fectch();
     }, []);
 
     useEffect(() => {
-        const lastSelectedOption = selectedOptions[selectedOptions.length - 1];
+        const targetIds = post?.categoryIds;
 
+        if (targetIds?.length > 0 && targetIds[0].hasOwnProperty("_id")) {
+            const filteredOptions = options.filter((option) =>
+                targetIds.some((target) => target._id === option._id)
+            );
+
+            setSelectedOptions(filteredOptions);
+        }
+ 
+    }, [post?.hasOwnProperty("categoryIds"), options]);
+    
+    useEffect(() => {
+        const lastSelectedOption = selectedOptions[selectedOptions.length - 1];
         const fectchCreate = async () => {
-            console.log("Creating");
             try {
                 const newCategory = await ApiCategory.createCategory({
                     name: lastSelectedOption.value,
@@ -59,7 +71,8 @@ export default function OptionCategory() {
         ) {
             fectchCreate();
         }
-    }, [selectedOptions.length]);
+
+    }, [selectedOptions?.length]);
 
     return (
         <>

@@ -1,3 +1,4 @@
+import { PostType } from "../interfaces";
 import { decodeJwt } from "./convert";
 
 const checkTokenExpiry = (storedToken: string): boolean => {
@@ -25,4 +26,18 @@ export const getToken = () => {
 
 export const deleteToken = () => {
     localStorage.removeItem("token");
+};
+
+export const setPost = (post: PostType) => {
+    localStorage.setItem("data", JSON.stringify(post));
+};
+
+export const getPost = () => {
+    const post = localStorage.getItem("data");
+    if (post) return JSON.parse(post);
+    return null;
+};
+
+export const deletePost = () => {
+    localStorage.removeItem("data");
 };

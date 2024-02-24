@@ -8,6 +8,12 @@ export interface UserType {
     id_gg?: string;
     id_github?: string;
 }
+export interface CategoryType {
+    _id: string;
+    name: string;
+    description: string;
+    parentCategory?: CategoryType; // Tham chiếu đến _id của category cha (nếu có)
+}
 
 export interface PostType {
     _id: string;
@@ -16,7 +22,7 @@ export interface PostType {
     description: string;
     featureImageUrl?: string;
     authorId: UserType;
-    categoryIds: CategoryType[] | [string];
+    categoryIds: [CategoryType] | [string];
     tagIds: TagType[] | [string];
     commentIds: CommentType[] | [string];
     views: number;
@@ -25,12 +31,6 @@ export interface PostType {
     updateAt: string;
 }
 
-export interface CategoryType {
-    _id: string;
-    name: string;
-    description: string;
-    parentCategory?: CategoryType; // Tham chiếu đến _id của category cha (nếu có)
-}
 
 export interface TagType {
     _id: string;

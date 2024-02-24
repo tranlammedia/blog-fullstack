@@ -64,8 +64,11 @@
   padding: 30px;
   transition: margin-right 0.3s, margin-left 0.3s;
   overflow-y: auto;
+}
+.main-content-mr {
   margin-right: var(--width-nav-right-close);
 }
+
 .main-content.open-left{
   margin-left: var(--width-nav-left-open);
 }

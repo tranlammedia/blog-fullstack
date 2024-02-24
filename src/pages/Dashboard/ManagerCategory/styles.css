@@ -1,0 +1,77 @@
+/* CSS Category */
+.table-width-manager-category th,
+.table-width-manager-category td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.8rem;
+}
+
+.table-width-manager-category thead tr th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Ten Danh muc */
+.table-width-manager-category th:nth-child(1),
+.table-width-manager-category td:nth-child(1) {
+    width: 30%;
+    text-align: left;
+
+}
+
+/* Mo ta */
+.table-width-manager-category th:nth-child(2),
+.table-width-manager-category td:nth-child(2) {
+    /* width: 10%; */
+    text-align: left;
+
+}
+
+/* Thao tac */
+.table-width-manager-category th:nth-child(3),
+.table-width-manager-category td:nth-child(3) {
+    width: 30%;
+}
+
+.table-width-manager-category td {
+    /* white-space: nowrap; Ngăn chữ bị tràn dòng */
+    overflow: hidden;
+    /* Ẩn nội dung vượt ra ngoài */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ... khi nội dung bị ẩn */
+}
+
+/* CSS tags */
+.table-width-manager-tags th,
+.table-width-manager-tags td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.8rem;
+}
+
+.table-width-manager-tags thead tr th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Ten Nhan */
+.table-width-manager-tags th:nth-child(1),
+.table-width-manager-tags td:nth-child(1) {
+    width: 70%;
+    text-align: left;
+
+}
+
+/* Thao tac */
+.table-width-manager-tags th:nth-child(3),
+.table-width-manager-tags td:nth-child(3) {
+    width: 30%;
+}
+
+.table-width-manager-tags td {
+    /* white-space: nowrap; Ngăn chữ bị tràn dòng */
+    overflow: hidden;
+    /* Ẩn nội dung vượt ra ngoài */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ... khi nội dung bị ẩn */
+}

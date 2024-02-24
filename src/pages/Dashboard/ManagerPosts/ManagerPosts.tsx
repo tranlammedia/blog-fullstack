@@ -1,8 +1,120 @@
+import { useEffect, useState } from "react";
 import NavLeft from "../../../components/DashboardNav/NavLeft";
 import { useShowNavLeft } from "../../../providers/useShowNavLeft";
+import { ApiPost } from "../../../services/Api";
+import { PostType } from "../../../interfaces";
+import "./styles.css";
+import { Link, useNavigate } from "react-router-dom";
+import { formateDate } from "../../../helpers/convert";
+
+interface fetchPost {
+    totalPages: number;
+    page: number;
+    data: PostType[];
+}
 
 export default function ManagerPosts() {
     const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
+    const [dataPost, setDataPost] = useState<fetchPost | null>(null);
+    const [callApi, setCallApi] = useState(false);
+    const [postDelete, setPostDelete] = useState<PostType | null>(null);
+
+    useEffect(() => {
+        const fetch = async () => {
+            const posts = await ApiPost.getPostsForAdmin();
+            setDataPost(posts);
+        };
+        fetch();
+    }, [callApi]);
+
+    const handleOpenDeleteModal = async (postDelete) => {
+        setPostDelete(postDelete);
+    };
+    const handleDeletePost = async (postId: string) => {
+        await ApiPost.deletePost(postId);
+        setCallApi(!callApi);
+    };
+
+    const handleMoveToPage = (page: number) => {
+        const fetchData = async () => {
+            try {
+                const posts = await ApiPost.getPostsForReader(page, 10);
+
+                setDataPost(posts);
+            } catch (error) {
+                // console.log(error);
+            }
+        };
+        if (dataPost?.page !== page) {
+            fetchData();
+        }
+    };
+
+    const elpagetitation = (dataPost) => {
+        if (!dataPost) return null;
+        const elpages: JSX.Element[] = [];
+        const currentpage = dataPost.page;
+        const totalPages = dataPost.totalPages;
+
+        const start = currentpage - 2 < 1 ? 1 : currentpage - 2;
+        const end = currentpage + 2 > totalPages ? totalPages : currentpage + 2;
+        const prev = currentpage - 1 < 1 ? 1 : currentpage - 1;
+        const next = currentpage + 1 > totalPages ? totalPages : currentpage + 1;
+        elpages.push(
+            <li
+                key={"prev"}
+                className={`page-item ${currentpage == 1 ? "disabled" : ""}`}
+            >
+                <a
+                    className="page-link"
+                    href="#"
+                    tabIndex={-1}
+                    onClick={() => handleMoveToPage(prev)}
+                >
+                    Trước
+                </a>
+            </li>
+        );
+
+        if (start > 1)
+            elpages.push(
+                <li key={"letf"} className="page-item">
+                    ...
+                </li>
+            );
+        for (let page = start; page <= end; page++) {
+            elpages.push(
+                <li
+                    className={`page-item ${
+                        page === currentpage ? "active" : ""
+                    }`}
+                    key={page}
+                    onClick={() => handleMoveToPage(page)}
+                >
+                    <a href="#" className="page-link">
+                        {page}
+                    </a>
+                </li>
+            );
+        }
+        if (end < totalPages)
+            elpages.push(
+                <li key={"right"} className="page-item">
+                    ...
+                </li>
+            );
+        elpages.push(
+            <li key={"next"} className={`page-item ${currentpage == totalPages ? "disabled" : ""}`}>
+                <a className="page-link"
+                    href="#"
+                    onClick={() => handleMoveToPage(next)}
+                    >
+                    Tiếp theo
+                </a>
+            </li>
+        );
+        return elpages;
+    };
 
     return (
         <section className="container-dashboard">
@@ -50,7 +162,7 @@ export default function ManagerPosts() {
                 <b>Danh sách bài viết</b>
 
                 {/* <!-- Bảng danh sách bài viết --> */}
-                <table className="table table-striped">
+                <table className="table table-striped table-width-manager-posts">
                     {/* <!-- Phần header của bảng --> */}
                     <thead>
                         <tr>
@@ -58,121 +170,74 @@ export default function ManagerPosts() {
                             <th>Tiêu đề</th>
                             <th>Nội dung</th>
                             <th>Chủ đề</th>
+                            <th>Ngày update</th>
+                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
                     {/* <!-- Phần body của bảng --> */}
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Chủ đề 1</td>
-                            <td>Nội dung của chủ đề 1</td>
-                            <td>Crypto</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary btn-sm"
-                                >
-                                    <i className="fas fa-edit"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-danger btn-sm"
-                                    data-toggle="modal"
-                                    data-target="#bottonDeleteModal"
-                                >
-                                    <i className="fas fa-trash-alt"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Chủ đề 1</td>
-                            <td>Nội dung của chủ đề 1</td>
-                            <td>Crypto</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary btn-sm"
-                                >
-                                    <i className="fas fa-edit"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-danger btn-sm"
-                                    data-toggle="modal"
-                                    data-target="#bottonDeleteModal"
-                                >
-                                    <i className="fas fa-trash-alt"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Chủ đề 1</td>
-                            <td>Nội dung của chủ đề 1</td>
-                            <td>Crypto</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary btn-sm"
-                                >
-                                    <i className="fas fa-edit"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-danger btn-sm"
-                                    data-toggle="modal"
-                                    data-target="#bottonDeleteModal"
-                                >
-                                    <i className="fas fa-trash-alt"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Chủ đề 1</td>
-                            <td>Nội dung của chủ đề 1</td>
-                            <td>Crypto</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary btn-sm"
-                                >
-                                    <i className="fas fa-edit"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-danger btn-sm"
-                                    data-toggle="modal"
-                                    data-target="#bottonDeleteModal"
-                                >
-                                    <i className="fas fa-trash-alt"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Chủ đề 1</td>
-                            <td>Nội dung của chủ đề 1</td>
-                            <td>Crypto</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary btn-sm mr-2"
-                                >
-                                    <i className="fas fa-edit"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-danger btn-sm"
-                                    data-toggle="modal"
-                                    data-target="#bottonDeleteModal"
-                                >
-                                    <i className="fas fa-trash-alt"></i>
-                                </button>
-                            </td>
-                        </tr>
+                        {dataPost?.data.map((post, index) => (
+                            <tr key={post._id}>
+                                <td>{index + 1}</td>
+                                <td>
+                                    <a
+                                        href={"/blog/" + post._id}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {post.title.slice(0, 60)}
+                                        {post.title?.length > 60 && "..."}
+                                    </a>
+                                </td>
+                                <td>
+                                    {post.description?.slice(0, 100)}
+                                    {post.description?.length > 100 && "..."}
+                                </td>
+                                <td>
+                                    {post.categoryIds?.map(
+                                        (category, index) => (
+                                            <a key={index} href="#">
+                                                |{category.name}|{" "}
+                                            </a>
+                                        )
+                                    )}
+                                </td>
+                                <td>{formateDate(post.updateAt)}</td>
+                                <td>
+                                    <span
+                                        className={` badge badge-${
+                                            post.status === "publish"
+                                                ? "success"
+                                                : "secondary"
+                                        } badge-custom`}
+                                    >
+                                        {post.status}
+                                    </span>
+                                </td>
+                                <td>
+                                    <Link
+                                        type="button"
+                                        className="btn btn-primary btn-sm mr-2"
+                                        to={"edit/" + post._id}
+                                    >
+                                        <i className="fas fa-edit"></i>
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger btn-sm"
+                                        data-toggle="modal"
+                                        data-target={`#bottonDeleteModal`}
+                                        onClick={() =>
+                                            handleOpenDeleteModal(post)
+                                        }
+                                    >
+                                        <i className="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+
                         {/* <!-- Thêm các dòng dữ liệu khác vào đây --> */}
                     </tbody>
                 </table>
@@ -180,87 +245,73 @@ export default function ManagerPosts() {
                 {/* <!-- Phân trang --> */}
                 <nav aria-label="Page navigation example">
                     <ul className="pagination justify-content-end">
-                        <li className="page-item disabled">
-                            <a
-                                className="page-link"
-                                href="#"
-                                tabIndex={-1}
-                                aria-disabled="true"
-                            >
-                                Trước
-                            </a>
-                        </li>
-                        <li className="page-item active">
-                            <a className="page-link" href="#">
-                                1
-                            </a>
-                        </li>
-                        <li className="page-item">
-                            <a className="page-link" href="#">
-                                2
-                            </a>
-                        </li>
-                        <li className="page-item">
-                            <a className="page-link" href="#">
-                                3
-                            </a>
-                        </li>
-                        <li className="page-item">
-                            <a className="page-link" href="#">
-                                Tiếp theo
-                            </a>
-                        </li>
+                        {dataPost ? elpagetitation(dataPost) : ""}
                     </ul>
                 </nav>
             </div>
             {/* <!-- Modal conform delete--> */}
-            <div
-                className="modal fade"
-                id="bottonDeleteModal"
-                tabIndex={-1}
-                role="dialog"
-                aria-labelledby="bottonDeleteModalLabel"
-                aria-hidden="true"
-            >
+            {postDelete && (
                 <div
-                    className="modal-dialog modal-dialog-centered"
-                    role="document"
+                    className="modal fade"
+                    id={`bottonDeleteModal`}
+                    tabIndex={-1}
+                    role="dialog"
+                    aria-labelledby="bottonDeleteModalLabel"
+                    aria-hidden="true"
                 >
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5
-                                className="modal-title"
-                                id="bottonDeleteModalLabel"
-                            >
-                                Xác nhận xóa bài viết
-                            </h5>
-                            <button
-                                type="button"
-                                className="close"
-                                data-dismiss="modal"
-                                aria-label="Close"
-                            >
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            Bạn có chắc chắn muốn xóa bài viết này không?
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                data-dismiss="modal"
-                            >
-                                Hủy
-                            </button>
-                            <button type="button" className="btn btn-danger">
-                                Xóa
-                            </button>
+                    <div
+                        className="modal-dialog modal-dialog-centered"
+                        role="document"
+                    >
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5
+                                    className="modal-title"
+                                    id="bottonDeleteModalLabel"
+                                >
+                                    Xác nhận xóa bài viết
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                Bạn có chắc chắn muốn xóa không?
+                                <br />
+                                Bài viết:
+                                <span className="font-weight-bold">
+                                    {" "}
+                                    {postDelete.title}
+                                </span>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    data-dismiss="modal"
+                                >
+                                    Hủy
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() =>
+                                        handleDeletePost(postDelete._id)
+                                    }
+                                    data-dismiss="modal"
+                                >
+                                    Xóa
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </section>
     );
 }

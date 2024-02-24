@@ -1,14 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import ImageUploader from "quill-image-uploader";
 
 import "./styles.css";
-import { useLocation } from "react-router-dom";
 import { useShowNavLeft } from "../../providers/useShowNavLeft";
 import { useEditor } from "../../providers/useEditor";
 import { API_CLOUDINARY_URL, CLOUDINARY_PRESET } from "../../config/constants";
+import { ApiPost } from "../../services/Api";
+import { PostType } from "../../interfaces";
+import * as storage from "../../helpers/storage";
 
 Quill.register("modules/imageResize", ImageResize);
 Quill.register("modules/imageUploader", ImageUploader);
@@ -19,7 +22,20 @@ const EditQuill = () => {
     const [showNavRight, setShowNavRight] = useState(true);
     const [lengthTitle, setLengthTitle] = useState(120);
     const { post, setPost }: any = useEditor();
+    const { blogid } = useParams();
 
+    useEffect(() => {
+        if (blogid) {
+            const fetch = async () => {
+                const postDB: PostType[] = await ApiPost.getPost(blogid);
+                setPost(postDB[1]);
+            };
+
+            fetch();
+        }
+        setPost(storage.getPost());
+    }, []);
+    
     useEffect(() => {
         if (location.state?.showNavLeft != undefined) {
             setShowNavLeft(location.state?.showNavLeft);
@@ -28,18 +44,26 @@ const EditQuill = () => {
             setShowNavRight(location.state?.showNavRight);
         }
     }, [location.state?.showNavLeft, location.state?.showNavRight]);
-
+    
+    useEffect(() => {
+        if(post) {
+            storage.setPost(post);
+            setLengthTitle(120 - post?.title?.length);
+        }
+    },[post])
+        
+    
     function handleChangeContent(newContent: string) {
         setPost({ ...post, content: newContent });
     }
 
     function handleChangeTitle(event: React.ChangeEvent<HTMLInputElement>) {
-        const title = event.target.value
-        if (title.length <= 120)  {
+        const title = event.target.value;
+        if (title?.length <= 120) {
             setPost({ ...post, title });
-            setLengthTitle(120 - title.length)
         }
     }
+
 
     const modules = useMemo(
         () => ({
@@ -115,13 +139,10 @@ const EditQuill = () => {
                         formData.append("upload_preset", CLOUDINARY_PRESET); // Replace with your Cloudinary upload preset
                         formData.append("folder", "blog-fullstack");
 
-                        fetch(
-                            API_CLOUDINARY_URL,
-                            {
-                                method: "POST",
-                                body: formData,
-                            }
-                        )
+                        fetch(API_CLOUDINARY_URL, {
+                            method: "POST",
+                            body: formData,
+                        })
                             .then((response) => response.json())
                             .then((result) => {
                                 console.log(result);
@@ -160,14 +181,19 @@ const EditQuill = () => {
         "code-block",
     ];
 
+
     return (
         <div
-            className={`main-content ${showNavLeft ? "open-left" : ""} ${
-                showNavRight ? "open-right" : ""
-            }`}
+            className={`main-content main-content-mr ${
+                showNavLeft ? "open-left" : ""
+            } ${showNavRight ? "open-right" : ""}`}
         >
             <div className="edit d-flex flex-column">
-                <h2>Bài viết mới</h2>
+                {blogid || post?._id ? (
+                    <h2>Cập nhật bài viết</h2>
+                ) : (
+                    <h2>Bài viết mới</h2>
+                )}
                 <div className="form-group">
                     <div className="d-flex justify-content-between">
                         <label>Tiêu đề</label>

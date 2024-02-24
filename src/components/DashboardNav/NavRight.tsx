@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "./styles.css";
+import CreatableSelect from "react-select/creatable";
+
 import DraftIcon from "../icons/DraftIcon";
 import PublishIcon from "../icons/PublishIcon";
 import FileTextIcon from "../icons/FileTextIcon";
@@ -8,7 +10,7 @@ import TagIcon from "../icons/TagIcon";
 import ImgIcon from "../icons/ImgIcon";
 import { useEditor } from "../../providers/useEditor";
 import { PostType } from "../../interfaces";
-import { ApiPost } from "../../services/Api";
+import { ApiPost, ApiTag } from "../../services/Api";
 import { htmltostring } from "../../helpers/convert";
 import { uploadImage } from "../../helpers/uploadImage";
 import CaretLeftIcon from "../icons/CaretLeftIcon";
@@ -16,9 +18,11 @@ import CaretRightIcon from "../icons/CaretRightIcon";
 import CategoryIcon from "../icons/CategoryIcon";
 import OptionCategory from "./OptionCategory";
 import OptionTag from "./OptionTag";
+import * as storage from "../../helpers/storage";
 
 export default function NavRight() {
     const navigate = useNavigate();
+    const { blogid } = useParams();
     const [showNavRight, setShowNavRight] = useState(true);
 
     const { post, setPost }: any = useEditor();
@@ -34,25 +38,56 @@ export default function NavRight() {
         navigate(".", { state: { showNavRight: !showNavRight } });
     }
     async function handleButtonPost(status: "draft" | "publish") {
-        const featureImageUrl = await uploadImage(featuredImage.file);
+        const isPushlish = !post?.hasOwnProperty("_id") && !blogid
+        
+        if (isPushlish) {
+            // create a new post
+            const featureImageUrl = await uploadImage(featuredImage.file);
 
-        const newPost = {
-            ...post,
-            status: status,
-            featureImageUrl: featureImageUrl,
-            description: !post.description
-                ? htmltostring(post.content)
-                : post.description,
-        };
-        const fetchData = async (newPost) => {
-            try {
-                const post: PostType = await ApiPost.createPost(newPost);
-                navigate("/blog/" + post._id);
-            } catch (error) {
-                console.log(error);
+            const newPost = {
+                ...post,
+                status: status,
+                featureImageUrl: featureImageUrl,
+                description: !post.description
+                    ? htmltostring(post.content)
+                    : post.description,
+            };
+            const fetchData = async (newPost) => {
+                try {
+                    const post: PostType = await ApiPost.createPost(newPost);
+                    storage.deletePost()
+                    navigate("/dashboard")
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+
+            fetchData(newPost);
+        } else {
+            // update post
+            let updatePost = {
+                ...post,
+                status: status,
+            };
+            console.log(updatePost);
+            if (featuredImage.file) {
+                const featureImageUrl = await uploadImage(featuredImage.file);
+                updatePost = {
+                    ...post,
+                    featureImageUrl: featureImageUrl,
+                };
             }
-        };
-        fetchData(newPost);
+            const fetchData = async (updatePost) => {
+                try {
+                    const post: PostType = await ApiPost.updatePost(updatePost);
+                    storage.deletePost()
+                    navigate("/dashboard")
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            fetchData(updatePost);
+        }
     }
 
     function handleCheckDisableButton() {
@@ -67,7 +102,6 @@ export default function NavRight() {
                 ...post,
                 description,
             });
-            setLengthDescShort(300 - description.length);
         }
     };
 
@@ -81,6 +115,12 @@ export default function NavRight() {
             });
         }
     };
+
+useEffect(()=> {
+    if (post) {
+        setLengthDescShort(300 - post?.description?.length);
+    }
+},[post])
 
     return (
         <div
@@ -209,6 +249,7 @@ export default function NavRight() {
                                             <img
                                                 src={
                                                     featuredImage.url ||
+                                                    post?.featureImageUrl ||
                                                     "https://via.placeholder.com/550x280"
                                                 }
                                                 alt="Featured Image"

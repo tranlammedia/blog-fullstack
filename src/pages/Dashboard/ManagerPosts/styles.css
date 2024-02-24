@@ -1,0 +1,80 @@
+/* CSS */
+.table-width-manager-posts th,
+.table-width-manager-posts td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.8rem;
+}
+
+.table-width-manager-posts thead tr th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* STT */
+.table-width-manager-posts th:nth-child(1),
+.table-width-manager-posts td:nth-child(1) {
+    width: 5%;
+
+}
+
+/* Tieu De */
+.table-width-manager-posts th:nth-child(2),
+.table-width-manager-posts td:nth-child(2) {
+    width: 20%;
+    text-align: left;
+
+}
+
+/* Noi dung */
+.table-width-manager-posts th:nth-child(3),
+.table-width-manager-posts td:nth-child(3) {
+    width: 30%;
+    text-align: left;
+
+}
+
+/* Chu de */
+.table-width-manager-posts th:nth-child(4),
+.table-width-manager-posts td:nth-child(4) {
+    width: 10%;
+    
+}
+
+.table-width-manager-posts td:nth-child(4) {
+    font-size: 0.8rem;
+}
+
+/* Ngay */
+.table-width-manager-posts th:nth-child(5),
+.table-width-manager-posts td:nth-child(5) {
+    width: 10%;
+}
+
+/* Trang thai */
+.table-width-manager-posts th:nth-child(6),
+.table-width-manager-posts td:nth-child(6) {
+    width: 10%;
+}
+
+.badge-custom {
+    font-size: 0.7rem;
+    min-width: 100%;
+    padding: 6px;
+}
+
+/* Thao tac */
+.table-width-manager-posts th:nth-child(7),
+.table-width-manager-posts td:nth-child(7) {
+    width: 15%;
+}
+
+
+
+.table-width-manager-posts td {
+    /* white-space: nowrap; Ngăn chữ bị tràn dòng */
+    overflow: hidden;
+    /* Ẩn nội dung vượt ra ngoài */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ... khi nội dung bị ẩn */
+}

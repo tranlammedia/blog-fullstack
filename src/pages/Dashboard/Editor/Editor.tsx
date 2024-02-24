@@ -10,7 +10,7 @@ import { EditorProvider, useEditor } from "../../../providers/useEditor";
 const Editor = () => {
 
     return (
-        <EditorProvider>
+        
             <section className="container-dashboard">
                 <NavLeft />
                 <EditQuill
@@ -19,7 +19,7 @@ const Editor = () => {
 
                 ></NavRight>
             </section>
-        </EditorProvider>
+        
     );
 };
 

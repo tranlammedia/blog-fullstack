@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import * as localStorage from "../helpers/localStorage";
+import * as localStorage from "../helpers/storage";
 
 export default function AuthToken() {
     const location = useLocation();

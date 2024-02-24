@@ -12,15 +12,17 @@ import PortfolioDetail from "./pages/PortfolioDetail";
 import DashboardLayout from "./layout/DashboardLayout";
 import Editor from "./pages/Dashboard/Editor/Editor";
 import ManagerPosts from "./pages/Dashboard/ManagerPosts/ManagerPosts";
-import ManagerUsers from "./pages/Dashboard/ManagerUsers/ManagerUsers";
+import ManagerCategory from "./pages/Dashboard/ManagerCategory/ManagerCategory";
 import { useAuth } from "./providers/useAuth";
 import AuthToken from "./pages/AuthToken";
+import Redirect from "./pages/Redirect";
 
 function App() {
     const { userLogin }: any = useAuth();
     return (
         <Routes>
             <Route path="/auth" element={<AuthToken />} />
+            <Route path="/redirect/:path" element={<Redirect />} />
             <Route path="/" element={<SampleLayout />}>
                 <Route index element={<Home />} />
                 <Route path="/about" element={<About />} />
@@ -40,7 +42,8 @@ function App() {
                 <Route path="/dashboard" element={<DashboardLayout />}>
                     <Route index element={<ManagerPosts />} />
                     <Route path="new" element={<Editor />} />
-                    <Route path="users" element={<ManagerUsers />} />
+                    <Route path="edit/:blogid" element={<Editor />} />
+                    <Route path="category" element={<ManagerCategory />} />
                 </Route>
             )}
             <Route path="*" element={<AuthToken />} />

@@ -1,6 +1,6 @@
 // AuthContext.js
 import { createContext, useContext, useEffect, useState } from "react";
-import * as localStorage from "../helpers/localStorage";
+import * as localStorage from "../helpers/storage";
 import * as cookies from "../helpers/cookies";
 import { ApiUser } from "../services/Api";
 import { UserType } from "../interfaces";

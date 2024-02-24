@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ApiPost } from "../../services/Api";
-import { PostType } from "../../interfaces";
+import { CategoryType, PostType } from "../../interfaces";
 import { formateDate } from "../../helpers/convert";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./styles.css";
+
+interface fetchPost {
+    totalPages: number;
+    page: number;
+    data: PostType[];
+}
+
 export default function Blog() {
-    const [posts, setPosts] = useState<PostType[] | null>(null);
+    const [dataPost, setDataPost] = useState<fetchPost | null>(null);
     useEffect(() => {
         window.scrollTo(0, 0);
         const fetchData = async () => {
             try {
-                const posts: PostType[] = await ApiPost.getAllPosts();
-                console.log(posts);
-                setPosts(posts);
+                const posts = await ApiPost.getPostsForReader(1, 10);
+
+                setDataPost(posts);
             } catch (error) {
                 // console.log(error);
             }
@@ -25,6 +32,93 @@ export default function Blog() {
         };
     }, []);
 
+    const handleMoveToPage = (page: number) => {
+        const fetchData = async () => {
+            try {
+                const posts = await ApiPost.getPostsForReader(page, 10);
+
+                setDataPost(posts);
+            } catch (error) {
+                // console.log(error);
+            }
+        };
+        if (dataPost?.page !== page) {
+            fetchData();
+        }
+    };
+
+    const elpagetitation = (dataPost) => {
+        if (!dataPost) return null;
+        const elpages: JSX.Element[] = [];
+        const currentpage = dataPost.page;
+        const totalPages = dataPost.totalPages;
+
+        const start = currentpage - 2 < 1 ? 1 : currentpage - 2;
+        const end = currentpage + 2 > totalPages ? totalPages : currentpage + 2;
+        const prev = currentpage - 1 < 1 ? 1 : currentpage - 1;
+        const next =
+            currentpage + 1 > totalPages ? totalPages : currentpage + 1;
+
+        elpages.push(
+            <li
+                key={"prev"}
+                className={`page-item ${currentpage == 1 ? "disabled" : ""}`}
+            >
+                <a
+                    className="page-link"
+                    href="#"
+                    tabIndex={-1}
+                    onClick={() => handleMoveToPage(prev)}
+                >
+                    <span className="lnr lnr-chevron-left"></span>
+                </a>
+            </li>
+        );
+        if (start > 1)
+            elpages.push(
+                <li key={"start"} className="page-item">
+                    ...
+                </li>
+            );
+        for (let page = start; page <= end; page++) {
+            elpages.push(
+                <li
+                    className={`page-item ${
+                        page === currentpage ? "active" : ""
+                    }`}
+                    key={page}
+                    onClick={() => handleMoveToPage(page)}
+                >
+                    <a href="#" className="page-link">
+                        {page}
+                    </a>
+                </li>
+            );
+        }
+        if (end < totalPages)
+            elpages.push(
+                <li key={"right"} className="page-item">
+                    ...
+                </li>
+            );
+        elpages.push(
+            <li
+                key={"next"}
+                className={`page-item ${
+                    currentpage == totalPages ? "disabled" : ""
+                }`}
+            >
+                <a
+                    className="page-link"
+                    href="#"
+                    onClick={() => handleMoveToPage(next)}
+                >
+                    <span className="lnr lnr-chevron-right"></span>
+                </a>
+            </li>
+        );
+        return elpages;
+    };
     return (
         <>
             {/* <!--================Blog Categorie Area =================--> */}
@@ -93,7 +187,7 @@ export default function Blog() {
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="blog_left_sidebar">
-                                {posts?.map((post) => {
+                                {dataPost?.data.map((post) => {
                                     return (
                                         <article
                                             className="row blog_item"
@@ -102,14 +196,21 @@ export default function Blog() {
                                             {/* infor */}
                                             <div className="col-md-3">
                                                 <div className="blog_info text-right">
-                                                    <div className="post_tag">
-                                                        <a
-                                                            className="active"
-                                                            href="#"
-                                                        >
-                                                            Technology,
-                                                        </a>
-                                                    </div>
+                                                    {post?.categoryIds[0] && (
+                                                        <div className="post_tag">
+                                                            <a
+                                                                className="active"
+                                                                href="#"
+                                                            >
+                                                                {
+                                                                    (
+                                                                        post
+                                                                            .categoryIds[0] as CategoryType
+                                                                    )?.name
+                                                                }
+                                                            </a>
+                                                        </div>
+                                                    )}
                                                     <ul className="blog_meta list">
                                                         <li>
                                                             <a href="#">
@@ -145,9 +246,7 @@ export default function Blog() {
                                                             }
                                                             alt=""
                                                             className="blog_post_image"
-                                                            style={{
-                                                                
-                                                            }}
+                                                            style={{}}
                                                         />
                                                     )}
                                                     <div className="blog_details">
@@ -180,68 +279,9 @@ export default function Blog() {
                                 <article>
                                     <nav className="blog-pagination justify-content-center d-flex">
                                         <ul className="pagination">
-                                            <li className="page-item">
-                                                <a
-                                                    href="#"
-                                                    className="page-link"
-                                                    aria-label="Previous"
-                                                >
-                                                    <span aria-hidden="true">
-                                                        <span className="lnr lnr-chevron-left"></span>
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    href="#"
-                                                    className="page-link"
-                                                >
-                                                    01
-                                                </a>
-                                            </li>
-                                            <li className="page-item active">
-                                                <a
-                                                    href="#"
-                                                    className="page-link"
-                                                >
-                                                    02
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    href="#"
-                                                    className="page-link"
-                                                >
-                                                    03
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    href="#"
-                                                    className="page-link"
-                                                >
-                                                    04
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    href="#"
-                                                    className="page-link"
-                                                >
-                                                    09
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a
-                                                    href="#"
-                                                    className="page-link"
-                                                    aria-label="Next"
-                                                >
-                                                    <span aria-hidden="true">
-                                                        <span className="lnr lnr-chevron-right"></span>
-                                                    </span>
-                                                </a>
-                                            </li>
+                                            {dataPost
+                                                ? elpagetitation(dataPost)
+                                                : ""}
                                         </ul>
                                     </nav>
                                 </article>
