@@ -8,6 +8,7 @@ const postSchema = new Schema<PostType>(
         description: {type: String, required: true},
         featureImageUrl: {type: String},
         categoryIds: { type: [Schema.Types.ObjectId], ref: "Category" },
+        tagIds: { type: [Schema.Types.ObjectId], ref: "Tag" },
         authorId: { type: Schema.Types.ObjectId, ref: "User" },
         commentIds: {type: [Schema.Types.ObjectId], required: true, default: [] },
         views: { type: Number, required: true, default: 0},

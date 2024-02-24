@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
 
-import { PORT, SECRET_SESSION_KEY, URL_DATABASE } from "./config/constants";
+import { PORT, SECRET_SESSION_KEY, URL_CLIENT, URL_DATABASE } from "./config/constants";
 import connectDatabase from "./config/database";
 import passport from "./config/passport";
 
@@ -18,7 +18,7 @@ connectDatabase(URL_DATABASE);
 
 app.use(
     cors({
-        origin: "http://127.0.0.1:3000", // Replace with your actual client origin
+        origin: URL_CLIENT, // Replace with your actual client origin
         credentials: true,
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         exposedHeaders: "Authorization", // sent token to client

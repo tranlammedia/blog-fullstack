@@ -4,7 +4,7 @@ import TagModel from "../models/Tag";
 
 export const getAllTag = async (req: Request, res: Response) => {
     try {
-        const tags = await TagModel.find();
+        const tags = await TagModel.find().sort({name: 1});
 
         if (tags.length < 1) {
             res.status(404).json({
@@ -30,10 +30,10 @@ export const createTag = async (req: Request, res: Response) => {
     const tagBody = req.body;
 
     // Kiểm tra email duy nhất
-    const existingCategory = await TagModel.findOne({
+    const existingTag = await TagModel.findOne({
         name: { $regex: new RegExp(tagBody.name, "i") },
     });
-    if (existingCategory) {
+    if (existingTag) {
         return res
             .status(409)
             .json({ success: false, error: "Tag đã tồn tại" });
@@ -50,4 +50,61 @@ export const createTag = async (req: Request, res: Response) => {
     await TagModel.create(newTag);
 
     res.status(201).json({ success: true, data: newTag });
+};
+
+export const updateTag = async (req: Request, res: Response) => {
+    try {
+        const postId = req.params.id;
+        const postBody = req.body;
+
+        // Kiểm tra xem postId có tồn tại không
+        const updatedTag = await TagModel.findByIdAndUpdate(
+            postId,
+            { $set: { ...postBody } },
+            { new: true }
+        );
+
+        if (!updatedTag) {
+            return res
+                .status(404)
+                .json({ success: false, error: "Tag not found" });
+        }
+        res.status(200).json({ success: true, data: updatedTag });
+    } catch (error) {
+        console.error("Error updating Tag:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal server error",
+        });
+    }
+};
+
+export const deleteTag = async (req: Request, res: Response) => {
+    try {
+        const tagId = req.params.id;
+
+        // Xóa bài viết từ trong cơ sở dữ liệu
+        const deletedTag = await TagModel.findByIdAndDelete(tagId);
+
+        // Kiểm tra xem bài viết có tồn tại không
+        if (!deletedTag) {
+            return res
+                .status(404)
+                .json({ success: false, error: "tag not found" });
+        }
+
+        // Trả về thông báo xóa thành công
+        res.json({
+            success: true,
+            message: "tag deleted successfully",
+            data: deletedTag,
+        });
+    } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error("Error deleting tag:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal server error",
+        });
+    }
 };

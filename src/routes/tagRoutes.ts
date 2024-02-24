@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.get("/", authenticateToken, tagController.getAllTag);
 router.post("/", authenticateToken, tagController.createTag);
+router.put("/:id", authenticateToken, tagController.updateTag);
+router.delete("/:id", authenticateToken, tagController.deleteTag);
 
 export default router;

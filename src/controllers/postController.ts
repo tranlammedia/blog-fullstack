@@ -8,10 +8,22 @@ interface ExtendedRequest extends Request {
     isAuthenticated?: () => boolean;
 }
 
-export const getAllPosts = async (req: Request, res: Response) => {
+export const getPostsForReader = async (req: Request, res: Response) => {
+    const pageParam = req.query.page;
+    const perPageParam = req.query.perpage;
+    const page = pageParam ? parseInt(pageParam as string, 10) : 1; // Trang hiện tại, mặc định là trang 1
+    let perPage = perPageParam ? parseInt(perPageParam as string, 10) : 10;
+
+    perPage = perPage > 50 ? 50 : perPage;
+
     try {
-        const posts = await PostModel.find()
-            .populate("authorId")
+        const totalPosts = await PostModel.countDocuments();
+        const totalPages = Math.ceil(totalPosts / perPage);
+
+        const posts = await PostModel.find({ status: "publish" })
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+            .populate(["authorId", "categoryIds", "tagIds"])
             .sort({ createdAt: -1 });
 
         if (posts.length < 1) {
@@ -21,7 +33,59 @@ export const getAllPosts = async (req: Request, res: Response) => {
             });
         } else {
             res.status(200).json({
-                success: true,
+                totalPages: totalPages,
+                page: page,
+                data: posts,
+            });
+        }
+    } catch (error) {
+        console.error("Lỗi khi lấy danh sách bài viết:", error);
+        res.status(500).json({
+            succcess: false,
+            error: "Đã xảy ra lỗi server khi lấy danh sách bài viết.",
+        });
+    }
+};
+
+export const getPostsForAdmin = async (req: ExtendedRequest, res: Response) => {
+    const user = req.user;
+    const pageParam = req.query.page;
+    const perPageParam = req.query.perpage;
+    const page = pageParam ? parseInt(pageParam as string, 10) : 1; // Trang hiện tại, mặc định là trang 1
+    let perPage = perPageParam ? parseInt(perPageParam as string, 10) : 10;
+
+    perPage = perPage > 50 ? 50 : perPage;
+    
+    try {
+        let query = {};
+        if (user.role == "admin") {
+            query = {};
+        } else if (user.role == "author") {
+            query = { authorId: user._id };
+        } else {
+            return res
+            .status(403)
+            .json({ success: false, error: "Unauthorized" });
+        }
+        const totalPosts = await PostModel.countDocuments(query);
+        const totalPages = Math.ceil(totalPosts / perPage);
+
+        const posts = await PostModel.find(query)
+        // { authorId: "65c5d5b74ecd1e313908c091" }
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+            .populate(["authorId", "categoryIds", "tagIds"])
+            .sort({ createdAt: -1 });
+
+        if (posts.length < 1) {
+            res.status(404).json({
+                success: false,
+                error: "Không có bài viết nào được tìm thấy.",
+            });
+        } else {
+            res.status(200).json({
+                totalPages: totalPages,
+                page: page,
                 data: posts,
             });
         }
@@ -48,7 +112,7 @@ export const getPostById = async (req: Request, res: Response) => {
             postId,
             { $inc: { views: 1 } },
             { new: true }
-        ).populate("authorId");
+        ).populate(["authorId", "categoryIds", "tagIds"]);
 
         // nếu không tồn tại
         if (!currentPost) {
@@ -90,7 +154,7 @@ export const getPostById = async (req: Request, res: Response) => {
 export const createPost = async (req: ExtendedRequest, res: Response) => {
     try {
         const postBody = req.body;
-        console.log(req.user._id);
+
         if (!req.user?._id)
             return res
                 .status(403)
@@ -119,22 +183,62 @@ export const createPost = async (req: ExtendedRequest, res: Response) => {
 };
 
 export const updatePost = async (req: Request, res: Response) => {
-    const postId = req.params.id;
-    // const postIndex = POSTS.findIndex((p) => p.id === postId);
-
-    // if (postIndex === -1) {
-    //     return res.status(404).json({ error: "Post not found" });
-    // }
-
-    // const updatedPost = { ...posts[postIndex], ...req.body };
-    // posts[postIndex] = updatedPost;
-
-    // res.json(updatedPost);
+    try {
+        const postId = req.params.id; // Lấy id của bài viết cần cập nhật từ URL
+        const postBody = req.body; // Dữ liệu mới của bài viết
+        console.log(postBody);
+        // Kiểm tra xem postId có tồn tại không
+        const updatedPost = await PostModel.findOneAndUpdate(
+            { _id: postId }, // Điều kiện tìm kiếm
+            { $set: { ...postBody, updateAt: Date.now() } }, // Dữ liệu cập nhật
+            { new: true } // Tùy chọn để trả về bản ghi đã cập nhật
+        );
+        if (!updatedPost) {
+            return res
+                .status(404)
+                .json({ success: false, error: "Post not found" });
+        }
+        res.status(200).json({ success: true, data: updatedPost });
+    } catch (error) {
+        console.error("Error updating post:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal server error",
+        });
+    }
 };
 
 export const deletePost = async (req: Request, res: Response) => {
     const postId = req.params.id;
-    // posts = posts.filter((p) => p.id !== postId);
+    console.log(postId);
+    if (!Types.ObjectId.isValid(postId)) {
+        return res
+            .status(400)
+            .json({ success: false, error: "Invalid postId parameter" });
+    }
+    try {
+        // Xóa bài viết từ trong cơ sở dữ liệu
+        const deletedPost = await PostModel.findByIdAndDelete(postId);
 
-    res.json({ message: "Post deleted successfully" });
+        // Kiểm tra xem bài viết có tồn tại không
+        if (!deletedPost) {
+            return res
+                .status(404)
+                .json({ success: false, error: "Post not found" });
+        }
+
+        // Trả về thông báo xóa thành công
+        res.json({
+            success: true,
+            message: "Post deleted successfully",
+            data: deletedPost,
+        });
+    } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error("Error deleting post:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal server error",
+        });
+    }
 };

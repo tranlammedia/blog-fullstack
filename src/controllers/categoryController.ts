@@ -4,7 +4,7 @@ import CategoryModel from "../models/Category";
 
 export const getAllCategory = async (req: Request, res: Response) => {
     try {
-        const categories = await CategoryModel.find();
+        const categories = await CategoryModel.find().sort({ name: 1 });
 
         if (categories.length < 1) {
             res.status(404).json({
@@ -50,4 +50,61 @@ export const createCategory = async (req: Request, res: Response) => {
     await CategoryModel.create(newCategory);
 
     res.status(201).json({ success: true, data: newCategory });
+};
+
+export const updateCategory = async (req: Request, res: Response) => {
+    try {
+        const categoryId = req.params.id;
+        const categoryBody = req.body;
+
+        // Kiểm tra xem categoryId có tồn tại không
+        const updatedCategory = await CategoryModel.findByIdAndUpdate(
+            categoryId,
+            { $set: { ...categoryBody } },
+            { new: true }
+        );
+
+        if (!updatedCategory) {
+            return res
+                .status(404)
+                .json({ success: false, error: "Category not found" });
+        }
+        res.status(200).json({ success: true, data: updatedCategory });
+    } catch (error) {
+        console.error("Error updating category:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal server error",
+        });
+    }
+};
+
+export const deleteCategory = async (req: Request, res: Response) => {
+    try {
+        const categoryId = req.params.id;
+
+        // Xóa bài viết từ trong cơ sở dữ liệu
+        const deletedCategory = await CategoryModel.findByIdAndDelete(categoryId);
+
+        // Kiểm tra xem bài viết có tồn tại không
+        if (!deletedCategory) {
+            return res
+                .status(404)
+                .json({ success: false, error: "category not found" });
+        }
+
+        // Trả về thông báo xóa thành công
+        res.json({
+            success: true,
+            message: "category deleted successfully",
+            data: deletedCategory,
+        });
+    } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error("Error deleting category:", error);
+        res.status(500).json({
+            success: false,
+            error: "Internal server error",
+        });
+    }
 };
