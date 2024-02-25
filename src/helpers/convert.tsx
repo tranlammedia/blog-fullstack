@@ -9,6 +9,33 @@ export function formateDate(dateString: string): string {
     return `${day}-${month}-${year}`;
 }
 
+export function formatTimeAgo(dateString: string) {
+    const createdDate = new Date(dateString).getTime();
+    const currentTime = new Date().getTime();
+
+    const timeDifference = Math.floor((currentTime - createdDate) / 1000);
+    const units = ["year", "month", "week", "day", "hour", "minute", "second"];
+    const thresholds = [
+        { unit: "year", threshold: 60 * 60 * 24 * 365 },
+        { unit: "month", threshold: 60 * 60 * 24 * 30 },
+        { unit: "week", threshold: 60 * 60 * 24 * 7 },
+        { unit: "day", threshold: 60 * 60 * 24 },
+        { unit: "hour", threshold: 60 * 60 },
+        { unit: "minute", threshold: 60 },
+        { unit: "second", threshold: 1 },
+    ];
+
+    for (const { unit, threshold } of thresholds) {
+        if (timeDifference > threshold) {
+            return `${Math.floor(timeDifference / threshold)} ${unit}${
+                Math.floor(timeDifference / threshold) > 1 ? "s" : ""
+            } ago`;
+        }
+    }
+
+    return "just now";
+}
+
 export const decodeJwt = (token?: string | null) => {
     let tokenEncode: string | null = token || null;
     if (!token) {
@@ -27,7 +54,7 @@ export const htmltostring = (html: string, len: number = 300): string => {
     const stringHtml = html.substring(0, len + 50);
     const stringWithoutHtml = stringHtml.replace(/<[^>]+>/g, "");
 
-    const regex = /[.?!]/gi
+    const regex = /[.?!]/gi;
     const subString = stringWithoutHtml.substring(0, len);
 
     let lastPosition = -1;
@@ -40,7 +67,8 @@ export const htmltostring = (html: string, len: number = 300): string => {
     const result =
         lastPosition !== -1
             ? stringWithoutHtml.substring(0, lastPosition + 1)
-            : stringWithoutHtml.substring(0, 200) + (stringWithoutHtml.length > 200 ? "..." : "");
+            : stringWithoutHtml.substring(0, 200) +
+              (stringWithoutHtml.length > 200 ? "..." : "");
 
     return result;
 };

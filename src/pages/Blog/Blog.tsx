@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ApiPost } from "../../services/Api";
 import { CategoryType, PostType } from "../../interfaces";
 import { formateDate } from "../../helpers/convert";
@@ -13,12 +13,40 @@ interface fetchPost {
 }
 
 export default function Blog() {
+    const location = useLocation();
     const [dataPost, setDataPost] = useState<fetchPost | null>(null);
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const categoryId = queryParams.get('category')?.split('-')[1];
+        const tagId = queryParams.get('tag')?.split('-')[1];
+        
+        const queryObj = {
+            ...(categoryId? {categoryId: categoryId} : {}),
+            ...(tagId? {tagId: tagId} : {}),
+        }
+        console.log(queryObj)
+        const fetchData = async () => {
+            try {
+                const posts = await ApiPost.getPostsForReader(queryObj);
+
+                setDataPost(posts);
+            } catch (error) {
+                // console.log(error);
+            }
+        };
+
+        fetchData();
+        return () => {
+            window.scrollTo(0, 0);
+        };
+      }, [location]);
+      
     useEffect(() => {
         window.scrollTo(0, 0);
         const fetchData = async () => {
             try {
-                const posts = await ApiPost.getPostsForReader(1, 10);
+                const posts = await ApiPost.getPostsForReader();
 
                 setDataPost(posts);
             } catch (error) {
@@ -35,7 +63,7 @@ export default function Blog() {
     const handleMoveToPage = (page: number) => {
         const fetchData = async () => {
             try {
-                const posts = await ApiPost.getPostsForReader(page, 10);
+                const posts = await ApiPost.getPostsForReader({page:page});
 
                 setDataPost(posts);
             } catch (error) {
@@ -198,9 +226,9 @@ export default function Blog() {
                                                 <div className="blog_info text-right">
                                                     {post?.categoryIds[0] && (
                                                         <div className="post_tag">
-                                                            <a
+                                                            <Link
+                                                            to={`/blog?category=${(post?.categoryIds[0] as CategoryType)?.name}-${(post?.categoryIds[0] as CategoryType)?._id}`}
                                                                 className="active"
-                                                                href="#"
                                                             >
                                                                 {
                                                                     (
@@ -208,7 +236,7 @@ export default function Blog() {
                                                                             .categoryIds[0] as CategoryType
                                                                     )?.name
                                                                 }
-                                                            </a>
+                                                            </Link>
                                                         </div>
                                                     )}
                                                     <ul className="blog_meta list">

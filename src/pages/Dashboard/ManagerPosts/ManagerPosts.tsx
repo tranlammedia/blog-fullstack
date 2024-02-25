@@ -38,7 +38,7 @@ export default function ManagerPosts() {
     const handleMoveToPage = (page: number) => {
         const fetchData = async () => {
             try {
-                const posts = await ApiPost.getPostsForReader(page, 10);
+                const posts = await ApiPost.getPostsForAdmin(page);
 
                 setDataPost(posts);
             } catch (error) {
@@ -59,7 +59,8 @@ export default function ManagerPosts() {
         const start = currentpage - 2 < 1 ? 1 : currentpage - 2;
         const end = currentpage + 2 > totalPages ? totalPages : currentpage + 2;
         const prev = currentpage - 1 < 1 ? 1 : currentpage - 1;
-        const next = currentpage + 1 > totalPages ? totalPages : currentpage + 1;
+        const next =
+            currentpage + 1 > totalPages ? totalPages : currentpage + 1;
         elpages.push(
             <li
                 key={"prev"}
@@ -67,7 +68,6 @@ export default function ManagerPosts() {
             >
                 <a
                     className="page-link"
-                    href="#"
                     tabIndex={-1}
                     onClick={() => handleMoveToPage(prev)}
                 >
@@ -91,9 +91,7 @@ export default function ManagerPosts() {
                     key={page}
                     onClick={() => handleMoveToPage(page)}
                 >
-                    <a href="#" className="page-link">
-                        {page}
-                    </a>
+                    <a className="page-link">{page}</a>
                 </li>
             );
         }
@@ -104,11 +102,13 @@ export default function ManagerPosts() {
                 </li>
             );
         elpages.push(
-            <li key={"next"} className={`page-item ${currentpage == totalPages ? "disabled" : ""}`}>
-                <a className="page-link"
-                    href="#"
-                    onClick={() => handleMoveToPage(next)}
-                    >
+            <li
+                key={"next"}
+                className={`page-item ${
+                    currentpage == totalPages ? "disabled" : ""
+                }`}
+            >
+                <a className="page-link" onClick={() => handleMoveToPage(next)}>
                     Tiếp theo
                 </a>
             </li>

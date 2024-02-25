@@ -10,14 +10,20 @@ interface fetchPost {
     page: number;
     data: PostType[];
 }
+interface paramsGetPosts {
+    page: string | number;
+    perpage: string | number;
+    categoryId?: string | null;
+    tagId?: string | null;
+    sortby?: string | null;
+}
 export const ApiPost = {
-    getPostsForReader: async (
-        page: string | number = 1,
-        perpage: string | number = 10
-    ): Promise<fetchPost> => {
+    getPostsForReader: async (paramsInput = {}): Promise<fetchPost> => {
+        const params : paramsGetPosts = { page: 1, perpage: 10, ...paramsInput };
         try {
             const response: AxiosResponse<any> = await axios.get(
-                `${API_SERVER_URL}/post?page=${page}&perpage=${perpage}`
+                `${API_SERVER_URL}/post`,
+                { params: params }
             );
             return response.data;
         } catch (error) {
@@ -282,6 +288,25 @@ export const ApiCategory = {
             throw error;
         }
     },
+
+    getPostCountByCategory: async () => {
+        try {
+            const response: AxiosResponse<any> = await axios.get(
+                `${API_SERVER_URL}/category/count-posts`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        // Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 export const ApiTag = {
@@ -359,6 +384,25 @@ export const ApiTag = {
             return response.data.data;
         } catch (error) {
             console.error("Error creating tag:", error);
+            throw error;
+        }
+    },
+
+    getPostCountByTag: async () => {
+        try {
+            const response: AxiosResponse<any> = await axios.get(
+                `${API_SERVER_URL}/tag/count-posts`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                        // Authorization: token,
+                    },
+                }
+            );
+
+            return response.data.data;
+        } catch (error) {
             throw error;
         }
     },

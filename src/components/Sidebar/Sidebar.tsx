@@ -12,9 +12,9 @@ export default function Sidebar() {
         <div className="blog_right_sidebar">
             <WigetSearch />
             <WigetAuthor />
+            <WigetCategory />
             <WigetPopularPost />
             <WigetAds />
-            <WigetCategory />
             <WigetNewsletter />
             <WigetTags />
         </div>
