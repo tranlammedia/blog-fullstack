@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { TagType } from "../interfaces";
 import TagModel from "../models/Tag";
+import PostModel from "../models/Post";
 
 export const getAllTag = async (req: Request, res: Response) => {
     try {
@@ -105,6 +106,41 @@ export const deleteTag = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             error: "Internal server error",
+        });
+    }
+};
+
+export const getPostCountByTag = async (req: Request, res: Response) => {
+    try {
+        const counts = await PostModel.aggregate([
+            { $unwind: "$tagIds" },
+            {
+                $lookup: {
+                    from: "tags", // tên collection chứa thông tin danh mục
+                    localField: "tagIds",
+                    foreignField: "_id",
+                    as: "tagInfo",
+                },
+            },
+
+            { $unwind: "$tagInfo" },
+            {
+                $group: {
+                    _id: "$tagInfo._id",
+                    name: { $first: "$tagInfo.name" },
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: counts,
+        });
+    } catch (error) {
+        res.status(500).json({
+            succcess: false,
+            error: "Đã xảy ra lỗi server khi lấy count nhãn bài viết.",
         });
     }
 };

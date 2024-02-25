@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CategoryType } from "../interfaces";
 import CategoryModel from "../models/Category";
+import PostModel from "../models/Post";
 
 export const getAllCategory = async (req: Request, res: Response) => {
     try {
@@ -84,7 +85,9 @@ export const deleteCategory = async (req: Request, res: Response) => {
         const categoryId = req.params.id;
 
         // Xóa bài viết từ trong cơ sở dữ liệu
-        const deletedCategory = await CategoryModel.findByIdAndDelete(categoryId);
+        const deletedCategory = await CategoryModel.findByIdAndDelete(
+            categoryId
+        );
 
         // Kiểm tra xem bài viết có tồn tại không
         if (!deletedCategory) {
@@ -105,6 +108,41 @@ export const deleteCategory = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             error: "Internal server error",
+        });
+    }
+};
+
+export const getPostCountByCategory = async (req: Request, res: Response) => {
+    try {
+        const counts = await PostModel.aggregate([
+            { $unwind: "$categoryIds" },
+            {
+                $lookup: {
+                    from: "categories", // tên collection chứa thông tin danh mục
+                    localField: "categoryIds",
+                    foreignField: "_id",
+                    as: "categoryInfo",
+                },
+            },
+
+            { $unwind: "$categoryInfo" },
+            {
+                $group: {
+                    _id: "$categoryInfo._id",
+                    name: { $first: "$categoryInfo.name" },
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: counts,
+        });
+    } catch (error) {
+        res.status(500).json({
+            succcess: false,
+            error: "Đã xảy ra lỗi server khi lấy count chủ đề bài viết.",
         });
     }
 };

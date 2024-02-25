@@ -11,20 +11,39 @@ interface ExtendedRequest extends Request {
 export const getPostsForReader = async (req: Request, res: Response) => {
     const pageParam = req.query.page;
     const perPageParam = req.query.perpage;
+    const categoryIdParam = req.query.categoryId;
+    const tagIdParam = req.query.tagId;
+    const sortParam = req.query.sortby;
+
     const page = pageParam ? parseInt(pageParam as string, 10) : 1; // Trang hiện tại, mặc định là trang 1
     let perPage = perPageParam ? parseInt(perPageParam as string, 10) : 10;
 
     perPage = perPage > 50 ? 50 : perPage;
 
+    const queryFilter = {
+        status: "publish",
+        ...(categoryIdParam ? { categoryIds: categoryIdParam } : {}),
+        ...(tagIdParam ? { tagIds: tagIdParam } : {}),
+    };
+
+    let querySort;
+    if (sortParam) {
+        querySort = {
+            [sortParam as string]: -1,
+        };
+    } else {
+        querySort = { createdAt: -1 };
+    }
+
     try {
-        const totalPosts = await PostModel.countDocuments();
+        const totalPosts = await PostModel.countDocuments(queryFilter);
         const totalPages = Math.ceil(totalPosts / perPage);
 
-        const posts = await PostModel.find({ status: "publish" })
+        const posts = await PostModel.find(queryFilter)
             .skip((page - 1) * perPage)
             .limit(perPage)
             .populate(["authorId", "categoryIds", "tagIds"])
-            .sort({ createdAt: -1 });
+            .sort(querySort);
 
         if (posts.length < 1) {
             res.status(404).json({
@@ -55,7 +74,7 @@ export const getPostsForAdmin = async (req: ExtendedRequest, res: Response) => {
     let perPage = perPageParam ? parseInt(perPageParam as string, 10) : 10;
 
     perPage = perPage > 50 ? 50 : perPage;
-    
+
     try {
         let query = {};
         if (user.role == "admin") {
@@ -64,18 +83,18 @@ export const getPostsForAdmin = async (req: ExtendedRequest, res: Response) => {
             query = { authorId: user._id };
         } else {
             return res
-            .status(403)
-            .json({ success: false, error: "Unauthorized" });
+                .status(403)
+                .json({ success: false, error: "Unauthorized" });
         }
         const totalPosts = await PostModel.countDocuments(query);
         const totalPages = Math.ceil(totalPosts / perPage);
 
         const posts = await PostModel.find(query)
-        // { authorId: "65c5d5b74ecd1e313908c091" }
+            // { authorId: "65c5d5b74ecd1e313908c091" }
             .skip((page - 1) * perPage)
             .limit(perPage)
             .populate(["authorId", "categoryIds", "tagIds"])
-            .sort({ createdAt: -1 });
+            .sort({ updateAt: -1 });
 
         if (posts.length < 1) {
             res.status(404).json({
