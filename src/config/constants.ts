@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-export const PORT: string = process.env.PORT || "3001";
+export const PORT = process.env.PORT || 3001;
 export const URL_DATABASE = process.env.URL_DATABASE || "localhost:4000";
 
 export const URL_CLIENT = process.env.URL_CLIENT;
