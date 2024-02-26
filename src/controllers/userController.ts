@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
+
 import UserModel from "../models/User";
 import { UserType } from "../interfaces";
 import { Types } from "mongoose";
+import generateToken from "../functions/generateToken";
 
 export const createUser = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
@@ -21,10 +24,19 @@ export const createUser = async (req: Request, res: Response) => {
             error: "name, email, password yêu cầu bắt buộc",
         });
     }
-    const newUser: UserType = new UserModel({ name, email, password });
-    await UserModel.create(newUser);
+    const hash_password = await bcrypt.hash(password, 10);
 
-    res.status(201).json({ success: true, data: newUser });
+    const newUser: UserType = new UserModel({
+        name,
+        email,
+        password: hash_password,
+    });
+    const createdUser = await UserModel.create(newUser);
+
+    const token = generateToken(createdUser?._id)
+    res.setHeader("Authorization", token);
+
+    return res.sendStatus(200);
 };
 
 export const getUserById = async (req: Request, res: Response) => {

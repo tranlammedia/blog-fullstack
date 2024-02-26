@@ -13,8 +13,9 @@ export const getPostsForReader = async (req: Request, res: Response) => {
     const perPageParam = req.query.perpage;
     const categoryIdParam = req.query.categoryId;
     const tagIdParam = req.query.tagId;
+    const search = req.query.search;
     const sortParam = req.query.sortby;
-
+    
     const page = pageParam ? parseInt(pageParam as string, 10) : 1; // Trang hiện tại, mặc định là trang 1
     let perPage = perPageParam ? parseInt(perPageParam as string, 10) : 10;
 
@@ -25,6 +26,9 @@ export const getPostsForReader = async (req: Request, res: Response) => {
         ...(categoryIdParam ? { categoryIds: categoryIdParam } : {}),
         ...(tagIdParam ? { tagIds: tagIdParam } : {}),
     };
+    if (search) {
+        queryFilter['title'] = { $regex: new RegExp(search as string, 'i') }; // Tìm kiếm theo tiêu đề, không phân biệt chữ hoa chữ thường
+    }
 
     let querySort;
     if (sortParam) {
@@ -45,18 +49,18 @@ export const getPostsForReader = async (req: Request, res: Response) => {
             .populate(["authorId", "categoryIds", "tagIds"])
             .sort(querySort);
 
-        if (posts.length < 1) {
-            res.status(404).json({
-                success: false,
-                error: "Không có bài viết nào được tìm thấy.",
-            });
-        } else {
+        // if (posts.length < 1) {
+        //     res.status(404).json({
+        //         success: false,
+        //         error: "Không có bài viết nào được tìm thấy.",
+        //     });
+        // } else {
             res.status(200).json({
                 totalPages: totalPages,
                 page: page,
                 data: posts,
             });
-        }
+        // }
     } catch (error) {
         console.error("Lỗi khi lấy danh sách bài viết:", error);
         res.status(500).json({

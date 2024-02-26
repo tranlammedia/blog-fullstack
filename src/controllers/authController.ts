@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import passport from "passport";
+import bcrypt from 'bcrypt';
+
 import { URL_CLIENT } from "../config/constants";
 import generateToken from "../functions/generateToken";
 import { UserType } from "../interfaces";
@@ -22,6 +24,7 @@ export const loginWithEmailAndPassword = async (
     res: Response
 ) => {
     const { email, password } = req.body;
+    console.log(email, password);
     // find user in database
     try {
         const user: UserType | null = await UserModel.findOne({ email });
@@ -33,7 +36,7 @@ export const loginWithEmailAndPassword = async (
                 .json({ success: false, error: "User not found" });
 
         // Sai mật khẩu
-        if (user.password !== password)
+        if (!(await bcrypt.compare(password,user.password)))
             return res
                 .status(401)
                 .json({ success: false, error: "Incorrect password" });
