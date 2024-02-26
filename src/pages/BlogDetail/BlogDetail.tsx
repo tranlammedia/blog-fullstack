@@ -87,35 +87,14 @@ export default function BlogDetail() {
                                                         <i className="lnr lnr-eye"></i>
                                                     </a>
                                                 </li>
-                                                <li>
+                                                {/* <li>
                                                     <a href="#">
                                                         06 Comments
                                                         <i className="lnr lnr-bubble"></i>
                                                     </a>
-                                                </li>
+                                                </li> */}
                                             </ul>
-                                            {/* <ul className="social-links">
-                                                <li>
-                                                    <a href="#">
-                                                        <i className="fa fa-facebook"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <i className="fa fa-twitter"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <i className="fa fa-github"></i>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <i className="fa fa-behance"></i>
-                                                    </a>
-                                                </li>
-                                            </ul> */}
+                                            
                                         </div>
                                     </div>
                                     <div className="col-lg-9 col-md-9 blog_details">
@@ -145,8 +124,8 @@ export default function BlogDetail() {
                                                             to={`/blog/${posts[0]._id}`}
                                                         >
                                                             <img
-                                                                className="img-fluid"
-                                                                src="/img/blog/prev.jpg"
+                                                                className="img-fluid img-thumb"
+                                                                src={posts[0].featureImageUrl || "https://via.placeholder.com/60x60"}
                                                                 alt=""
                                                             />
                                                         </Link>
@@ -194,8 +173,8 @@ export default function BlogDetail() {
                                                             to={`/blog/${posts[2]._id}`}
                                                         >
                                                             <img
-                                                                className="img-fluid"
-                                                                src="/img/blog/next.jpg"
+                                                                className="img-fluid img-thumb"
+                                                                src={posts[2].featureImageUrl || "https://via.placeholder.com/60x60"}
                                                                 alt=""
                                                             />
                                                         </Link>

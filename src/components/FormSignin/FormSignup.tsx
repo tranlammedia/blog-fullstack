@@ -1,10 +1,13 @@
 import { ReactNode, useState } from "react";
 import { ApiUser } from "../../services/Api";
+import { useAuth } from "../../providers/useAuth";
 
 export default function FormSignup({ children }: { children: ReactNode }) {
+    const { login }: any = useAuth();
     const [requestBody, setRequestBody] = useState<{ [key: string]: string }>(
         {}
     );
+    const [showModal, setShowModal] = useState(true);
     const [isValidEmail, setIsValidEmail] = useState(false);
     const [isExistEmail, setIsExistEmail] = useState(false);
 
@@ -25,9 +28,20 @@ export default function FormSignup({ children }: { children: ReactNode }) {
     function handleSubmit(requestBody) {
         const fetch = async () => {
             try {
-                const newUser = await ApiUser.createUser(requestBody);
-                console.log(newUser);
-                setIsExistEmail(false);
+                const token = await ApiUser.createUser(requestBody);
+                await login(token);
+                // setShowModal(false)
+                const dismissButton =
+                    document.querySelector("#buttonFormSignup");
+                
+                if (dismissButton) {
+                    console.log(dismissButton);
+                    dismissButton.dispatchEvent(
+                        new Event("click", { bubbles: true })
+                    );
+                }
+
+                // setIsExistEmail(false);
             } catch (error: any) {
                 if (error.response.status === 409) {
                     setIsExistEmail(true);
@@ -46,6 +60,7 @@ export default function FormSignup({ children }: { children: ReactNode }) {
                         <div className="modal-header">
                             <h4 className="modal-title">Đăng Ký</h4>
                             <button
+                                id="buttonFormSignup"
                                 type="button"
                                 className="close"
                                 data-dismiss="modal"

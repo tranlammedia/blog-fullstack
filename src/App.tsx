@@ -38,7 +38,7 @@ function App() {
                 </Route>
                 <Route path="/contact" element={<Contact />} />
             </Route>
-            {userLogin && (
+            {(userLogin && userLogin.role !== 'reader' ) && (
                 <Route path="/dashboard" element={<DashboardLayout />}>
                     <Route index element={<ManagerPosts />} />
                     <Route path="new" element={<Editor />} />

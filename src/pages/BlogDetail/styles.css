@@ -5,3 +5,9 @@
     width: -webkit-fill-available;  
     width: -moz-available;
 }
+.img-thumb {
+    min-width: 60px;
+    max-width: 60px;
+    min-height: 60px;
+    max-height: 60px;
+}

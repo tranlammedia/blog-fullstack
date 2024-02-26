@@ -37,7 +37,7 @@ export default function FormSignin({ children }: { children: ReactNode }) {
                 login(token);
 
                 const dismissButton = document.querySelector(
-                    '[data-dismiss="modal"]'
+                    '#buttonFormSignin'
                 );
                 if (dismissButton) {
                     dismissButton.dispatchEvent(
@@ -75,6 +75,7 @@ export default function FormSignin({ children }: { children: ReactNode }) {
                         <div className="modal-header">
                             <h4 className="modal-title">Đăng nhập</h4>
                             <button
+                                id="buttonFormSignin"
                                 type="button"
                                 className="close"
                                 data-dismiss="modal"

@@ -27,7 +27,7 @@ export const ApiPost = {
             );
             return response.data;
         } catch (error) {
-            console.error("Error fetching data:", error);
+        
             throw error;
         }
     },
@@ -164,8 +164,7 @@ export const ApiUser = {
                     },
                 }
             );
-            console.log(response);
-            return response.data;
+            return response.headers["authorization"];
         } catch (error) {
             throw error;
         }

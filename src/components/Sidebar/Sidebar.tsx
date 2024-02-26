@@ -14,8 +14,8 @@ export default function Sidebar() {
             <WigetAuthor />
             <WigetCategory />
             <WigetPopularPost />
-            <WigetAds />
-            <WigetNewsletter />
+            {/* <WigetAds /> */}
+            {/* <WigetNewsletter /> */}
             <WigetTags />
         </div>
     );

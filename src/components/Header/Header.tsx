@@ -141,15 +141,18 @@ export default function Header() {
                                             data-toggle="dropdown"
                                             aria-expanded="false"
                                         >
-                                            {userLogin?.name || userLogin?.username }
+                                            {userLogin?.name ||
+                                                userLogin?.username}
                                         </button>
                                         <div className="dropdown-menu dropdown-menu-custom">
-                                            <Link
-                                                className="dropdown-item dropdown-name divider"
-                                                to="/dashboard"
-                                            >
-                                                Dashboard
-                                            </Link>
+                                            {(userLogin && userLogin.role !== "reader") && (
+                                                <Link
+                                                    className="dropdown-item dropdown-name divider"
+                                                    to="/dashboard"
+                                                >
+                                                    Dashboard
+                                                </Link>
+                                            )}
 
                                             <a
                                                 className="dropdown-item dropdown-name "

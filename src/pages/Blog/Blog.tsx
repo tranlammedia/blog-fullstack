@@ -20,12 +20,14 @@ export default function Blog() {
         const queryParams = new URLSearchParams(location.search);
         const categoryId = queryParams.get('category')?.split('-')[1];
         const tagId = queryParams.get('tag')?.split('-')[1];
-        
+        const search = queryParams.get('search');
+    
         const queryObj = {
             ...(categoryId? {categoryId: categoryId} : {}),
             ...(tagId? {tagId: tagId} : {}),
+            ...(search? {search: search} : {}),
         }
-        console.log(queryObj)
+        
         const fetchData = async () => {
             try {
                 const posts = await ApiPost.getPostsForReader(queryObj);
@@ -241,7 +243,7 @@ export default function Blog() {
                                                     )}
                                                     <ul className="blog_meta list">
                                                         <li>
-                                                            <a href="#">
+                                                            <a >
                                                                 {formateDate(
                                                                     post.createdAt
                                                                 )}
@@ -249,18 +251,18 @@ export default function Blog() {
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">
+                                                            <Link to={post._id}>
                                                                 {post.views}{" "}
                                                                 Views
                                                                 <i className="lnr lnr-eye"></i>
-                                                            </a>
+                                                            </Link>
                                                         </li>
-                                                        <li>
+                                                        {/* <li>
                                                             <a href="#">
                                                                 06 Comments
                                                                 <i className="lnr lnr-bubble"></i>
                                                             </a>
-                                                        </li>
+                                                        </li> */}
                                                     </ul>
                                                 </div>
                                             </div>
@@ -307,9 +309,9 @@ export default function Blog() {
                                 <article>
                                     <nav className="blog-pagination justify-content-center d-flex">
                                         <ul className="pagination">
-                                            {dataPost
+                                            {(dataPost && dataPost.data.length >0)
                                                 ? elpagetitation(dataPost)
-                                                : ""}
+                                                : "Không có bài viết nào được tìm thấy"}
                                         </ul>
                                     </nav>
                                 </article>
