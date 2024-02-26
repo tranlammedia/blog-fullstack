@@ -84,7 +84,7 @@ passport.use(
         {
             clientID: GITHUB_CLIENT_ID,
             clientSecret: GITHUB_CLIENT_SECRET,
-            callbackURL: "/api/auth/github/callback",
+            callbackURL: "http://localhost:3001/api/auth/github/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
             const user = await findOrCreateUser.github(profile);
