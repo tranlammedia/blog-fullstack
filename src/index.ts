@@ -18,7 +18,7 @@ connectDatabase(URL_DATABASE);
 
 app.use(
     cors({
-        origin: URL_CLIENT, // Replace with your actual client origin
+        origin: `*`, // Replace with your actual client origin
         credentials: true,
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         exposedHeaders: "Authorization", // sent token to client
