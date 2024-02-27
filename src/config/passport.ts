@@ -8,6 +8,7 @@ import {
     GITHUB_CLIENT_SECRET,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
+    URL_SERVER,
 } from "./constants";
 import randomString from "../functions/randomString";
 
@@ -67,7 +68,7 @@ passport.use(
         {
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "/api/auth/google/callback",
+            callbackURL: URL_SERVER+"/api/auth/google/callback",
             // https://github.com/jaredhanson/passport-google-oauth2/pull/51
             userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
         },
@@ -84,7 +85,7 @@ passport.use(
         {
             clientID: GITHUB_CLIENT_ID,
             clientSecret: GITHUB_CLIENT_SECRET,
-            callbackURL: "https://blog-fullstack-0xv9.onrender.com/api/auth/github/callback",
+            callbackURL: URL_SERVER+"/api/auth/github/callback",
         },
         async function (accessToken, refreshToken, profile, done) {
             const user = await findOrCreateUser.github(profile);

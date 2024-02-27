@@ -3,8 +3,9 @@ dotenv.config();
 
 export const PORT = process.env.PORT || 3001;
 export const URL_DATABASE = process.env.URL_DATABASE || "localhost:4000";
-
+export const URL_SERVER = process.env.URL_SERVER;
 export const URL_CLIENT = process.env.URL_CLIENT;
+
 export const SECRET_SESSION_KEY = process.env.SECRET_SESSION_KEY;
 export const SECRET_JWT_KEY = process.env.SECRET_JWT_KEY;
 
