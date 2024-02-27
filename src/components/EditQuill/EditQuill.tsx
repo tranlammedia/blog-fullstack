@@ -33,9 +33,8 @@ const EditQuill = () => {
 
             fetch();
         }
-        setPost(storage.getPost());
     }, []);
-    
+    console.log(post)
     useEffect(() => {
         if (location.state?.showNavLeft != undefined) {
             setShowNavLeft(location.state?.showNavLeft);
@@ -90,7 +89,7 @@ const EditQuill = () => {
             ],
             imageResize: {
                 parchment: Quill.import("parchment"),
-                modules: ["Resize", "DisplaySize", "Toolbar"],
+                modules: [ "DisplaySize"],
                 handleStyles: {
                     backgroundColor: "black",
                     border: "none",

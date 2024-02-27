@@ -15,7 +15,6 @@ export default function OptionCategory() {
             categoryIds: selectedOptions.map((option) => option._id),
         });
     };
-    console.log(category)
     useEffect(() => {
         const fectch = async () => {
             try {

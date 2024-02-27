@@ -112,6 +112,7 @@ export const ApiPost = {
                     el.hasOwnProperty("_id") ? el._id : el
                 ),
             };
+            // console.log(newPost)
             const response: AxiosResponse<any> = await axios.put(
                 `${API_SERVER_URL}/post/${newPost._id}`,
                 updatePost,

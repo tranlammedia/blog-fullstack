@@ -72,3 +72,4 @@ export const htmltostring = (html: string, len: number = 300): string => {
 
     return result;
 };
+

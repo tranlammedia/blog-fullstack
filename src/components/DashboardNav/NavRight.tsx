@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./styles.css";
-import CreatableSelect from "react-select/creatable";
 
 import DraftIcon from "../icons/DraftIcon";
 import PublishIcon from "../icons/PublishIcon";
@@ -38,8 +37,8 @@ export default function NavRight() {
         navigate(".", { state: { showNavRight: !showNavRight } });
     }
     async function handleButtonPost(status: "draft" | "publish") {
-        const isPushlish = !post?.hasOwnProperty("_id") && !blogid
-        
+        const isPushlish = !post?.hasOwnProperty("_id") && !blogid;
+
         if (isPushlish) {
             // create a new post
             const featureImageUrl = await uploadImage(featuredImage.file);
@@ -55,8 +54,9 @@ export default function NavRight() {
             const fetchData = async (newPost) => {
                 try {
                     const post: PostType = await ApiPost.createPost(newPost);
-                    storage.deletePost()
-                    navigate("/dashboard")
+                    setPost(null)
+                    storage.deletePost();
+                    navigate("/dashboard");
                 } catch (error) {
                     console.log(error);
                 }
@@ -69,7 +69,7 @@ export default function NavRight() {
                 ...post,
                 status: status,
             };
-            console.log(updatePost);
+
             if (featuredImage.file) {
                 const featureImageUrl = await uploadImage(featuredImage.file);
                 updatePost = {
@@ -80,14 +80,16 @@ export default function NavRight() {
             const fetchData = async (updatePost) => {
                 try {
                     const post: PostType = await ApiPost.updatePost(updatePost);
-                    storage.deletePost()
-                    navigate("/dashboard")
+                    setPost(null)
+                    storage.deletePost();
+                    navigate("/dashboard");
                 } catch (error) {
                     console.log(error);
                 }
             };
             fetchData(updatePost);
         }
+
     }
 
     function handleCheckDisableButton() {
@@ -116,11 +118,11 @@ export default function NavRight() {
         }
     };
 
-useEffect(()=> {
-    if (post) {
-        setLengthDescShort(300 - post?.description?.length);
-    }
-},[post])
+    useEffect(() => {
+        if (post) {
+            setLengthDescShort(300 - post?.description?.length);
+        }
+    }, [post]);
 
     return (
         <div
