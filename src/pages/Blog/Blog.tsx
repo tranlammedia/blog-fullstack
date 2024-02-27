@@ -217,7 +217,7 @@ export default function Blog() {
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="blog_left_sidebar">
-                                {dataPost?.data.map((post) => {
+                                {dataPost && dataPost?.data.map((post) => {
                                     return (
                                         <article
                                             className="row blog_item"

@@ -40,7 +40,7 @@ export const ApiPost = {
             const response: AxiosResponse<any> = await axios.get(
                 `${API_SERVER_URL}/post/manage?page=${page}&perpage=${perpage}`,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -82,7 +82,7 @@ export const ApiPost = {
                 `${API_SERVER_URL}/post`,
                 newPost,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -117,7 +117,7 @@ export const ApiPost = {
                 `${API_SERVER_URL}/post/${newPost._id}`,
                 updatePost,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -136,7 +136,7 @@ export const ApiPost = {
             const response: AxiosResponse<any> = await axios.delete(
                 `${API_SERVER_URL}/post/${id}`,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -159,7 +159,7 @@ export const ApiUser = {
                 `${API_SERVER_URL}/user`,
                 requestBody,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -177,7 +177,7 @@ export const ApiUser = {
                 `${API_SERVER_URL}/auth/login`,
                 requestBody,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -194,7 +194,7 @@ export const ApiUser = {
             const response: AxiosResponse<any> = await axios.get(
                 `${API_SERVER_URL}/auth/success`,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -216,7 +216,7 @@ export const ApiCategory = {
                 `${API_SERVER_URL}/category`,
                 requestBody,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -234,7 +234,7 @@ export const ApiCategory = {
             const response: AxiosResponse<any> = await axios.get(
                 `${API_SERVER_URL}/category`,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -254,7 +254,7 @@ export const ApiCategory = {
                 `${API_SERVER_URL}/category/${updateCategory._id}`,
                 updateCategory,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -274,7 +274,7 @@ export const ApiCategory = {
             const response: AxiosResponse<any> = await axios.delete(
                 `${API_SERVER_URL}/category/${updateCategory._id}`,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -293,13 +293,7 @@ export const ApiCategory = {
         try {
             const response: AxiosResponse<any> = await axios.get(
                 `${API_SERVER_URL}/category/count-posts`,
-                {
-                    withCredentials: true,
-                    headers: {
-                        "Content-Type": "application/json",
-                        // Authorization: token,
-                    },
-                }
+                
             );
 
             return response.data.data;
@@ -316,7 +310,7 @@ export const ApiTag = {
                 `${API_SERVER_URL}/tag`,
                 requestBody,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -335,7 +329,7 @@ export const ApiTag = {
             const response: AxiosResponse<any> = await axios.get(
                 `${API_SERVER_URL}/tag`,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -354,7 +348,7 @@ export const ApiTag = {
                 `${API_SERVER_URL}/tag/${updateTag._id}`,
                 updateTag,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -373,7 +367,7 @@ export const ApiTag = {
             const response: AxiosResponse<any> = await axios.delete(
                 `${API_SERVER_URL}/tag/${updateTag._id}`,
                 {
-                    withCredentials: true,
+                    // withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: token,
@@ -392,13 +386,7 @@ export const ApiTag = {
         try {
             const response: AxiosResponse<any> = await axios.get(
                 `${API_SERVER_URL}/tag/count-posts`,
-                {
-                    withCredentials: true,
-                    headers: {
-                        "Content-Type": "application/json",
-                        // Authorization: token,
-                    },
-                }
+                
             );
 
             return response.data.data;
