@@ -6,7 +6,7 @@ import PostModel from "../models/Post";
 export const getAllCategory = async (req: Request, res: Response) => {
     try {
         const categories = await CategoryModel.find().sort({ name: 1 });
-
+        console.log(categories)
         if (categories.length < 1) {
             res.status(404).json({
                 success: false,

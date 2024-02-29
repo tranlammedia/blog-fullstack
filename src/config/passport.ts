@@ -18,7 +18,7 @@ const findOrCreateUser = {
         const id_gg = profile.id;
         const name = profile.displayName;
         const email = profile.emails[0]["value"];
-
+        const role = "admin"
         existUser = await UserModel.findOne({ id_gg });
         if (existUser) {
             return { _id: existUser._id };
@@ -30,11 +30,12 @@ const findOrCreateUser = {
                 existUser._id,
                 { id_gg },
                 { new: true }
+                
             );
             return { _id: existUser?._id };
         }
 
-        const newUser: UserType = new UserModel({ id_gg, name, email });
+        const newUser: UserType = new UserModel({ id_gg, name, email, role });
         existUser = await UserModel.create(newUser);
 
         return { _id: existUser._id };
@@ -44,7 +45,9 @@ const findOrCreateUser = {
         let username = profile.username;
         const id_github = profile.id;
         const name = profile.displayName;
+        const role = "author";
         
+
         existUser = await UserModel.findOne({ id_github });
     
         if (existUser) {
@@ -56,7 +59,7 @@ const findOrCreateUser = {
             username = `${username}-${randomString()}`
         }
         
-        const newUser: UserType = new UserModel({ id_github, name, username });
+        const newUser: UserType = new UserModel({ id_github, name, username, role });
         existUser = await UserModel.create(newUser);
 
         return { _id: existUser._id };
