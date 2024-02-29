@@ -34,7 +34,7 @@ const EditQuill = () => {
             fetch();
         }
     }, []);
-    console.log(post)
+    
     useEffect(() => {
         if (location.state?.showNavLeft != undefined) {
             setShowNavLeft(location.state?.showNavLeft);

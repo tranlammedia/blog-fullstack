@@ -4,6 +4,7 @@ import { useShowNavLeft } from "../../../providers/useShowNavLeft";
 import { ApiCategory, ApiPost, ApiTag } from "../../../services/Api";
 import "./styles.css";
 import { useEditor } from "../../../providers/useEditor";
+import { useLocation } from "react-router-dom";
 
 export default function ManagerCategory() {
     const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
@@ -23,9 +24,8 @@ export default function ManagerCategory() {
                 setTags(tags);
             } catch (error) {}
         };
-        if (!tags || !categories) {
-            fectch();
-        }
+
+        fectch();
     }, []);
 
 
@@ -169,6 +169,7 @@ export default function ManagerCategory() {
                                 {/* <!-- Thêm các dòng dữ liệu khác vào đây --> */}
                             </tbody>
                         </table>
+                        {categories && "Chưa có danh mục nào"}
                     </div>
                     <div className="col-md-5">
                         <div className=" d-flex justify-content-between">
@@ -236,6 +237,7 @@ export default function ManagerCategory() {
                                 {/* <!-- Thêm các dòng dữ liệu khác vào đây --> */}
                             </tbody>
                         </table>
+                        {tags && "Chưa có nhãn nào" }
                     </div>
                     {/* Form edit item */}
 

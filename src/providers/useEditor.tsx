@@ -9,8 +9,8 @@ const EditorContext = createContext({});
 
 export const EditorProvider = ({ children }) => {
     const [post, setPost] = useState<PostType | null>(null);
-    const [categories, setCategories] = useState<CategoryType | null>(null);
-    const [tags, setTags] = useState<TagType | null>(null);
+    const [categories, setCategories] = useState<CategoryType | []>([]);
+    const [tags, setTags] = useState<TagType | []>([]);
 
     useEffect(() => {
 

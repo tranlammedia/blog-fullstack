@@ -176,78 +176,87 @@ export default function ManagerPosts() {
                         </tr>
                     </thead>
                     {/* <!-- Phần body của bảng --> */}
-                    <tbody>
-                        {dataPost?.data.map((post, index) => (
-                            <tr key={post._id}>
-                                <td>{index + 1}</td>
-                                <td>
-                                    <a
-                                        href={"/blog/" + post._id}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {post.title.slice(0, 60)}
-                                        {post.title?.length > 60 && "..."}
-                                    </a>
-                                </td>
-                                <td>
-                                    {post.description?.slice(0, 100)}
-                                    {post.description?.length > 100 && "..."}
-                                </td>
-                                <td>
-                                    {post.categoryIds?.map(
-                                        (category, index) => (
-                                            <a key={index} href="#">
-                                                |{category.name}|{" "}
-                                            </a>
-                                        )
-                                    )}
-                                </td>
-                                <td>{formateDate(post.updateAt)}</td>
-                                <td>
-                                    <span
-                                        className={` badge badge-${
-                                            post.status === "publish"
-                                                ? "success"
-                                                : "secondary"
-                                        } badge-custom`}
-                                    >
-                                        {post.status}
-                                    </span>
-                                </td>
-                                <td>
-                                    <Link
-                                        type="button"
-                                        className="btn btn-primary btn-sm mr-2"
-                                        to={"edit/" + post._id}
-                                    >
-                                        <i className="fas fa-edit"></i>
-                                    </Link>
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger btn-sm"
-                                        data-toggle="modal"
-                                        data-target={`#bottonDeleteModal`}
-                                        onClick={() =>
-                                            handleOpenDeleteModal(post)
-                                        }
-                                    >
-                                        <i className="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                    {
+                        <tbody>
+                            {dataPost?.data.map((post, index) => (
+                                <tr key={post._id}>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <a
+                                            href={"/blog/" + post._id}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {post.title.slice(0, 60)}
+                                            {post.title?.length > 60 && "..."}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {post.description?.slice(0, 100)}
+                                        {post.description?.length > 100 &&
+                                            "..."}
+                                    </td>
+                                    <td>
+                                        {post.categoryIds?.map(
+                                            (category, index) => (
+                                                <a key={index} href="#">
+                                                    |{category.name}|{" "}
+                                                </a>
+                                            )
+                                        )}
+                                    </td>
+                                    <td>{formateDate(post.updateAt)}</td>
+                                    <td>
+                                        <span
+                                            className={` badge badge-${
+                                                post.status === "publish"
+                                                    ? "success"
+                                                    : "secondary"
+                                            } badge-custom`}
+                                        >
+                                            {post.status}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <Link
+                                            type="button"
+                                            className="btn btn-primary btn-sm mr-2"
+                                            to={"edit/" + post._id}
+                                        >
+                                            <i className="fas fa-edit"></i>
+                                        </Link>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger btn-sm"
+                                            data-toggle="modal"
+                                            data-target={`#bottonDeleteModal`}
+                                            onClick={() =>
+                                                handleOpenDeleteModal(post)
+                                            }
+                                        >
+                                            <i className="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
 
-                        {/* <!-- Thêm các dòng dữ liệu khác vào đây --> */}
-                    </tbody>
+                            {/* <!-- Thêm các dòng dữ liệu khác vào đây --> */}
+                        </tbody>
+                    }
                 </table>
-
-                {/* <!-- Phân trang --> */}
-                <nav aria-label="Page navigation example">
-                    <ul className="pagination justify-content-end">
-                        {dataPost ? elpagetitation(dataPost) : ""}
-                    </ul>
-                </nav>
+                {(dataPost?.data && dataPost?.data?.length > 0)? (
+                    <>
+                        Chưa có bài viết nào
+                        {/* <!-- Phân trang --> */}
+                        <nav aria-label="Page navigation example">
+                            <ul className="pagination justify-content-end">
+                                { elpagetitation(dataPost)}
+                            </ul>
+                        </nav>
+                    </>
+                ) : (
+                    ""
+                )}
             </div>
             {/* <!-- Modal conform delete--> */}
             {postDelete && (
