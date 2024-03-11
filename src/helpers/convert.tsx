@@ -14,7 +14,6 @@ export function formatTimeAgo(dateString: string) {
     const currentTime = new Date().getTime();
 
     const timeDifference = Math.floor((currentTime - createdDate) / 1000);
-    const units = ["year", "month", "week", "day", "hour", "minute", "second"];
     const thresholds = [
         { unit: "year", threshold: 60 * 60 * 24 * 365 },
         { unit: "month", threshold: 60 * 60 * 24 * 30 },
@@ -69,7 +68,23 @@ export const htmltostring = (html: string, len: number = 300): string => {
             ? stringWithoutHtml.substring(0, lastPosition + 1)
             : stringWithoutHtml.substring(0, 200) +
               (stringWithoutHtml.length > 200 ? "..." : "");
-
     return result;
 };
 
+export const stringToPath = (text: string, id: string): string => {
+    const cleanedString = text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    const dashedString =
+        cleanedString.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-]/g, "") +
+        "-" +
+        id;
+    return dashedString;
+};
+
+export const idFromPath = (path: string): string => {
+    const lastIndex = path.lastIndexOf("-");
+const substringAfterLastDash = path.substring(lastIndex + 1);
+    return substringAfterLastDash;
+};

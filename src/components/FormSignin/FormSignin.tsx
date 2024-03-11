@@ -36,9 +36,8 @@ export default function FormSignin({ children }: { children: ReactNode }) {
                 const token = await ApiUser.loginUserJwt(requestBody);
                 login(token);
 
-                const dismissButton = document.querySelector(
-                    '#buttonFormSignin'
-                );
+                const dismissButton =
+                    document.querySelector("#buttonFormSignin");
                 if (dismissButton) {
                     dismissButton.dispatchEvent(
                         new Event("click", { bubbles: true })
@@ -59,9 +58,6 @@ export default function FormSignin({ children }: { children: ReactNode }) {
                     });
                     setIsValidPwd(false);
                 }
-
-                // other
-                console.log(status);
             }
         };
         fetch();

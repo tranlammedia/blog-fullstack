@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import Newsletter from "../components/Newsletter";
-import { API_SERVER_URL } from "../config/constants";
 
 export default function Home() {
     useEffect(() => {
@@ -17,7 +16,7 @@ export default function Home() {
                                 <div className="banner_content">
                                     <h3 className="text-uppercase">Hell0</h3>
                                     <h1 className="text-uppercase">
-                                        Tôi là Trần Lâm   {API_SERVER_URL}
+                                        Tôi là Trần Lâm
                                     </h1>
                                     <h5 className="text-uppercase">
                                         Future Tech Professional

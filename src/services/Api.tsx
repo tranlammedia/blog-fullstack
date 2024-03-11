@@ -19,7 +19,7 @@ interface paramsGetPosts {
 }
 export const ApiPost = {
     getPostsForReader: async (paramsInput = {}): Promise<fetchPost> => {
-        const params : paramsGetPosts = { page: 1, perpage: 10, ...paramsInput };
+        const params: paramsGetPosts = { page: 1, perpage: 10, ...paramsInput };
         try {
             const response: AxiosResponse<any> = await axios.get(
                 `${API_SERVER_URL}/post`,
@@ -27,7 +27,6 @@ export const ApiPost = {
             );
             return response.data;
         } catch (error) {
-        
             throw error;
         }
     },
@@ -49,7 +48,6 @@ export const ApiPost = {
             );
             return response.data;
         } catch (error: any) {
-            console.log(error.code);
             if (error.response.status == 404) {
                 return {
                     totalPages: 0,
@@ -77,7 +75,6 @@ export const ApiPost = {
 
     createPost: async (newPost: Object): Promise<PostType> => {
         try {
-            // console.log(newPost);
             const response: AxiosResponse<any> = await axios.post(
                 `${API_SERVER_URL}/post`,
                 newPost,
@@ -89,7 +86,6 @@ export const ApiPost = {
                     },
                 }
             );
-            // console.log(response.data.data);
             return response.data.data;
         } catch (error) {
             console.error("Error creating post:", error);
@@ -112,7 +108,6 @@ export const ApiPost = {
                     el.hasOwnProperty("_id") ? el._id : el
                 ),
             };
-            // console.log(newPost)
             const response: AxiosResponse<any> = await axios.put(
                 `${API_SERVER_URL}/post/${newPost._id}`,
                 updatePost,
@@ -241,7 +236,6 @@ export const ApiCategory = {
                     },
                 }
             );
-                console.log(response.data.data)
             return response.data.data;
         } catch (error) {
             throw error;
@@ -292,8 +286,7 @@ export const ApiCategory = {
     getPostCountByCategory: async () => {
         try {
             const response: AxiosResponse<any> = await axios.get(
-                `${API_SERVER_URL}/category/count-posts`,
-                
+                `${API_SERVER_URL}/category/count-posts`
             );
 
             return response.data.data;
@@ -317,7 +310,6 @@ export const ApiTag = {
                     },
                 }
             );
-            console.log(response);
             return response.data.data;
         } catch (error) {
             throw error;
@@ -385,8 +377,7 @@ export const ApiTag = {
     getPostCountByTag: async () => {
         try {
             const response: AxiosResponse<any> = await axios.get(
-                `${API_SERVER_URL}/tag/count-posts`,
-                
+                `${API_SERVER_URL}/tag/count-posts`
             );
 
             return response.data.data;

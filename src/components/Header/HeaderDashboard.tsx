@@ -5,7 +5,6 @@ import { useAuth } from "../../providers/useAuth";
 export default function HeaderDashboard() {
     const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
     const { userLogin, logout }: any = useAuth();
-    const navigate = useNavigate();
 
     const toggleNavLeft = () => {
         setShowNavLeft(!showNavLeft);

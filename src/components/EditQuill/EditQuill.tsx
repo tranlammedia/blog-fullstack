@@ -7,34 +7,39 @@ import ImageUploader from "quill-image-uploader";
 
 import "./styles.css";
 import { useShowNavLeft } from "../../providers/useShowNavLeft";
-import { useEditor } from "../../providers/useEditor";
 import { API_CLOUDINARY_URL, CLOUDINARY_PRESET } from "../../config/constants";
-import { ApiPost } from "../../services/Api";
-import { PostType } from "../../interfaces";
-import * as storage from "../../helpers/storage";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+    clearPostState,
+    getPostFetch,
+    postSelect,
+    updatePostState,
+} from "../../redux/modules/postSlice";
 
 Quill.register("modules/imageResize", ImageResize);
 Quill.register("modules/imageUploader", ImageUploader);
 
 const EditQuill = () => {
     const location = useLocation();
+    const dispatch = useAppDispatch();
+    const post = useAppSelector(postSelect);
     const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
     const [showNavRight, setShowNavRight] = useState(true);
     const [lengthTitle, setLengthTitle] = useState(120);
-    const { post, setPost }: any = useEditor();
     const { blogid } = useParams();
 
     useEffect(() => {
         if (blogid) {
-            const fetch = async () => {
-                const postDB: PostType[] = await ApiPost.getPost(blogid);
-                setPost(postDB[1]);
-            };
-
-            fetch();
+            dispatch(getPostFetch(blogid));
         }
     }, []);
-    
+
+    useEffect(() => {
+        if (post.value[0]) {
+            setLengthTitle(120 - post.value[0]?.title?.length || 120);
+        }
+    }, [post.value[0]]);
+
     useEffect(() => {
         if (location.state?.showNavLeft != undefined) {
             setShowNavLeft(location.state?.showNavLeft);
@@ -43,26 +48,21 @@ const EditQuill = () => {
             setShowNavRight(location.state?.showNavRight);
         }
     }, [location.state?.showNavLeft, location.state?.showNavRight]);
-    
-    useEffect(() => {
-        if(post) {
-            storage.setPost(post);
-            setLengthTitle(120 - post?.title?.length);
-        }
-    },[post])
-        
-    
+
     function handleChangeContent(newContent: string) {
-        setPost({ ...post, content: newContent });
+        dispatch(updatePostState({ content: newContent }));
     }
 
     function handleChangeTitle(event: React.ChangeEvent<HTMLInputElement>) {
         const title = event.target.value;
         if (title?.length <= 120) {
-            setPost({ ...post, title });
+            dispatch(updatePostState({ title }));
         }
     }
 
+    const hanleClearPostState = () => {
+        dispatch(clearPostState());
+    };
 
     const modules = useMemo(
         () => ({
@@ -89,24 +89,21 @@ const EditQuill = () => {
             ],
             imageResize: {
                 parchment: Quill.import("parchment"),
-                modules: [ "DisplaySize"],
+                modules: ["Resize", "DisplaySize"],
                 handleStyles: {
                     backgroundColor: "black",
                     border: "none",
                     color: "white",
-                    // other camelCase styles for size display
                 },
                 displayStyles: {
                     backgroundColor: "black",
                     border: "none",
                     color: "white",
-                    // other camelCase styles for size display
                 },
                 toolbarStyles: {
                     backgroundColor: "black",
                     border: "none",
                     color: "white",
-                    // other camelCase styles for size display
                 },
             },
             imageUploader: {
@@ -144,7 +141,6 @@ const EditQuill = () => {
                         })
                             .then((response) => response.json())
                             .then((result) => {
-                                console.log(result);
                                 resolve(result.secure_url);
                             })
                             .catch((error) => {
@@ -180,7 +176,6 @@ const EditQuill = () => {
         "code-block",
     ];
 
-
     return (
         <div
             className={`main-content main-content-mr ${
@@ -188,11 +183,17 @@ const EditQuill = () => {
             } ${showNavRight ? "open-right" : ""}`}
         >
             <div className="edit d-flex flex-column">
-                {blogid || post?._id ? (
+                <div className="d-flex justify-content-between">
+
+                {blogid || post.value[0]?._id ? (
                     <h2>Cập nhật bài viết</h2>
                 ) : (
                     <h2>Bài viết mới</h2>
                 )}
+                {!blogid && (
+                    <button className="btn btn-danger" onClick={hanleClearPostState}>Clear</button>
+                )}
+                </div>
                 <div className="form-group">
                     <div className="d-flex justify-content-between">
                         <label>Tiêu đề</label>
@@ -205,7 +206,7 @@ const EditQuill = () => {
                         onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                         ) => handleChangeTitle(event)}
-                        value={post?.title || ""}
+                        value={post.value[0]?.title || ""}
                     />
                 </div>
                 <div className="form-group">
@@ -213,7 +214,7 @@ const EditQuill = () => {
                     <ReactQuill
                         theme={"snow"}
                         onChange={handleChangeContent}
-                        value={post?.content || ""}
+                        value={post.value[0]?.content || ""}
                         modules={modules}
                         formats={formats}
                         placeholder={"Write something awesome..."}

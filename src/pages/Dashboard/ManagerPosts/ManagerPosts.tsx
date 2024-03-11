@@ -6,6 +6,10 @@ import { PostType } from "../../../interfaces";
 import "./styles.css";
 import { Link, useNavigate } from "react-router-dom";
 import { formateDate } from "../../../helpers/convert";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { getCategoriesFetch } from "../../../redux/modules/categorySlice";
+import { getTagsFetch } from "../../../redux/modules/tagSlice";
+import { clearPostState, postSelect } from "../../../redux/modules/postSlice";
 
 interface fetchPost {
     totalPages: number;
@@ -14,10 +18,19 @@ interface fetchPost {
 }
 
 export default function ManagerPosts() {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch()
     const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
     const [dataPost, setDataPost] = useState<fetchPost | null>(null);
     const [callApi, setCallApi] = useState(false);
     const [postDelete, setPostDelete] = useState<PostType | null>(null);
+    
+    const post = useAppSelector(postSelect)
+
+    useEffect(() => {
+        dispatch(getCategoriesFetch())
+        dispatch(getTagsFetch())
+    }, []);
 
     useEffect(() => {
         const fetch = async () => {
@@ -25,8 +38,9 @@ export default function ManagerPosts() {
             setDataPost(posts);
         };
         fetch();
+        
     }, [callApi]);
-
+    
     const handleOpenDeleteModal = async (postDelete) => {
         setPostDelete(postDelete);
     };
@@ -49,6 +63,10 @@ export default function ManagerPosts() {
             fetchData();
         }
     };
+
+    const handleButtonEditPost = () => {
+        dispatch(clearPostState())
+    }
 
     const elpagetitation = (dataPost) => {
         if (!dataPost) return null;
@@ -221,6 +239,7 @@ export default function ManagerPosts() {
                                         <Link
                                             type="button"
                                             className="btn btn-primary btn-sm mr-2"
+                                            onClick={handleButtonEditPost}
                                             to={"edit/" + post._id}
                                         >
                                             <i className="fas fa-edit"></i>

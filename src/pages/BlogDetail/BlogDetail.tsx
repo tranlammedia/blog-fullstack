@@ -3,7 +3,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { useEffect, useState } from "react";
 import { PostType } from "../../interfaces";
 import { ApiPost } from "../../services/Api";
-import { formateDate } from "../../helpers/convert";
+import { formateDate, idFromPath } from "../../helpers/convert";
 import "./styles.css"
 
 
@@ -14,7 +14,6 @@ export default function BlogDetail() {
     useEffect(() => {
         // Đặt lại vị trí cuộn về trên đầu trang khi component được mount
         window.scrollTo(0, 0);
-
         const fetchData = async (blogid: string) => {
             try {
                 const posts: PostType[] = await ApiPost.getPost(blogid);
@@ -23,9 +22,10 @@ export default function BlogDetail() {
                 // console.log(error);
             }
         };
-
+        
         if (blogid) {
-            fetchData(blogid);
+            const id = idFromPath(blogid)
+            fetchData(id);
         }
 
         // Đối với cleanup, ví dụ, nếu bạn muốn đặt lại vị trí cuộn khi component bị unmount
@@ -69,7 +69,7 @@ export default function BlogDetail() {
                                             <ul className="blog_meta list">
                                                 <li>
                                                     <a href="#">
-                                                        {posts[1].authorId.name}
+                                                        {posts[1].authorId?.name || 'author'}
                                                         <i className="lnr lnr-user"></i>
                                                     </a>
                                                 </li>

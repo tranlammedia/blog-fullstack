@@ -8,7 +8,9 @@ export default function FormSignup({ children }: { children: ReactNode }) {
         {}
     );
     const [showModal, setShowModal] = useState(true);
+    const [isValidName, setIsValidName] = useState(false);
     const [isValidEmail, setIsValidEmail] = useState(false);
+    const [isValidPwd, setIsValidPwd] = useState<boolean>(false);
     const [isExistEmail, setIsExistEmail] = useState(false);
 
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -18,10 +20,18 @@ export default function FormSignup({ children }: { children: ReactNode }) {
             ...requestBody,
             [event.target.name]: event.target.value,
         });
+        // check length of name
+        if (event.target.name === "name") {
+            setIsValidName(event.target.value.length > 0);
+        }
         // Check email format
         if (event.target.name === "email") {
             const isValid = emailRegex.test(event.target.value);
             setIsValidEmail(isValid);
+        }
+        // check length of password
+        if (event.target.name === "password") {
+            setIsValidPwd(event.target.value.length > 0);
         }
     }
 
@@ -33,9 +43,8 @@ export default function FormSignup({ children }: { children: ReactNode }) {
                 // setShowModal(false)
                 const dismissButton =
                     document.querySelector("#buttonFormSignup");
-                
+
                 if (dismissButton) {
-                    console.log(dismissButton);
                     dismissButton.dispatchEvent(
                         new Event("click", { bubbles: true })
                     );
@@ -147,6 +156,13 @@ export default function FormSignup({ children }: { children: ReactNode }) {
                                                     onClick={() =>
                                                         handleSubmit(
                                                             requestBody
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        !(
+                                                            isValidName &&
+                                                            isValidEmail &&
+                                                            isValidPwd
                                                         )
                                                     }
                                                 >

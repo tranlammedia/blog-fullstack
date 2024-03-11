@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ApiPost } from "../../services/Api";
 import { CategoryType, PostType } from "../../interfaces";
-import { formateDate } from "../../helpers/convert";
+import { formateDate, idFromPath, stringToPath } from "../../helpers/convert";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./styles.css";
 
@@ -18,16 +18,16 @@ export default function Blog() {
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
-        const categoryId = queryParams.get('category')?.split('-')[1];
-        const tagId = queryParams.get('tag')?.split('-')[1];
-        const search = queryParams.get('search');
-    
+        const categoryParam = queryParams.get("category");
+        const tagParam = queryParams.get("tag");
+        const search = queryParams.get("search");
+
         const queryObj = {
-            ...(categoryId? {categoryId: categoryId} : {}),
-            ...(tagId? {tagId: tagId} : {}),
-            ...(search? {search: search} : {}),
-        }
-        
+            ...(categoryParam ? { categoryId: idFromPath(categoryParam) } : {}),
+            ...(tagParam ? { tagId: idFromPath(tagParam) } : {}),
+            ...(search ? { search: search } : {}),
+        };
+
         const fetchData = async () => {
             try {
                 const posts = await ApiPost.getPostsForReader(queryObj);
@@ -42,8 +42,8 @@ export default function Blog() {
         return () => {
             window.scrollTo(0, 0);
         };
-      }, [location]);
-      
+    }, [location]);
+
     useEffect(() => {
         window.scrollTo(0, 0);
         const fetchData = async () => {
@@ -65,7 +65,7 @@ export default function Blog() {
     const handleMoveToPage = (page: number) => {
         const fetchData = async () => {
             try {
-                const posts = await ApiPost.getPostsForReader({page:page});
+                const posts = await ApiPost.getPostsForReader({ page: page });
 
                 setDataPost(posts);
             } catch (error) {
@@ -217,99 +217,122 @@ export default function Blog() {
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="blog_left_sidebar">
-                                {dataPost && dataPost?.data.map((post) => {
-                                    return (
-                                        <article
-                                            className="row blog_item"
-                                            key={post._id}
-                                        >
-                                            {/* infor */}
-                                            <div className="col-md-3">
-                                                <div className="blog_info text-right">
-                                                    {post?.categoryIds[0] && (
-                                                        <div className="post_tag">
-                                                            <Link
-                                                            to={`/blog?category=${(post?.categoryIds[0] as CategoryType)?.name}-${(post?.categoryIds[0] as CategoryType)?._id}`}
-                                                                className="active"
-                                                            >
-                                                                {
-                                                                    (
-                                                                        post
-                                                                            .categoryIds[0] as CategoryType
-                                                                    )?.name
-                                                                }
-                                                            </Link>
-                                                        </div>
-                                                    )}
-                                                    <ul className="blog_meta list">
-                                                        <li>
-                                                            <a >
-                                                                {formateDate(
-                                                                    post.createdAt
-                                                                )}
-                                                                <i className="lnr lnr-calendar-full"></i>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <Link to={post._id}>
-                                                                {post.views}{" "}
-                                                                Views
-                                                                <i className="lnr lnr-eye"></i>
-                                                            </Link>
-                                                        </li>
-                                                        {/* <li>
+                                {dataPost &&
+                                    dataPost?.data.map((post) => {
+                                        return (
+                                            <article
+                                                className="row blog_item"
+                                                key={post._id}
+                                            >
+                                                {/* infor */}
+                                                <div className="col-md-3">
+                                                    <div className="blog_info text-right">
+                                                        {post
+                                                            ?.categoryIds[0] && (
+                                                            <div className="post_tag">
+                                                                <Link
+                                                                    to={`/blog?category=${stringToPath(
+                                                                        (
+                                                                            post
+                                                                                ?.categoryIds[0] as CategoryType
+                                                                        )?.name,
+                                                                        (
+                                                                            post
+                                                                                ?.categoryIds[0] as CategoryType
+                                                                        )?._id
+                                                                    )}`}
+                                                                    className="active"
+                                                                >
+                                                                    {
+                                                                        (
+                                                                            post
+                                                                                .categoryIds[0] as CategoryType
+                                                                        )?.name
+                                                                    }
+                                                                </Link>
+                                                            </div>
+                                                        )}
+                                                        <ul className="blog_meta list">
+                                                            <li>
+                                                                <a>
+                                                                    {formateDate(
+                                                                        post.createdAt
+                                                                    )}
+                                                                    <i className="lnr lnr-calendar-full"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <Link
+                                                                    to={stringToPath(
+                                                                        post.title,
+                                                                        post._id
+                                                                    )}
+                                                                >
+                                                                    {post.views}{" "}
+                                                                    Views
+                                                                    <i className="lnr lnr-eye"></i>
+                                                                </Link>
+                                                            </li>
+                                                            {/* <li>
                                                             <a href="#">
                                                                 06 Comments
                                                                 <i className="lnr lnr-bubble"></i>
                                                             </a>
                                                         </li> */}
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            {/* post */}
-                                            <div className="col-md-9">
-                                                <div className="blog_post">
-                                                    {post.featureImageUrl && (
-                                                        <img
-                                                            src={
-                                                                post.featureImageUrl
-                                                            }
-                                                            alt=""
-                                                            className="blog_post_image"
-                                                            style={{}}
-                                                        />
-                                                    )}
-                                                    <div className="blog_details">
-                                                        <Link to={post._id}>
-                                                            <h2>
-                                                                {post.title}
-                                                            </h2>
-                                                        </Link>
-                                                        <div
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: post.description,
-                                                            }}
-                                                        />
-                                                        <Link
-                                                            to={post._id}
-                                                            className="primary_btn"
-                                                        >
-                                                            <span>
-                                                                View More
-                                                            </span>
-                                                        </Link>
+                                                        </ul>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </article>
-                                    );
-                                })}
+                                                {/* post */}
+                                                <div className="col-md-9">
+                                                    <div className="blog_post">
+                                                        {post.featureImageUrl && (
+                                                            <img
+                                                                src={
+                                                                    post.featureImageUrl
+                                                                }
+                                                                alt=""
+                                                                className="blog_post_image"
+                                                                style={{}}
+                                                            />
+                                                        )}
+                                                        <div className="blog_details">
+                                                            <Link to={stringToPath(
+                                                                        post.title,
+                                                                        post._id
+                                                                    )}>
+                                                                <h2>
+                                                                    {post.title}
+                                                                </h2>
+                                                            </Link>
+                                                            <div
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: post.description,
+                                                                }}
+                                                            />
+                                                            <Link
+                                                                to={stringToPath(
+                                                                    post.title,
+                                                                    post._id
+                                                                )}
+                                                                className="primary_btn"
+                                                            >
+                                                                <span>
+                                                                    View More
+                                                                </span>
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        );
+                                    })}
 
                                 {/* pagetitation */}
                                 <article>
                                     <nav className="blog-pagination justify-content-center d-flex">
                                         <ul className="pagination">
-                                            {(dataPost && dataPost.data.length >0)
+                                            {dataPost &&
+                                            dataPost.data.length > 0
                                                 ? elpagetitation(dataPost)
                                                 : "Không có bài viết nào được tìm thấy"}
                                         </ul>

@@ -1,50 +1,44 @@
 import CreatableSelect from "react-select/creatable";
 import { useEffect, useState } from "react";
 import { ApiCategory } from "../../services/Api";
-import { useEditor } from "../../providers/useEditor";
+import { postSelect, updatePostState } from "../../redux/modules/postSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+    categoriesSelect,
+    getCategoriesFetch,
+} from "../../redux/modules/categorySlice";
 
 export default function OptionCategory() {
-    const { post, setPost, category, setCategory }: any = useEditor();
+    const dispatch = useAppDispatch();
+    const post = useAppSelector(postSelect);
+    const categories = useAppSelector(categoriesSelect);
     const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
     const [options, setOptions] = useState<any[]>([]);
 
-    const handleSelectChange = (selectedOptions) => {
-        setSelectedOptions(selectedOptions);
-        setPost({
-            ...post,
-            categoryIds: selectedOptions.map((option) => option._id),
-        });
-    };
     useEffect(() => {
-        const fectch = async () => {
-            try {
-                const categories = await ApiCategory.getAll();
-                setOptions(
-                    categories.map((option) => ({
-                        _id: option._id,
-                        value: option.name,
-                        label: option.name,
-                    }))
-                );
-                setCategory(categories)
-            } catch (error) {}
-        };
-        fectch();
-    }, []);
+        if (categories.value.length === 0) {
+            dispatch(getCategoriesFetch());
+        }
+        setOptions(
+            categories.value.map((option) => ({
+                _id: option._id,
+                value: option.name,
+                label: option.name,
+            }))
+        );
+    }, [categories.value.length]);
 
     useEffect(() => {
-        const targetIds = post?.categoryIds;
-
+        const targetIds = post.value[0]?.categoryIds;
+        
         if (targetIds?.length > 0 && targetIds[0].hasOwnProperty("_id")) {
             const filteredOptions = options.filter((option) =>
                 targetIds.some((target) => target._id === option._id)
             );
-
             setSelectedOptions(filteredOptions);
         }
- 
-    }, [post?.hasOwnProperty("categoryIds"), options]);
-    
+    }, [post.value[0]?.hasOwnProperty("categoryIds"), options]);
+
     useEffect(() => {
         const lastSelectedOption = selectedOptions[selectedOptions.length - 1];
         const fectchCreate = async () => {
@@ -70,9 +64,16 @@ export default function OptionCategory() {
         ) {
             fectchCreate();
         }
-
     }, [selectedOptions?.length]);
 
+    const handleSelectChange = (selectedOptions) => {
+        setSelectedOptions(selectedOptions);
+        dispatch(
+            updatePostState({
+                categoryIds: selectedOptions.map((option) => option._id),
+            })
+        );
+    };
     return (
         <>
             <CreatableSelect

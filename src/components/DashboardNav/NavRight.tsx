@@ -7,9 +7,6 @@ import PublishIcon from "../icons/PublishIcon";
 import FileTextIcon from "../icons/FileTextIcon";
 import TagIcon from "../icons/TagIcon";
 import ImgIcon from "../icons/ImgIcon";
-import { useEditor } from "../../providers/useEditor";
-import { PostType } from "../../interfaces";
-import { ApiPost, ApiTag } from "../../services/Api";
 import { htmltostring } from "../../helpers/convert";
 import { uploadImage } from "../../helpers/uploadImage";
 import CaretLeftIcon from "../icons/CaretLeftIcon";
@@ -17,93 +14,77 @@ import CaretRightIcon from "../icons/CaretRightIcon";
 import CategoryIcon from "../icons/CategoryIcon";
 import OptionCategory from "./OptionCategory";
 import OptionTag from "./OptionTag";
-import * as storage from "../../helpers/storage";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+    postPostFetch,
+    postSelect,
+    putPostFetch,
+    updatePostState,
+} from "../../redux/modules/postSlice";
 
 export default function NavRight() {
     const navigate = useNavigate();
-    const { blogid } = useParams();
+    const dispatch = useAppDispatch();
+    const post = useAppSelector(postSelect);
     const [showNavRight, setShowNavRight] = useState(true);
-
-    const { post, setPost }: any = useEditor();
 
     const [lengthDescShort, setLengthDescShort] = useState(300);
     const [featuredImage, setFeaturedImage] = useState({
         file: "",
-        url: post?.featureImageUrl,
+        url: post.value[0]?.featureImageUrl,
     });
 
     function toggleNavRight() {
         setShowNavRight(!showNavRight);
         navigate(".", { state: { showNavRight: !showNavRight } });
     }
-    async function handleButtonPost(status: "draft" | "publish") {
-        const isPushlish = !post?.hasOwnProperty("_id") && !blogid;
 
-        if (isPushlish) {
+    async function handleButtonPost(status: "draft" | "publish") {
+        const isCreate = !post.value[0]?.hasOwnProperty("_id");
+
+        if (isCreate) {
             // create a new post
             const featureImageUrl = await uploadImage(featuredImage.file);
 
             const newPost = {
-                ...post,
+                ...post.value[0],
                 status: status,
                 featureImageUrl: featureImageUrl,
-                description: !post.description
-                    ? htmltostring(post.content)
-                    : post.description,
+                description: !post.value[0]?.description
+                    ? htmltostring(post.value[0].content)
+                    : post.value[0].description,
             };
-            const fetchData = async (newPost) => {
-                try {
-                    const post: PostType = await ApiPost.createPost(newPost);
-                    setPost(null)
-                    storage.deletePost();
-                    navigate("/dashboard");
-                } catch (error) {
-                    console.log(error);
-                }
-            };
-
-            fetchData(newPost);
+            dispatch(postPostFetch(newPost));
         } else {
             // update post
             let updatePost = {
-                ...post,
+                ...post.value[0],
                 status: status,
             };
 
             if (featuredImage.file) {
                 const featureImageUrl = await uploadImage(featuredImage.file);
                 updatePost = {
-                    ...post,
+                    ...post.value[0],
                     featureImageUrl: featureImageUrl,
                 };
             }
-            const fetchData = async (updatePost) => {
-                try {
-                    const post: PostType = await ApiPost.updatePost(updatePost);
-                    setPost(null)
-                    storage.deletePost();
-                    navigate("/dashboard");
-                } catch (error) {
-                    console.log(error);
-                }
-            };
-            fetchData(updatePost);
+            dispatch(putPostFetch(updatePost));
         }
-
+        navigate("/dashboard");
     }
 
     function handleCheckDisableButton() {
-        return !(post?.content?.length > 0 && post?.title?.length > 0);
+        return !(
+            post.value[0]?.content?.length > 0 &&
+            post.value[0]?.title?.length > 0
+        );
     }
 
     const handleDescShort = (e) => {
         const description = e.target.value;
-
         if (description.length <= 300) {
-            setPost({
-                ...post,
-                description,
-            });
+            dispatch(updatePostState({ description }));
         }
     };
 
@@ -120,7 +101,7 @@ export default function NavRight() {
 
     useEffect(() => {
         if (post) {
-            setLengthDescShort(300 - post?.description?.length);
+            setLengthDescShort(300 - post.value[0]?.description?.length || 300);
         }
     }, [post]);
 
@@ -146,11 +127,11 @@ export default function NavRight() {
                             <div className="d-flex justify-content-around align-items-center flex-wrap p-1 my-2">
                                 <button
                                     type="button"
-                                    className="btn btn-outline-danger btn-sm my-1"
+                                    className="btn btn-warning btn-sm my-1"
                                     onClick={() => handleButtonPost("draft")}
                                     disabled={handleCheckDisableButton()}
                                 >
-                                    Draft
+                                    Save
                                 </button>
 
                                 <button
@@ -183,7 +164,10 @@ export default function NavRight() {
                                                 onChange={(e) =>
                                                     handleDescShort(e)
                                                 }
-                                                value={post?.description || ""}
+                                                value={
+                                                    post.value[0]
+                                                        ?.description || ""
+                                                }
                                             />
                                             <label>{lengthDescShort}/300</label>
                                         </div>
@@ -251,7 +235,8 @@ export default function NavRight() {
                                             <img
                                                 src={
                                                     featuredImage.url ||
-                                                    post?.featureImageUrl ||
+                                                    post.value[0]
+                                                        ?.featureImageUrl ||
                                                     "https://via.placeholder.com/550x280"
                                                 }
                                                 alt="Featured Image"

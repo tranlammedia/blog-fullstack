@@ -1,52 +1,40 @@
 import CreatableSelect from "react-select/creatable";
 import { useEffect, useState } from "react";
 import { ApiTag } from "../../services/Api";
-import { useEditor } from "../../providers/useEditor";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { postSelect, updatePostState } from "../../redux/modules/postSlice";
+import { getTagsFetch, tagsSelect } from "../../redux/modules/tagSlice";
 
 export default function OptionTag() {
-    const { post, setPost, setTags }: any = useEditor();
+    const dispatch = useAppDispatch();
+    const post = useAppSelector(postSelect);
+    const tags = useAppSelector(tagsSelect);
     const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
     const [options, setOptions] = useState<any[]>([]);
 
-    const handleSelectChange = (selectedOptions) => {
-        setSelectedOptions(selectedOptions);
-        setPost({
-            ...post,
-            tagIds: selectedOptions.map((option) => option._id),
-        });
-    };
-    
     useEffect(() => {
-        const fectch = async () => {
-            try {
-                const tags = await ApiTag.getAll();
-
-                setOptions(
-                    tags.map((option) => ({
-                        _id: option._id,
-                        value: option.name,
-                        label: option.name,
-                    }))
-                );
-                setTags(tags);
-            } catch (error) {}
-        };
-        fectch();
-
-    }, []);
+        if (tags.value.length === 0) {
+            dispatch(getTagsFetch());
+        }
+        setOptions(
+            tags.value.map((option) => ({
+                _id: option._id,
+                value: option.name,
+                label: option.name,
+            }))
+        );
+    }, [tags.value.length]);
 
     useEffect(() => {
-
-        const targetIds = post?.tagIds;
+        const targetIds = post.value[0]?.tagIds;
 
         if (targetIds?.length > 0 && targetIds[0].hasOwnProperty("_id")) {
-
             const filteredOptions = options.filter((option) =>
                 targetIds.some((target) => target._id === option._id)
             );
             setSelectedOptions(filteredOptions);
         }
-    }, [post?.hasOwnProperty("categoryIds"), options]);
+    }, [post.value[0]?.hasOwnProperty("tagIds"), options]);
 
     useEffect(() => {
         const lastSelectedOption = selectedOptions[selectedOptions.length - 1];
@@ -73,9 +61,17 @@ export default function OptionTag() {
         ) {
             fectchCreate();
         }
-
     }, [selectedOptions.length]);
-
+    
+    const handleSelectChange = (selectedOptions) => {
+        setSelectedOptions(selectedOptions);
+        dispatch(
+            updatePostState({
+                ...post,
+                tagIds: selectedOptions.map((option) => option._id),
+            })
+        );
+    };
     return (
         <>
             <CreatableSelect
