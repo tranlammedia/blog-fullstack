@@ -20,7 +20,7 @@ export const categorySlice = createSlice({
             state.isLoading = true;
         },
         getCategoriesSuccess: (state, action) => {
-            state.value = action.payload;
+            state.value = action.payload; 
             state.isLoading = false;
         },
         postCategoryFetch: (state, action) => {
