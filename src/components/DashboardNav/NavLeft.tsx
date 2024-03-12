@@ -9,7 +9,7 @@ export default function NavLeft() {
     useEffect(() => {
         if (location.state?.showNavLeft != undefined) {
             setShowNavLeft(location.state?.showNavLeft);
-        }
+        } 
     }, [location.state?.showNavLeft]);
 
     return (
