@@ -1,6 +1,6 @@
-import { CategoryType } from "./../../../../server/src/interfaces";
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { CategoryType } from "../../interfaces";
 
 interface BaseState<T> {
     value: T[];
