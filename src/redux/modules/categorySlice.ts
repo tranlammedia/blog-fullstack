@@ -13,7 +13,7 @@ const initialState: BaseState<CategoryType> = {
 };
 
 export const categorySlice = createSlice({
-    name: "categories",
+    name: "categories", 
     initialState,
     reducers: {
         getCategoriesFetch: (state) => {
