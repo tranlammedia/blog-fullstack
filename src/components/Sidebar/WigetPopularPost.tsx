@@ -23,7 +23,7 @@ export default function WigetPopularPost() {
     return (
         <aside className="single_sidebar_widget popular_post_widget">
             <h3 className="widget_title">Popular Posts</h3>
-            {popularPosts.length > 0 &&
+            {popularPosts?.length > 0 &&
                 popularPosts.map((post) => {
                     return (
                         <div key={post._id} className="media post_item">

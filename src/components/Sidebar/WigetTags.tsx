@@ -17,7 +17,7 @@ export default function WigetTags() {
         <aside className="single-sidebar-widget tag_cloud_widget">
             <h4 className="widget_title">Tag Clouds</h4>
             <ul className="list">
-                {tags.length > 0 &&
+                {tags?.length > 0 &&
                     tags.map((tag) => {
                         return (
                             <li key={tag._id}>

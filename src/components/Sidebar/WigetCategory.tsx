@@ -26,7 +26,7 @@ export default function WigetCategory() {
 
     return (
         <>
-            {categories.length > 0 && (
+            {categories?.length > 0 && (
                 <aside className="single_sidebar_widget post_category_widget">
                     <h4 className="widget_title">Post Catgories</h4>
                     <ul className="list cat-list">
