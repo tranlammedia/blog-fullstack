@@ -191,13 +191,13 @@ const EditQuill = () => {
                 showNavLeft ? "open-left" : ""
             } ${showNavRight ? "open-right" : ""}`}
         >
-            <div className="edit d-flex flex-column">
-                <div className="d-flex justify-content-between">
-                    {blogid || post.value[0]?._id ? (
+            <div className="area-edit d-flex flex-column">
+                <div className="d-flex justify-content-end">
+                    {/* {blogid || post.value[0]?._id ? (
                         <h2>Cập nhật bài viết</h2>
                     ) : (
                         <h2>Bài viết mới</h2>
-                    )}
+                    )} */}
                     {!blogid && (
                         <button
                             className="btn btn-danger"
@@ -209,21 +209,19 @@ const EditQuill = () => {
                 </div>
                 <div className="form-group">
                     <div className="d-flex justify-content-between">
-                        <label>Tiêu đề</label>
-                        <label>{lengthTitle}/120</label>
-                    </div>
                     <input
                         type="text"
-                        className="form-control form-control-sm"
+                        className="form-control form-control-sm custom-input-title"
                         placeholder=""
                         onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                         ) => handleChangeTitle(event)}
                         value={post.value[0]?.title || ""}
                     />
+                        <label className="ml-2">{lengthTitle}/120</label>
+                    </div>
                 </div>
                 <div className="form-group">
-                    <label>Nội dung</label>
                     <ReactQuill
                         theme={"snow"}
                         onChange={handleChangeContent}
@@ -231,7 +229,8 @@ const EditQuill = () => {
                         modules={modules}
                         formats={formats}
                         placeholder={"Write something awesome..."}
-                        scrollingContainer='html'
+                        scrollingContainer='div'
+                        className="custom-quill"
                     />
                 </div>
             </div>

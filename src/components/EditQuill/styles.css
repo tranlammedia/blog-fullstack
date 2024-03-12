@@ -1,13 +1,24 @@
+.custom-input-title {
+  font-size: x-large;
+  font-weight: 500;
+  border: none;
+}
+.area-edit {
+  /* height: auto; */
+}
 .text-editor {
-    width: 1086px;
-    margin: 0 auto;
-  }
-  .ql-editor {
-    min-height: 400px;
-  }
-.ql-container{
+  width: 1086px;
+  margin: 0 auto;
+}
+
+.ql-editor {
+  min-height: 400px;
+}
+
+.ql-container {
   font-size: 1rem;
 }
+
 svg {
   vertical-align: baseline;
 }
@@ -16,9 +27,16 @@ svg {
   display: block;
   max-width: 40vw;
   width: 80vw;
-  max-height: 30vw ;
- height: 80vw;
+  max-height: 30vw;
+  height: 80vw;
 }
+
 .ql-clipboard {
   position: fixed;
+}
+
+.custom-quill {
+  height: 70vh;
+  scroll-behavior: auto;
+  margin-bottom: 5px;
 }

@@ -267,6 +267,7 @@ export default function NavRight() {
                                     type="button"
                                     className="btn btn-outline-danger btn-sm my-1"
                                     style={{ fontSize: "0.8rem" }}
+                                    onClick={() => handleButtonPost("draft")}
                                     disabled={handleCheckDisableButton()}
                                 >
                                     <DraftIcon />
@@ -276,6 +277,7 @@ export default function NavRight() {
                                     type="button"
                                     className="btn btn-primary btn-sm my-1"
                                     style={{ fontSize: "0.8rem" }}
+                                    onClick={() => handleButtonPost("publish")}
                                     disabled={handleCheckDisableButton()}
                                 >
                                     <PublishIcon />
