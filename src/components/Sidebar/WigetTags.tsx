@@ -18,7 +18,7 @@ export default function WigetTags() {
             <h4 className="widget_title">Tag Clouds</h4>
             <ul className="list">
                 {tags?.length > 0 &&
-                    tags.map((tag) => {
+                    tags.map((tag) => { 
                         return (
                             <li key={tag._id}>
                                 <Link
