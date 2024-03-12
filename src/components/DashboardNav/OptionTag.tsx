@@ -33,6 +33,8 @@ export default function OptionTag() {
                 targetIds.some((target) => target._id === option._id)
             );
             setSelectedOptions(filteredOptions);
+        } else {
+            setSelectedOptions([]);
         }
     }, [post.value[0]?.hasOwnProperty("tagIds"), options]);
 
@@ -62,7 +64,7 @@ export default function OptionTag() {
             fectchCreate();
         }
     }, [selectedOptions.length]);
-    
+
     const handleSelectChange = (selectedOptions) => {
         setSelectedOptions(selectedOptions);
         dispatch(

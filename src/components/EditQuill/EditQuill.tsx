@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -23,15 +23,24 @@ const EditQuill = () => {
     const location = useLocation();
     const dispatch = useAppDispatch();
     const post = useAppSelector(postSelect);
+    const [scrollPosition, setScrollPosition] = useState(0);
     const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
     const [showNavRight, setShowNavRight] = useState(true);
     const [lengthTitle, setLengthTitle] = useState(120);
     const { blogid } = useParams();
 
+    const handleScroll = () => {
+        setScrollPosition(window.scrollY);
+    };
+
     useEffect(() => {
         if (blogid) {
             dispatch(getPostFetch(blogid));
         }
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
     }, []);
 
     useEffect(() => {
@@ -184,15 +193,19 @@ const EditQuill = () => {
         >
             <div className="edit d-flex flex-column">
                 <div className="d-flex justify-content-between">
-
-                {blogid || post.value[0]?._id ? (
-                    <h2>Cập nhật bài viết</h2>
-                ) : (
-                    <h2>Bài viết mới</h2>
-                )}
-                {!blogid && (
-                    <button className="btn btn-danger" onClick={hanleClearPostState}>Clear</button>
-                )}
+                    {blogid || post.value[0]?._id ? (
+                        <h2>Cập nhật bài viết</h2>
+                    ) : (
+                        <h2>Bài viết mới</h2>
+                    )}
+                    {!blogid && (
+                        <button
+                            className="btn btn-danger"
+                            onClick={hanleClearPostState}
+                        >
+                            Clear
+                        </button>
+                    )}
                 </div>
                 <div className="form-group">
                     <div className="d-flex justify-content-between">
@@ -218,6 +231,7 @@ const EditQuill = () => {
                         modules={modules}
                         formats={formats}
                         placeholder={"Write something awesome..."}
+                        scrollingContainer='html'
                     />
                 </div>
             </div>

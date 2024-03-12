@@ -36,6 +36,8 @@ export default function OptionCategory() {
                 targetIds.some((target) => target._id === option._id)
             );
             setSelectedOptions(filteredOptions);
+        } else {
+            setSelectedOptions([])
         }
     }, [post.value[0]?.hasOwnProperty("categoryIds"), options]);
 

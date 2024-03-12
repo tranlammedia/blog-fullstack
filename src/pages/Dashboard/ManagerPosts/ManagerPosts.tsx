@@ -265,7 +265,7 @@ export default function ManagerPosts() {
                 </table>
                 {(dataPost?.data && dataPost?.data?.length > 0)? (
                     <>
-                        Chưa có bài viết nào
+                        
                         {/* <!-- Phân trang --> */}
                         <nav aria-label="Page navigation example">
                             <ul className="pagination justify-content-end">
@@ -274,7 +274,7 @@ export default function ManagerPosts() {
                         </nav>
                     </>
                 ) : (
-                    ""
+                    "Chưa có bài viết nào"
                 )}
             </div>
             {/* <!-- Modal conform delete--> */}

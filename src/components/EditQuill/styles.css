@@ -19,3 +19,6 @@ svg {
   max-height: 30vw ;
  height: 80vw;
 }
+.ql-clipboard {
+  position: fixed;
+}
