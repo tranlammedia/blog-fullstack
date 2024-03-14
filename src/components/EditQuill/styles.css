@@ -3,8 +3,9 @@
   font-weight: 500;
   border: none;
 }
-.area-edit {
-  /* height: auto; */
+.title-edit {
+  margin: 0 1rem;
+  align-self: center;
 }
 .text-editor {
   width: 1086px;

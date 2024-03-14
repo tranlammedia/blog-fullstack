@@ -192,33 +192,26 @@ const EditQuill = () => {
             } ${showNavRight ? "open-right" : ""}`}
         >
             <div className="area-edit d-flex flex-column">
-                <div className="d-flex justify-content-end">
-                    {/* {blogid || post.value[0]?._id ? (
-                        <h2>Cập nhật bài viết</h2>
-                    ) : (
-                        <h2>Bài viết mới</h2>
-                    )} */}
-                    {!blogid && (
-                        <button
-                            className="btn btn-danger"
-                            onClick={hanleClearPostState}
-                        >
-                            Clear
-                        </button>
-                    )}
-                </div>
                 <div className="form-group">
                     <div className="d-flex justify-content-between">
-                    <input
-                        type="text"
-                        className="form-control form-control-sm custom-input-title"
-                        placeholder=""
-                        onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                        ) => handleChangeTitle(event)}
-                        value={post.value[0]?.title || ""}
-                    />
-                        <label className="ml-2">{lengthTitle}/120</label>
+                        <input
+                            type="text"
+                            className="form-control form-control-sm custom-input-title"
+                            placeholder="Tiêu đề... "
+                            onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                            ) => handleChangeTitle(event)}
+                            value={post.value[0]?.title || ""}
+                        />
+                        <label className="title-edit">{lengthTitle}/120</label>
+                        {!blogid && (
+                            <button
+                                className="btn btn-danger"
+                                onClick={hanleClearPostState}
+                            >
+                                Clear
+                            </button>
+                        )}
                     </div>
                 </div>
                 <div className="form-group">
@@ -229,7 +222,7 @@ const EditQuill = () => {
                         modules={modules}
                         formats={formats}
                         placeholder={"Write something awesome..."}
-                        scrollingContainer='div'
+                        scrollingContainer="div"
                         className="custom-quill"
                     />
                 </div>
