@@ -3,10 +3,7 @@ import { useEffect, useState } from "react";
 import { ApiCategory } from "../../services/Api";
 import { postSelect, updatePostState } from "../../redux/modules/postSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import {
-    categoriesSelect,
-    getCategoriesFetch,
-} from "../../redux/modules/categorySlice";
+import {categoriesSelect, getCategoriesFetch} from "../../redux/modules/categorySlice";
 
 export default function OptionCategory() {
     const dispatch = useAppDispatch();
@@ -14,6 +11,7 @@ export default function OptionCategory() {
     const categories = useAppSelector(categoriesSelect);
     const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
     const [options, setOptions] = useState<any[]>([]);
+
     useEffect(() => {
         if (categories.value.length === 0) {
             dispatch(getCategoriesFetch());
@@ -52,7 +50,7 @@ export default function OptionCategory() {
                     name: lastSelectedOption.value,
                 });
 
-                await setOptions([
+                setOptions([
                     ...options,
                     {
                         _id: newCategory._id,
@@ -60,8 +58,9 @@ export default function OptionCategory() {
                     },
                 ]);
 
-                await dispatch(
+                dispatch(
                     updatePostState({
+                        ...post,
                         categoryIds: [...post.value[0].categoryIds, newCategory._id],
                     })
                 );
@@ -82,6 +81,7 @@ export default function OptionCategory() {
         setSelectedOptions(selectedOptions);
         dispatch(
             updatePostState({
+                ...post,
                 categoryIds: selectedOptions.map((option) => option._id),
             })
         );

@@ -26,19 +26,19 @@ export default function OptionTag() {
     }, [tags.value.length]);
 
     useEffect(() => {
-        const targetIds = post.value[0]?.categoryIds || [];
+        const targetIds = post.value[0]?.tagIds || [];
 
-        const filteredOptions = options.filter(option => {
+        const filteredOptions = options.filter((option) => {
             if (targetIds.length > 0) {
                 if (targetIds[0]?.hasOwnProperty("_id")) {
-                    return targetIds.some(target => target._id === option._id);
+                    return targetIds.some((target) => target._id === option._id);
                 } else {
-                    return targetIds.some(target => target === option._id);
+                    return targetIds.some((target) => target === option._id);
                 }
             }
             return false;
         });
-        
+
         setSelectedOptions(filteredOptions);
     }, [post.value[0]?.hasOwnProperty("tagIds"), options]);
 
@@ -49,6 +49,7 @@ export default function OptionTag() {
                 const newTag = await ApiTag.createTag({
                     name: lastSelectedOption.value,
                 });
+
                 setOptions([
                     ...options,
                     {
@@ -56,6 +57,13 @@ export default function OptionTag() {
                         ...lastSelectedOption,
                     },
                 ]);
+
+                dispatch(
+                    updatePostState({
+                        ...post,
+                        tagIds: [...post.value[0].tagIds, newTag._id],
+                    })
+                );
             } catch (error) {
                 console.log(error);
             }
