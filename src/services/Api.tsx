@@ -101,12 +101,16 @@ export const ApiPost = {
                 description: newPost.description,
                 featureImageUrl: newPost.featureImageUrl,
                 status: newPost.status,
-                categoryIds: newPost.categoryIds.map((el) =>
-                    el.hasOwnProperty("_id") ? el._id : el
-                ),
-                tagIds: newPost.tagIds.map((el) =>
-                    el.hasOwnProperty("_id") ? el._id : el
-                ),
+                categoryIds: newPost.categoryIds.map((el) => {
+                    if (el) {
+                        return el?.hasOwnProperty("_id") ? el._id : el;
+                    }
+                }),
+                tagIds: newPost.tagIds.map((el) => {
+                    if (el) {
+                        return el?.hasOwnProperty("_id") ? el._id : el;
+                    }
+                }),
             };
             const response: AxiosResponse<any> = await axios.put(
                 `${API_SERVER_URL}/post/${newPost._id}`,

@@ -14,7 +14,6 @@ export default function OptionCategory() {
     const categories = useAppSelector(categoriesSelect);
     const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
     const [options, setOptions] = useState<any[]>([]);
-
     useEffect(() => {
         if (categories.value.length === 0) {
             dispatch(getCategoriesFetch());
@@ -27,18 +26,22 @@ export default function OptionCategory() {
             }))
         );
     }, [categories.value.length]);
-
+    
     useEffect(() => {
-        const targetIds = post.value[0]?.categoryIds;
+        const targetIds = post.value[0]?.categoryIds || [];
+
+        const filteredOptions = options.filter(option => {
+            if (targetIds.length > 0) {
+                if (targetIds[0]?.hasOwnProperty("_id")) {
+                    return targetIds.some(target => target._id === option._id);
+                } else {
+                    return targetIds.some(target => target === option._id);
+                }
+            }
+            return false;
+        });
         
-        if (targetIds?.length > 0 && targetIds[0].hasOwnProperty("_id")) {
-            const filteredOptions = options.filter((option) =>
-                targetIds.some((target) => target._id === option._id)
-            );
-            setSelectedOptions(filteredOptions);
-        } else {
-            setSelectedOptions([])
-        }
+        setSelectedOptions(filteredOptions);
     }, [post.value[0]?.hasOwnProperty("categoryIds"), options]);
 
     useEffect(() => {
@@ -48,13 +51,20 @@ export default function OptionCategory() {
                 const newCategory = await ApiCategory.createCategory({
                     name: lastSelectedOption.value,
                 });
-                setOptions([
+
+                await setOptions([
                     ...options,
                     {
                         _id: newCategory._id,
                         ...lastSelectedOption,
                     },
                 ]);
+
+                await dispatch(
+                    updatePostState({
+                        categoryIds: [...post.value[0].categoryIds, newCategory._id],
+                    })
+                );
             } catch (error) {
                 console.log(error);
             }
@@ -76,6 +86,7 @@ export default function OptionCategory() {
             })
         );
     };
+
     return (
         <>
             <CreatableSelect

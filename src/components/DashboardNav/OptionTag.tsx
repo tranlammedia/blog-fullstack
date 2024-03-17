@@ -26,16 +26,20 @@ export default function OptionTag() {
     }, [tags.value.length]);
 
     useEffect(() => {
-        const targetIds = post.value[0]?.tagIds;
+        const targetIds = post.value[0]?.categoryIds || [];
 
-        if (targetIds?.length > 0 && targetIds[0].hasOwnProperty("_id")) {
-            const filteredOptions = options.filter((option) =>
-                targetIds.some((target) => target._id === option._id)
-            );
-            setSelectedOptions(filteredOptions);
-        } else {
-            setSelectedOptions([]);
-        }
+        const filteredOptions = options.filter(option => {
+            if (targetIds.length > 0) {
+                if (targetIds[0]?.hasOwnProperty("_id")) {
+                    return targetIds.some(target => target._id === option._id);
+                } else {
+                    return targetIds.some(target => target === option._id);
+                }
+            }
+            return false;
+        });
+        
+        setSelectedOptions(filteredOptions);
     }, [post.value[0]?.hasOwnProperty("tagIds"), options]);
 
     useEffect(() => {
