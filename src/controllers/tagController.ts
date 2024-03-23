@@ -113,6 +113,7 @@ export const deleteTag = async (req: Request, res: Response) => {
 export const getPostCountByTag = async (req: Request, res: Response) => {
     try {
         const counts = await PostModel.aggregate([
+            { $match: { status: "publish" } },
             { $unwind: "$tagIds" },
             {
                 $lookup: {

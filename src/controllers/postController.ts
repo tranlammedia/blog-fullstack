@@ -15,7 +15,7 @@ export const getPostsForReader = async (req: Request, res: Response) => {
     const tagIdParam = req.query.tagId;
     const search = req.query.search;
     const sortParam = req.query.sortby;
-    
+
     const page = pageParam ? parseInt(pageParam as string, 10) : 1; // Trang hiện tại, mặc định là trang 1
     let perPage = perPageParam ? parseInt(perPageParam as string, 10) : 10;
 
@@ -27,7 +27,7 @@ export const getPostsForReader = async (req: Request, res: Response) => {
         ...(tagIdParam ? { tagIds: tagIdParam } : {}),
     };
     if (search) {
-        queryFilter['title'] = { $regex: new RegExp(search as string, 'i') }; // Tìm kiếm theo tiêu đề, không phân biệt chữ hoa chữ thường
+        queryFilter["title"] = { $regex: new RegExp(search as string, "i") }; // Tìm kiếm theo tiêu đề, không phân biệt chữ hoa chữ thường
     }
 
     let querySort;
@@ -49,18 +49,11 @@ export const getPostsForReader = async (req: Request, res: Response) => {
             .populate(["authorId", "categoryIds", "tagIds"])
             .sort(querySort);
 
-        // if (posts.length < 1) {
-        //     res.status(404).json({
-        //         success: false,
-        //         error: "Không có bài viết nào được tìm thấy.",
-        //     });
-        // } else {
-            res.status(200).json({
-                totalPages: totalPages,
-                page: page,
-                data: posts,
-            });
-        // }
+        res.status(200).json({
+            totalPages: totalPages,
+            page: page,
+            data: posts,
+        });
     } catch (error) {
         console.error("Lỗi khi lấy danh sách bài viết:", error);
         res.status(500).json({
@@ -144,12 +137,14 @@ export const getPostById = async (req: Request, res: Response) => {
                 .json({ success: false, error: "Post not found" });
         }
         const prevPost: PostType[] | null = await PostModel.find({
+            status: "publish",
             createdAt: { $lt: currentPost.createdAt },
         })
             .sort({ createdAt: -1 })
             .limit(1)
             .populate("authorId");
         const nextPost: PostType[] | null = await PostModel.find({
+            status: "publish",
             createdAt: { $gt: currentPost.createdAt },
         })
             .sort({ createdAt: 1 })
@@ -177,7 +172,7 @@ export const getPostById = async (req: Request, res: Response) => {
 export const createPost = async (req: ExtendedRequest, res: Response) => {
     try {
         const postBody = req.body;
-
+        
         if (!req.user?._id)
             return res
                 .status(403)
@@ -209,7 +204,6 @@ export const updatePost = async (req: Request, res: Response) => {
     try {
         const postId = req.params.id; // Lấy id của bài viết cần cập nhật từ URL
         const postBody = req.body; // Dữ liệu mới của bài viết
-        console.log(postBody);
         // Kiểm tra xem postId có tồn tại không
         const updatedPost = await PostModel.findOneAndUpdate(
             { _id: postId }, // Điều kiện tìm kiếm
