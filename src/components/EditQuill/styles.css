@@ -37,7 +37,7 @@ svg {
 }
 
 .custom-quill {
-  height: 70vh;
+  height: 70vh; 
   scroll-behavior: auto;
   margin-bottom: 5px;
 }
