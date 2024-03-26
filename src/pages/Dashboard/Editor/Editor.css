@@ -78,6 +78,21 @@
   margin-right: var(--width-nav-right-open);
 }
 
+/* title */
+.custom-input-title {
+  font-size: x-large;
+  font-weight: 500;
+  border: none;
+}
+.title-edit {
+  margin: 0 1rem;
+  align-self: center;
+}
+.text-editor {
+  width: 1086px;
+  margin: 0 auto;
+}
+
 /* nav-right */
 .sidebar-right {
   position: fixed;

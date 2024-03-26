@@ -390,3 +390,9 @@ export const ApiTag = {
         }
     },
 };
+
+export const ApiImage = {
+    upload: async () => {
+        
+    },
+}

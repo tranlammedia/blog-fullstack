@@ -1,77 +1,28 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useMemo } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize-module-react";
 import ImageUploader from "quill-image-uploader";
 
 import "./styles.css";
-import { useShowNavLeft } from "../../providers/useShowNavLeft";
 import { API_CLOUDINARY_URL, CLOUDINARY_PRESET } from "../../config/constants";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
-    clearPostState,
-    getPostFetch,
     postSelect,
     updatePostState,
 } from "../../redux/modules/postSlice";
+
 
 Quill.register("modules/imageResize", ImageResize);
 Quill.register("modules/imageUploader", ImageUploader);
 
 const EditQuill = () => {
-    const location = useLocation();
     const dispatch = useAppDispatch();
     const post = useAppSelector(postSelect);
-    const [scrollPosition, setScrollPosition] = useState(0);
-    const { showNavLeft, setShowNavLeft }: any = useShowNavLeft();
-    const [showNavRight, setShowNavRight] = useState(true);
-    const [lengthTitle, setLengthTitle] = useState(120);
-    const { blogid } = useParams();
-
-    const handleScroll = () => {
-        setScrollPosition(window.scrollY);
-    };
-
-    useEffect(() => {
-        if (blogid) {
-            dispatch(getPostFetch(blogid));
-        }
-        window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (post.value[0]) {
-            setLengthTitle(120 - post.value[0]?.title?.length || 120);
-        }
-    }, [post.value[0]]);
-
-    useEffect(() => {
-        if (location.state?.showNavLeft != undefined) {
-            setShowNavLeft(location.state?.showNavLeft);
-        }
-        if (location.state?.showNavRight != undefined) {
-            setShowNavRight(location.state?.showNavRight);
-        }
-    }, [location.state?.showNavLeft, location.state?.showNavRight]);
 
     function handleChangeContent(newContent: string) {
         dispatch(updatePostState({ content: newContent }));
     }
-
-    function handleChangeTitle(event: React.ChangeEvent<HTMLInputElement>) {
-        const title = event.target.value;
-        if (title?.length <= 120) {
-            dispatch(updatePostState({ title }));
-        }
-    }
-
-    const hanleClearPostState = () => {
-        dispatch(clearPostState());
-    };
 
     const modules = useMemo(
         () => ({
@@ -138,6 +89,7 @@ const EditQuill = () => {
                     //             console.error("Error:", error);
                     //         });
                     // });
+                    console.log(file);
                     return new Promise((resolve, reject) => {
                         const formData = new FormData();
                         formData.append("file", file);
@@ -186,48 +138,16 @@ const EditQuill = () => {
     ];
 
     return (
-        <div
-            className={`main-content main-content-mr ${
-                showNavLeft ? "open-left" : ""
-            } ${showNavRight ? "open-right" : ""}`}
-        >
-            <div className="area-edit d-flex flex-column">
-                <div className="form-group">
-                    <div className="d-flex justify-content-between">
-                        <input
-                            type="text"
-                            className="form-control form-control-sm custom-input-title"
-                            placeholder="Tiêu đề... "
-                            onChange={(
-                                event: React.ChangeEvent<HTMLInputElement>
-                            ) => handleChangeTitle(event)}
-                            value={post.value[0]?.title || ""}
-                        />
-                        <label className="title-edit">{lengthTitle}/120</label>
-                        {!blogid && (
-                            <button
-                                className="btn btn-danger"
-                                onClick={hanleClearPostState}
-                            >
-                                Clear
-                            </button>
-                        )}
-                    </div>
-                </div>
-                <div className="form-group">
-                    <ReactQuill
-                        theme={"snow"}
-                        onChange={handleChangeContent}
-                        value={post.value[0]?.content || ""}
-                        modules={modules}
-                        formats={formats}
-                        placeholder={"Write something awesome..."}
-                        scrollingContainer="div"
-                        className="custom-quill"
-                    />
-                </div>
-            </div>
-        </div>
+        <ReactQuill
+            theme={"snow"}
+            onChange={handleChangeContent}
+            value={post.value[0]?.content || ""}
+            modules={modules}
+            formats={formats}
+            placeholder={"Write something awesome..."}
+            scrollingContainer="div"
+            className="custom-quill"
+        />
     );
 };
 
