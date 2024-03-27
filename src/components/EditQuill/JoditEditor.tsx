@@ -99,7 +99,7 @@ const JoditEditor = () => {
             triggerChangeEvent: true,
             width: "auto",
             height: "auto",
-            minHeight: 200,
+            minHeight: 600,
             direction: "",
             language: "auto",
             debugLanguage: false,
